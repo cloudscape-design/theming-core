@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`merge merges theme with override and matches previous snapshot 1`] = `
+Object {
+  "contexts": Object {
+    "navigation": Object {
+      "id": "navigation",
+      "selector": ".navigation",
+      "tokens": Object {
+        "boxShadow": Object {
+          "dark": "purple",
+          "light": "purple",
+        },
+        "buttonShadow": Object {
+          "dark": "green",
+          "light": "red",
+        },
+        "shadow": Object {
+          "dark": "{brown}",
+          "light": "pink",
+        },
+      },
+    },
+  },
+  "id": "root",
+  "modes": Object {
+    "color": Object {
+      "id": "color",
+      "states": Object {
+        "dark": Object {
+          "selector": ".dark",
+        },
+        "light": Object {
+          "default": true,
+        },
+      },
+    },
+    "density": Object {
+      "id": "density",
+      "states": Object {
+        "comfortable": Object {
+          "default": true,
+        },
+        "compact": Object {
+          "selector": ".compact",
+        },
+      },
+    },
+    "motion": Object {
+      "id": "motion",
+      "states": Object {
+        "default": Object {
+          "default": true,
+        },
+        "disabled": Object {
+          "selector": ".disabled-motion",
+        },
+      },
+    },
+  },
+  "selector": ":root",
+  "tokenModeMap": Object {
+    "appear": "motion",
+    "boxShadow": "color",
+    "buttonShadow": "color",
+    "lineShadow": "color",
+    "scaledSize": "density",
+    "shadow": "color",
+  },
+  "tokens": Object {
+    "appear": Object {
+      "default": "20ms",
+      "disabled": "0",
+    },
+    "black": "black",
+    "boxShadow": Object {
+      "dark": "{brown}",
+      "light": "green",
+    },
+    "brown": "brown",
+    "buttonShadow": Object {
+      "dark": "red",
+      "light": "red",
+    },
+    "containerShadowBase": "2px 3px orange, -1px 0 8px olive",
+    "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
+    "fontFamilyBody": "{fontFamilyBase}",
+    "grey": "grey",
+    "lineShadow": Object {
+      "dark": "pink",
+      "light": "pink",
+    },
+    "medium": "3px",
+    "modalShadowContainer": "{containerShadowBase}",
+    "scaledSize": Object {
+      "comfortable": "{medium}",
+      "compact": "{small}",
+    },
+    "shadow": Object {
+      "dark": "orange",
+      "light": "yellow",
+    },
+    "small": "1px",
+  },
+}
+`;

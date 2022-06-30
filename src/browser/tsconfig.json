@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "es2015.collection", "dom"],
+    "types": [],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "composite": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "strict": true,
+    "declaration": true,
+    "outDir": "../../lib/browser",
+    "rootDir": "../",
+    "tsBuildInfoFile": "../../lib/browser/._tsbuildinfo"
+  },
+  "include": ["../shared", "."],
+  "exclude": ["../**/__tests__/**", "../**/__integ__/**"]
+}

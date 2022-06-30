@@ -1,0 +1,18 @@
+:root{
+  --font-family-base-SgSfB7:'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+  --color-orange-500-1q_-_3: #ec7211;
+  --color-orange-700-APwFpu: #dd6b10;
+  --color-background-button-primary-default-1frZrt:var(--color-orange-500-1q_-_3);
+  --color-background-button-primary-active-dGDwvd:var(--color-orange-700-APwFpu);
+  --space-xs-3io9lX:8px;
+  --space-xxs-32HdAH:4px;
+  --space-scaled-xs-2N6f_x:var(--space-xs-3io9lX);
+}
+
+.dark-mode:not(#\9){
+  --color-background-button-primary-active-dGDwvd:var(--color-orange-500-1q_-_3);
+}
+
+.compact-mode:not(#\9){
+  --space-scaled-xs-2N6f_x:var(--space-xxs-32HdAH);
+}

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders mappings from theme and propertiesMap 1`] = `
+"$black-var: var(--black-css, black);
+$grey-var: var(--grey-css, grey);
+$brown-var: var(--brown-css, brown);
+$shadow-var: var(--shadow-css, grey);
+$buttonShadow-var: var(--buttonShadow-css, grey);
+$boxShadow-var: var(--boxShadow-css, grey);
+$lineShadow-var: var(--lineShadow-css, grey);
+$small-var: var(--small-css, 1px);
+$medium-var: var(--medium-css, 3px);
+$scaledSize-var: var(--scaledSize-css, 3px);
+$appear-var: var(--appear-css, 20ms);
+$fontFamilyBase-var: var(--fontFamilyBase-css, \\"Helvetica Neue\\", Arial, sans-serif);
+$fontFamilyBody-var: var(--fontFamilyBody-css, \\"Helvetica Neue\\", Arial, sans-serif);
+$containerShadowBase-var: var(--containerShadowBase-css, 2px 3px orange, -1px 0 8px olive);
+$modalShadowContainer-var: var(--modalShadowContainer-css, 2px 3px orange, -1px 0 8px olive);"
+`;

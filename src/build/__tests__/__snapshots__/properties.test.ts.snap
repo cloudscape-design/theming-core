@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generates map from theme and variables 1`] = `
+Object {
+  "appear": "--appear-var-bqka5u",
+  "black": "--black-var-r5u19n",
+  "boxShadow": "--boxShadow-var-tmv0rp",
+  "brown": "--brown-var-yg13cv",
+  "buttonShadow": "--buttonShadow-var-b951yn",
+  "containerShadowBase": "--containerShadowBase-var-imnmlp",
+  "fontFamilyBase": "--fontFamilyBase-var-omo89z",
+  "fontFamilyBody": "--fontFamilyBody-var-jm19vz",
+  "grey": "--grey-var-b6v5yp",
+  "lineShadow": "--lineShadow-var-kcqn0o",
+  "medium": "--medium-var-tveajv",
+  "modalShadowContainer": "--modalShadowContainer-var-x6sehp",
+  "scaledSize": "--scaledSize-var-zvg51q",
+  "shadow": "--shadow-var-a2m1xh",
+  "small": "--small-var-87qott",
+}
+`;

@@ -1,0 +1,345 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renderCJSDeclaration matches previous snapshot 1`] = `
+"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
+
+export declare interface TypedOverride {
+  tokens: {
+    shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+  },
+  contexts?: {
+    'navigation'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    }
+  }
+}
+export declare const preset: ThemePreset;
+"
+`;
+
+exports[`renderCJSPreset matches previous snapshot 1`] = `
+"module.exports.preset = {
+  \\"theme\\": {
+    \\"id\\": \\"root\\",
+    \\"selector\\": \\":root\\",
+    \\"tokens\\": {
+      \\"fontFamilyBase\\": \\"\\\\\\"Helvetica Neue\\\\\\", Arial, sans-serif\\",
+      \\"fontFamilyBody\\": \\"{fontFamilyBase}\\",
+      \\"black\\": \\"black\\",
+      \\"grey\\": \\"grey\\",
+      \\"brown\\": \\"brown\\",
+      \\"shadow\\": {
+        \\"light\\": \\"{grey}\\",
+        \\"dark\\": \\"{black}\\"
+      },
+      \\"buttonShadow\\": \\"{shadow}\\",
+      \\"boxShadow\\": {
+        \\"light\\": \\"{shadow}\\",
+        \\"dark\\": \\"{brown}\\"
+      },
+      \\"lineShadow\\": {
+        \\"light\\": \\"{buttonShadow}\\",
+        \\"dark\\": \\"{boxShadow}\\"
+      },
+      \\"small\\": \\"1px\\",
+      \\"medium\\": \\"3px\\",
+      \\"scaledSize\\": {
+        \\"compact\\": \\"{small}\\",
+        \\"comfortable\\": \\"{medium}\\"
+      },
+      \\"appear\\": {
+        \\"default\\": \\"20ms\\",
+        \\"disabled\\": \\"0\\"
+      },
+      \\"containerShadowBase\\": \\"2px 3px orange, -1px 0 8px olive\\",
+      \\"modalShadowContainer\\": \\"{containerShadowBase}\\"
+    },
+    \\"tokenModeMap\\": {
+      \\"shadow\\": \\"color\\",
+      \\"buttonShadow\\": \\"color\\",
+      \\"boxShadow\\": \\"color\\",
+      \\"lineShadow\\": \\"color\\",
+      \\"scaledSize\\": \\"density\\",
+      \\"appear\\": \\"motion\\"
+    },
+    \\"contexts\\": {
+      \\"navigation\\": {
+        \\"id\\": \\"navigation\\",
+        \\"selector\\": \\".navigation\\",
+        \\"tokens\\": {
+          \\"shadow\\": {
+            \\"light\\": \\"{black}\\",
+            \\"dark\\": \\"{brown}\\"
+          },
+          \\"boxShadow\\": {
+            \\"dark\\": \\"purple\\",
+            \\"light\\": \\"purple\\"
+          }
+        }
+      }
+    },
+    \\"modes\\": {
+      \\"density\\": {
+        \\"id\\": \\"density\\",
+        \\"states\\": {
+          \\"compact\\": {
+            \\"selector\\": \\".compact\\"
+          },
+          \\"comfortable\\": {
+            \\"default\\": true
+          }
+        }
+      },
+      \\"color\\": {
+        \\"id\\": \\"color\\",
+        \\"states\\": {
+          \\"light\\": {
+            \\"default\\": true
+          },
+          \\"dark\\": {
+            \\"selector\\": \\".dark\\"
+          }
+        }
+      },
+      \\"motion\\": {
+        \\"id\\": \\"motion\\",
+        \\"states\\": {
+          \\"default\\": {
+            \\"default\\": true
+          },
+          \\"disabled\\": {
+            \\"selector\\": \\".disabled-motion\\"
+          }
+        }
+      }
+    }
+  },
+  \\"themeable\\": [
+    \\"shadow\\",
+    \\"boxShadow\\",
+    \\"buttonShadow\\",
+    \\"lineShadow\\"
+  ],
+  \\"exposed\\": [
+    \\"shadow\\",
+    \\"buttonShadow\\",
+    \\"boxShadow\\",
+    \\"lineShadow\\"
+  ],
+  \\"propertiesMap\\": {
+    \\"fontFamilyBase\\": \\"--fontFamilyBase-css\\",
+    \\"fontFamilyBody\\": \\"--fontFamilyBody-css\\",
+    \\"black\\": \\"--black-css\\",
+    \\"grey\\": \\"--grey-css\\",
+    \\"brown\\": \\"--brown-css\\",
+    \\"shadow\\": \\"--shadow-css\\",
+    \\"buttonShadow\\": \\"--buttonShadow-css\\",
+    \\"boxShadow\\": \\"--boxShadow-css\\",
+    \\"lineShadow\\": \\"--lineShadow-css\\",
+    \\"small\\": \\"--small-css\\",
+    \\"medium\\": \\"--medium-css\\",
+    \\"scaledSize\\": \\"--scaledSize-css\\",
+    \\"appear\\": \\"--appear-css\\",
+    \\"containerShadowBase\\": \\"--containerShadowBase-css\\",
+    \\"modalShadowContainer\\": \\"--modalShadowContainer-css\\"
+  },
+  \\"variablesMap\\": {
+    \\"fontFamilyBase\\": \\"fontFamilyBase-var\\",
+    \\"fontFamilyBody\\": \\"fontFamilyBody-var\\",
+    \\"black\\": \\"black-var\\",
+    \\"grey\\": \\"grey-var\\",
+    \\"brown\\": \\"brown-var\\",
+    \\"shadow\\": \\"shadow-var\\",
+    \\"buttonShadow\\": \\"buttonShadow-var\\",
+    \\"boxShadow\\": \\"boxShadow-var\\",
+    \\"lineShadow\\": \\"lineShadow-var\\",
+    \\"small\\": \\"small-var\\",
+    \\"medium\\": \\"medium-var\\",
+    \\"scaledSize\\": \\"scaledSize-var\\",
+    \\"appear\\": \\"appear-var\\",
+    \\"containerShadowBase\\": \\"containerShadowBase-var\\",
+    \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
+  }
+};
+"
+`;
+
+exports[`renderDeclaration matches previous snapshot 1`] = `
+"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-runtime';
+
+export declare interface TypedOverride {
+  tokens: {
+    shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+  },
+  contexts?: {
+    'navigation'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    }
+  }
+}
+export declare const preset: ThemePreset;
+"
+`;
+
+exports[`renderPreset matches previous snapshot 1`] = `
+"export var preset = {
+  \\"theme\\": {
+    \\"id\\": \\"root\\",
+    \\"selector\\": \\":root\\",
+    \\"tokens\\": {
+      \\"fontFamilyBase\\": \\"\\\\\\"Helvetica Neue\\\\\\", Arial, sans-serif\\",
+      \\"fontFamilyBody\\": \\"{fontFamilyBase}\\",
+      \\"black\\": \\"black\\",
+      \\"grey\\": \\"grey\\",
+      \\"brown\\": \\"brown\\",
+      \\"shadow\\": {
+        \\"light\\": \\"{grey}\\",
+        \\"dark\\": \\"{black}\\"
+      },
+      \\"buttonShadow\\": \\"{shadow}\\",
+      \\"boxShadow\\": {
+        \\"light\\": \\"{shadow}\\",
+        \\"dark\\": \\"{brown}\\"
+      },
+      \\"lineShadow\\": {
+        \\"light\\": \\"{buttonShadow}\\",
+        \\"dark\\": \\"{boxShadow}\\"
+      },
+      \\"small\\": \\"1px\\",
+      \\"medium\\": \\"3px\\",
+      \\"scaledSize\\": {
+        \\"compact\\": \\"{small}\\",
+        \\"comfortable\\": \\"{medium}\\"
+      },
+      \\"appear\\": {
+        \\"default\\": \\"20ms\\",
+        \\"disabled\\": \\"0\\"
+      },
+      \\"containerShadowBase\\": \\"2px 3px orange, -1px 0 8px olive\\",
+      \\"modalShadowContainer\\": \\"{containerShadowBase}\\"
+    },
+    \\"tokenModeMap\\": {
+      \\"shadow\\": \\"color\\",
+      \\"buttonShadow\\": \\"color\\",
+      \\"boxShadow\\": \\"color\\",
+      \\"lineShadow\\": \\"color\\",
+      \\"scaledSize\\": \\"density\\",
+      \\"appear\\": \\"motion\\"
+    },
+    \\"contexts\\": {
+      \\"navigation\\": {
+        \\"id\\": \\"navigation\\",
+        \\"selector\\": \\".navigation\\",
+        \\"tokens\\": {
+          \\"shadow\\": {
+            \\"light\\": \\"{black}\\",
+            \\"dark\\": \\"{brown}\\"
+          },
+          \\"boxShadow\\": {
+            \\"dark\\": \\"purple\\",
+            \\"light\\": \\"purple\\"
+          }
+        }
+      }
+    },
+    \\"modes\\": {
+      \\"density\\": {
+        \\"id\\": \\"density\\",
+        \\"states\\": {
+          \\"compact\\": {
+            \\"selector\\": \\".compact\\"
+          },
+          \\"comfortable\\": {
+            \\"default\\": true
+          }
+        }
+      },
+      \\"color\\": {
+        \\"id\\": \\"color\\",
+        \\"states\\": {
+          \\"light\\": {
+            \\"default\\": true
+          },
+          \\"dark\\": {
+            \\"selector\\": \\".dark\\"
+          }
+        }
+      },
+      \\"motion\\": {
+        \\"id\\": \\"motion\\",
+        \\"states\\": {
+          \\"default\\": {
+            \\"default\\": true
+          },
+          \\"disabled\\": {
+            \\"selector\\": \\".disabled-motion\\"
+          }
+        }
+      }
+    }
+  },
+  \\"themeable\\": [
+    \\"shadow\\",
+    \\"boxShadow\\",
+    \\"buttonShadow\\",
+    \\"lineShadow\\"
+  ],
+  \\"exposed\\": [
+    \\"shadow\\",
+    \\"buttonShadow\\",
+    \\"boxShadow\\",
+    \\"lineShadow\\"
+  ],
+  \\"propertiesMap\\": {
+    \\"fontFamilyBase\\": \\"--fontFamilyBase-css\\",
+    \\"fontFamilyBody\\": \\"--fontFamilyBody-css\\",
+    \\"black\\": \\"--black-css\\",
+    \\"grey\\": \\"--grey-css\\",
+    \\"brown\\": \\"--brown-css\\",
+    \\"shadow\\": \\"--shadow-css\\",
+    \\"buttonShadow\\": \\"--buttonShadow-css\\",
+    \\"boxShadow\\": \\"--boxShadow-css\\",
+    \\"lineShadow\\": \\"--lineShadow-css\\",
+    \\"small\\": \\"--small-css\\",
+    \\"medium\\": \\"--medium-css\\",
+    \\"scaledSize\\": \\"--scaledSize-css\\",
+    \\"appear\\": \\"--appear-css\\",
+    \\"containerShadowBase\\": \\"--containerShadowBase-css\\",
+    \\"modalShadowContainer\\": \\"--modalShadowContainer-css\\"
+  },
+  \\"variablesMap\\": {
+    \\"fontFamilyBase\\": \\"fontFamilyBase-var\\",
+    \\"fontFamilyBody\\": \\"fontFamilyBody-var\\",
+    \\"black\\": \\"black-var\\",
+    \\"grey\\": \\"grey-var\\",
+    \\"brown\\": \\"brown-var\\",
+    \\"shadow\\": \\"shadow-var\\",
+    \\"buttonShadow\\": \\"buttonShadow-var\\",
+    \\"boxShadow\\": \\"boxShadow-var\\",
+    \\"lineShadow\\": \\"lineShadow-var\\",
+    \\"small\\": \\"small-var\\",
+    \\"medium\\": \\"medium-var\\",
+    \\"scaledSize\\": \\"scaledSize-var\\",
+    \\"appear\\": \\"appear-var\\",
+    \\"containerShadowBase\\": \\"containerShadowBase-var\\",
+    \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
+  }
+};
+"
+`;

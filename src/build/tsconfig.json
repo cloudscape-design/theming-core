@@ -1,0 +1,15 @@
+{
+  "extends": "@tsconfig/node12/tsconfig.json",
+  "compilerOptions": {
+    "typeRoots": ["../../typings", "../../node_modules/@types"],
+    "declaration": true,
+    "composite": true,
+    "outDir": "../../lib/node",
+    "rootDir": "..",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "tsBuildInfoFile": "../../lib/node/._tsbuildinfo"
+  },
+  "include": [".", "../shared", "../../typings"],
+  "exclude": ["../**/__tests__/**", "../**/__fixtures__/**", "../**/__integ__/**"]
+}

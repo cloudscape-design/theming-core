@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jsonToSass converts empty json to sass map 1`] = `
+"(
+    
+  )"
+`;
+
+exports[`jsonToSass converts json to sass map 1`] = `
+"(
+    'first': \\"abcd\\",
+'second': (
+    'third': \\"efgh\\",
+'fourth': (
+    'fifth': \\"ilmn\\"
+  )
+  )
+  )"
+`;

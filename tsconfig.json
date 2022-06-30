@@ -1,0 +1,7 @@
+{
+    "files": [],
+    "references": [
+        { "path": "./src/browser"},
+        { "path": "./src/build"}
+    ]
+}

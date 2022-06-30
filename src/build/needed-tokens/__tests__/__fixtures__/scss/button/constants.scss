@@ -1,0 +1,25 @@
+@use 'sass:color';
+@use '../internal/styles' as styles;
+@use '../internal/styles/tokens' as awsui;
+@use '../internal/styles/wrong-tokens' as tokens;
+
+$_awsui-variants: (
+  'normal': (
+    'default-background': awsui.$color-background-button-normal-default,
+    'default-border-color': awsui.$color-border-button-normal-default,
+    'default-color': awsui.$color-text-button-normal-default,
+    'hover-background': awsui.$color-background-button-normal-hover,
+    'hover-border-color': awsui.$color-border-button-normal-hover,
+    'hover-color': awsui.$color-text-button-normal-hover,
+    'active-background': awsui.$color-background-button-normal-active,
+    'active-border-color': awsui.$color-border-button-normal-active,
+    'active-color': awsui.$color-text-button-normal-active,
+    'disabled-background': awsui.$color-background-button-normal-disabled,
+    'disabled-border-color': awsui.$color-border-button-normal-disabled,
+    'disabled-color': awsui.$color-text-interactive-disabled,
+  ),
+);
+
+.main {
+  background: tokens.$not-included;
+}

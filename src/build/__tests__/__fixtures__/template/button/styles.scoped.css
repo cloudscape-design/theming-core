@@ -1,0 +1,13 @@
+.awsui_root_vjswe_dwdfsa_1:not(#\9){
+  font-family:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
+  font-family:var(--font-family-base-SgSfB7, "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif);
+  background:#ec7211;
+  background:var(--color-background-button-primary-default-gYtV9J, #ec7211);
+  padding:8px;
+  padding:var(--space-scaled-xs-2N6f_x, 8px);
+  color:red;
+}
+.awsui_root_vjswe_rgdsed_1:not(#\9):active{
+  background:#dd6b10;
+  background:var(--color-background-button-primary-active-dGDwvd, #dd6b10);
+}

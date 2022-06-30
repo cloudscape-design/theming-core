@@ -1,0 +1,58 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { join } from 'path';
+import fs from 'fs';
+
+import { outputDir, preset, scssDir, presetPath } from './common';
+import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from '../internal';
+import { ThemePreset } from '../../shared/theme';
+
+const presetToParams = (preset: ThemePreset) => ({
+  primary: preset.theme,
+  exposed: preset.exposed,
+  themeable: preset.themeable,
+  variablesMap: preset.variablesMap,
+});
+
+test('builds internal themed components without errors', async () => {
+  const internalOutputDir = join(outputDir, 'internal-test');
+  const componentsOutputDir = join(internalOutputDir, 'components');
+  const designTokensOutputDir = join(internalOutputDir, 'design-tokens');
+  const params: BuildThemedComponentsInternalParams = {
+    ...presetToParams(preset),
+    componentsOutputDir,
+    designTokensOutputDir,
+    scssDir,
+  };
+  await buildThemedComponentsInternal(params);
+  expect(
+    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8')
+  ).toMatchSnapshot();
+});
+
+test('throws error if designTokensOutputDir not specified', async () => {
+  const internalOutputDir = join(outputDir, 'error-test');
+  const componentsOutputDir = join(internalOutputDir, 'components');
+  const params = {
+    ...presetToParams(preset),
+    componentsOutputDir,
+    scssDir,
+  };
+  return expect(() => buildThemedComponentsInternal(params)).rejects.toThrow();
+});
+
+test('skips design tokens and preset if specified', async () => {
+  const internalOutputDir = join(outputDir, 'skipped-test');
+  const componentsOutputDir = join(internalOutputDir, 'components');
+  const params: BuildThemedComponentsInternalParams = {
+    ...presetToParams(preset),
+    componentsOutputDir,
+    scssDir,
+    skip: ['design-tokens', 'preset'],
+  };
+
+  await buildThemedComponentsInternal(params);
+
+  expect(fs.readdirSync(internalOutputDir)).toHaveLength(1);
+  expect(fs.existsSync(presetPath(componentsOutputDir))).toBeFalsy();
+});

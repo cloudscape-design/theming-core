@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateTokensDeclarationFile matches previous snapshot 1`] = `
+"export const shadow: string;
+export const buttonShadow: string;
+export const boxShadow: string;
+export const lineShadow: string;"
+`;
+
+exports[`generateTokensFile matches previous snapshot 1`] = `
+"export var shadow = \\"var(--shadow-css, grey)\\";
+export var buttonShadow = \\"var(--buttonShadow-css, grey)\\";
+export var boxShadow = \\"var(--boxShadow-css, grey)\\";
+export var lineShadow = \\"var(--lineShadow-css, grey)\\";"
+`;

@@ -1,0 +1,190 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renderDeclarations does not render unnecessary declarations 1`] = `
+":global :root{
+	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
+}"
+`;
+
+exports[`renderDeclarations includes secondary theme 1`] = `
+":root{
+	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:grey;
+	--lineShadow-css:grey;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact{
+	--scaledSize-css:1px;
+}
+.dark{
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}
+.disabled-motion{
+	--appear-css:0;
+}
+.navigation{
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:purple;
+	--lineShadow-css:black;
+}
+.dark .navigation{
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
+}
+.dark.navigation{
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
+}
+.secondary-theme{
+	--black-css:purple;
+	--brown-css:black;
+}
+.dark.secondary-theme{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}
+.secondary-theme .navigation{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--lineShadow-css:purple;
+}
+.navigation.secondary-theme{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--lineShadow-css:purple;
+}
+.dark.secondary-theme .navigation{
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}
+.dark.navigation.secondary-theme{
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--lineShadow-css:black;
+}"
+`;
+
+exports[`renderDeclarations renders declarations for theme with :root selector and context 1`] = `
+":global :root{
+	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:grey;
+	--lineShadow-css:grey;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+:global .compact{
+	--scaledSize-css:1px;
+}
+:global .dark{
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}
+:global .disabled-motion{
+	--appear-css:0;
+}
+:global .navigation{
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:purple;
+	--lineShadow-css:black;
+}
+:global .dark .navigation{
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
+}
+:global .dark.navigation{
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
+}"
+`;
+
+exports[`renderDeclarations renders declarations for theme with non :root selector 1`] = `
+".secondary-theme{
+	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--black-css:purple;
+	--grey-css:grey;
+	--brown-css:black;
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:grey;
+	--lineShadow-css:grey;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact.secondary-theme{
+	--scaledSize-css:1px;
+}
+.dark.secondary-theme{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}
+.disabled-motion.secondary-theme{
+	--appear-css:0;
+}
+.secondary-theme .navigation{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
+}
+.navigation.secondary-theme{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
+}
+.dark.secondary-theme .navigation{
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}
+.dark.navigation.secondary-theme{
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}"
+`;

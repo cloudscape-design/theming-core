@@ -1,0 +1,56 @@
+name: Bug Report
+description: Report a bug
+title: '[Bug]: '
+labels: bug
+body:
+  - type: markdown
+    attributes:
+      value: Provide as much information as possible to help us investigate the bug.
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: Which version(s) are you using?
+      placeholder: e.g. v3.0.122
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: node-versions
+      description: Which version of Node.js are you using?
+      placeholder: e.g. v14.0.1
+    validations:
+      required: true
+  - type: input
+    id: npm-version
+    attributes:
+      label: npm-versions
+      description: Which version of NPM are you using?
+      placeholder: e.g. v6.14.16
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Tell us more about the issue you are experiencing
+      placeholder: What is the actual and expected behavior?
+    validations:
+      required: true
+  - type: textarea
+    id: source-code
+    attributes:
+      label: Source code
+      description: Share links to your source code
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: Please confirm the following
+      options:
+        - label:
+            I agree to follow this project's [Code of
+            Conduct](../../CODE_OF_CONDUCT.md)
+          required: true
+        - label:
+            I checked the [current
+            issues](https://github.com/cloudscape-design/theming-core/issues) for duplicate problems

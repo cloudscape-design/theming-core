@@ -1,0 +1,52 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "unicorn", "header"],
+  "rules": {
+    "@typescript-eslint/no-empty-function": "off",
+    "header/header": [
+      "error",
+      "line",
+      [" Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.", " SPDX-License-Identifier: Apache-2.0"]
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      },
+      "env": {
+        "browser": false,
+        "es6": true,
+        "node": true
+      }
+    },
+    {
+      "files": [
+        "src/browser/**",
+        "src/shared/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "lodash",
+                  "lodash/*"
+                ],
+                "message": "lodash is a commonjs module, which breaks webpack esm optimizations."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
