@@ -22,6 +22,7 @@ const packages = [
     packageRoot: path.join(root, './lib/node'),
     dependencies: [
       'autoprefixer',
+      'glob',
       'loader-utils',
       'lodash',
       'postcss',
