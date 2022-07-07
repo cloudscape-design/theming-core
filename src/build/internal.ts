@@ -1,5 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import path from 'path';
 import { createStyles } from './tasks/style';
 import { createPresetFiles } from './tasks/preset';
 import { createInternalTokenFiles } from './tasks/internal-tokens';
@@ -8,6 +9,7 @@ import { reduce, defaultsReducer, Theme, ThemePreset, resolveTheme } from '../sh
 import { getInlineStylesheets } from './inline-stylesheets';
 import { calculatePropertiesMap } from './properties';
 import findNeededTokens from './needed-tokens';
+import { hashFileContent } from './file';
 
 export type Tasks = 'preset' | 'design-tokens';
 
@@ -28,6 +30,8 @@ export interface BuildThemedComponentsInternalParams {
   secondary?: Theme[];
   /** If set, will skip the specified tasks */
   skip?: Tasks[];
+  /** The oath (relative to the scssDir) that contains the globally included CSS declarations. */
+  tokenStylesPath?: string;
   /** Design token directory to be used as output for design token files. Required if task is not skipped. */
   designTokensOutputDir?: string;
   /** File name of the design token files with the endings ts.d., .js and .scss. Default: 'index' */
@@ -60,6 +64,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     secondary = [],
     designTokensFileName = 'index',
     skip = [],
+    tokenStylesPath = './internal/styles/global.scss',
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -72,8 +77,17 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const defaults = reduce(resolution, primary, defaultsReducer());
 
   const propertiesMap = calculatePropertiesMap(resolution, variablesMap);
+  const tokenStylesSuffix = await hashFileContent(path.join(scssDir, tokenStylesPath));
   const styleTask = createStyles(
-    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
+    getInlineStylesheets({
+      primary,
+      secondary,
+      resolution: defaults,
+      variablesMap,
+      propertiesMap,
+      neededTokens,
+      tokenStylesSuffix,
+    }),
     componentsOutputDir,
     scssDir
   );

@@ -7,19 +7,30 @@ import { InlineStylesheet } from './tasks/style';
 import { jsonToSass } from '../shared/utils';
 import { markGlobal } from './tasks/postcss/modules';
 
+export interface GetInlineStylesheetsParams {
+  primary: Theme;
+  secondary: Theme[];
+  resolution: SpecificResolution;
+  variablesMap: Record<string, string>;
+  propertiesMap: Record<string, string>;
+  neededTokens: string[];
+  tokenStylesSuffix?: string;
+}
+
 /**
  * Generates a list of inline stylesheets used during the SCSS compilation. The primary
  * theme defines the mappings the environment.
  * @returns inline stylesheets
  */
-export function getInlineStylesheets(
-  primary: Theme,
-  secondary: Theme[],
-  resolution: SpecificResolution,
-  variablesMap: Record<string, string>,
-  propertiesMap: Record<string, string>,
-  neededTokens: string[]
-): InlineStylesheet[] {
+export function getInlineStylesheets({
+  primary,
+  secondary,
+  resolution,
+  variablesMap,
+  propertiesMap,
+  neededTokens,
+  tokenStylesSuffix,
+}: GetInlineStylesheetsParams): InlineStylesheet[] {
   const declarations = createBuildDeclarations(
     primary,
     secondary,
@@ -41,7 +52,7 @@ export function getInlineStylesheets(
 
   const context = {
     url: 'awsui:environment',
-    contents: `$theme: ${primary.id};`,
+    contents: `$theme: ${primary.id};` + (tokenStylesSuffix ? `$token-styles-suffix: "${tokenStylesSuffix}";` : ''),
   };
 
   const resolvedTokens = {
