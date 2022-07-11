@@ -1,6 +1,11 @@
 {
   "name": "@cloudscape-design/theming-mono",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloudscape-design/theming-core.git"
+  },
+  "homepage": "https://cloudscape.design",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore --ext ts .",
     "test:build": "jest -c jest.build.config.js",
