@@ -4,13 +4,10 @@
 
 const path = require('path');
 const fs = require('fs');
-const { execSync } = require('child_process');
 
 const root = path.join(__dirname, '..');
 const original = path.join(root, 'package.json');
-const originalLock = path.join(root, 'package-lock.json');
 const originalContent = JSON.parse(fs.readFileSync(original).toString());
-const originalLockContent = JSON.parse(fs.readFileSync(originalLock).toString());
 
 const packages = [
   {
@@ -55,6 +52,8 @@ packages.forEach((package) => {
     version,
     ...manifest,
     dependencies: pickDependenciesWithVersions(dependencies, originalContent.dependencies),
+    repository: originalContent.repository,
+    homepage: originalContent.homepage,
   };
   fs.writeFileSync(path.join(packageRoot, './package.json'), JSON.stringify(pkg, null, 2));
 });
