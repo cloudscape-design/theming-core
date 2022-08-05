@@ -21,7 +21,6 @@ const browserslist = [
   'last 3 Firefox major versions',
   'last 3 Edge major versions',
   'last 3 Safari major versions',
-  'ie >= 11',
 ];
 
 export const postCSSAfterAll = (input: string, filename: string) => {
