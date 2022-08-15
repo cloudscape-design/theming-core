@@ -117,24 +117,6 @@ test('keeps module prefix consistent', async () => {
   expect(modulePrefix(current.root)).toEqual(modulePrefix(previous.root));
 });
 
-test('custom property fallback matches IE11 declaration', async () => {
-  const componentStyles = await loadFile(componentStylesPath(componentsOutputDir));
-
-  const root = postcss.parse(componentStyles);
-  root.walkDecls((decl) => {
-    const matches = decl.value.matchAll(/var\(--[a-z0-9-]*, (.*)\)/g);
-    for (const match of matches) {
-      const [_, fallback] = match;
-      const prev = decl.prev();
-      if (prev?.type === 'decl') {
-        expect(prev.value).toEqual(fallback);
-      } else {
-        throw new Error('No IE11 fallback generated');
-      }
-    }
-  });
-});
-
 test('inlines SVG as base URL', async () => {
   const componentStyles = await loadFile(componentStylesPath(componentsOutputDir));
 

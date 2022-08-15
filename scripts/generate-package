@@ -23,7 +23,6 @@ const packages = [
       'loader-utils',
       'lodash',
       'postcss',
-      'postcss-custom-properties',
       'postcss-discard-empty',
       'postcss-initial',
       'postcss-inline-svg',
