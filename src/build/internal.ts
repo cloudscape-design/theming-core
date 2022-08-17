@@ -37,9 +37,9 @@ export interface BuildThemedComponentsInternalParams {
  * Builds themed components and optionally design tokens, if not skipped.
  *
  * The styles will be build with three inline stylesheets:
- * * `awsui:environment` - Stylesheet containing a simple environment context.
- * * `awsui:globals` - Root stylesheet with custom property assignments.
- * * `awsui:tokens`  - Mapping between SASS variables and var() assignments.
+ * * `awsui:environment` - Stylesheet containing a simple environment context
+ * * `awsui:globals` - Root stylesheet with custom property assignments
+ * * `awsui:tokens`  - Mapping between SASS variables and var() assignments
  *
  * If designTokensOuputDir is specified and not skipped, three with designTokensFileName will be generated:
  * * Typescript
