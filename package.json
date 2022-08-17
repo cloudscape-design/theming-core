@@ -20,8 +20,8 @@
   },
   "files": [],
   "dependencies": {
-    "@cloudscape-design/browser-test-tools": "^3.0.0",
     "@babel/plugin-transform-modules-commonjs": "^7.17.7",
+    "@cloudscape-design/browser-test-tools": "^3.0.0",
     "@tsconfig/node12": "^1.0.9",
     "@types/jest": "^27.4.1",
     "@types/loader-utils": "^2.0.3",
@@ -47,7 +47,6 @@
     "lodash": "^4.17.21",
     "merge": "^2.1.1",
     "postcss": "^8.4.12",
-    "postcss-custom-properties": "^12.1.7",
     "postcss-discard-empty": "^5.1.1",
     "postcss-initial": "^3.0.4",
     "postcss-inline-svg": "^5.0.0",
