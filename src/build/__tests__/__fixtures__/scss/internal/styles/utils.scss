@@ -1,7 +1,0 @@
-@use 'awsui:environment' as environment;
-
-@mixin theme-only {
-	@if (environment.$theme == 'theme') {
-		@content;
-	}	
-}
