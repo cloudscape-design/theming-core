@@ -39,11 +39,6 @@ export function getInlineStylesheets(
     contents: tokens,
   };
 
-  const context = {
-    url: 'awsui:environment',
-    contents: `$theme: ${primary.id};`,
-  };
-
   const resolvedTokens = {
     url: 'awsui:resolved-tokens',
     contents: `$resolved-tokens: [${[primary, ...secondary]
@@ -51,5 +46,5 @@ export function getInlineStylesheets(
       .join(',\n')}];`,
   };
 
-  return [declaration, mapping, context, resolvedTokens];
+  return [declaration, mapping, resolvedTokens];
 }

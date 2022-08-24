@@ -3,7 +3,6 @@
 @use 'sass:string';
 @use 'awsui:resolved-tokens' as resolved-tokens;
 @use '../internal/styles/tokens' as awsui;
-@use '../internal/styles/utils.scss' as utils;
 
 $tokens: map.get(list.nth(resolved-tokens.$resolved-tokens , 1), 'tokens');
 $colorBackgroundButtonPrimaryDefault: map.get($tokens, 'colorBackgroundButtonPrimaryDefault');
@@ -14,10 +13,6 @@ $elementColor: string.unquote(map.get($colorBackgroundButtonPrimaryDefault, 'dar
   background: awsui.$color-background-button-primary-default;
   padding: awsui.$space-scaled-xs;
 
-  @include utils.theme-only {
-    color: red;
-  }
-
   .element {
     color: $elementColor;
   }
@@ -25,5 +20,5 @@ $elementColor: string.unquote(map.get($colorBackgroundButtonPrimaryDefault, 'dar
 
 .caret {
   background: svg-load('./assets/icon.svg', stroke=black);
-} 
+}
 
