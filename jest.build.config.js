@@ -6,6 +6,7 @@ const tsPreset = require('ts-jest/jest-preset');
 module.exports = merge.recursive(tsPreset, {
   testEnvironment: 'node',
   collectCoverage: true,
+  coverageDirectory: 'coverage/build',
   coveragePathIgnorePatterns: ['/__fixtures__/', '/out/', '/node_modules/'],
   globals: {
     'ts-jest': {
