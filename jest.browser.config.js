@@ -7,6 +7,7 @@ module.exports = merge.recursive(tsPreset, {
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['js', 'ts'],
   collectCoverage: true,
+  coverageDirectory: 'coverage/browser',
   globals: {
     'ts-jest': {
       tsconfig: './tsconfig.test.json',
