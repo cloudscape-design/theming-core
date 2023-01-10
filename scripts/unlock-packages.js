@@ -9,10 +9,22 @@ const fs = require('fs');
 const filename = require.resolve('../package-lock.json');
 const packageLock = require(filename);
 
-Object.keys(packageLock.packages).forEach((dependencyName) => {
-  if (dependencyName.startsWith('node_modules/@cloudscape-design/')) {
-    delete packageLock.dependencies[dependencyName];
-  }
-});
+if (packageLock.lockfileVersion !== 2) {
+  throw new Error('package-lock.json must have "lockfileVersion": 2');
+}
+
+function unlock(packages) {
+  Object.keys(packages).forEach((dependencyName) => {
+    if (dependencyName.includes('@cloudscape-design/')) {
+      delete packages[dependencyName];
+    }
+  });
+
+  return packages;
+}
+
+packageLock.packages = unlock(packageLock.packages);
+packageLock.dependencies = unlock(packageLock.dependencies);
+
 fs.writeFileSync(filename, JSON.stringify(packageLock, null, 2) + '\n');
 console.log('Removed @cloudscape-design/ dependencies from package-lock file');
