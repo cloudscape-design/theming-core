@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { entries, fromEntries, includes } from '../utils';
-import { Override, ThemePreset, Token } from './interfaces';
+import { Override, Theme, ThemePreset, Token } from './interfaces';
 
 /**
  * This function compares the theme override against the list of tokens that are allowed
@@ -77,4 +77,25 @@ export function getContexts(preset: ThemePreset) {
   }
 
   return contexts;
+}
+
+export function getThemeFromPreset(preset: ThemePreset, baseThemeId?: string) {
+  if (!baseThemeId) {
+    return preset.theme;
+  }
+  const themesMap = [preset.theme, ...(preset.secondary ?? [])].reduce(
+    (accThemesMap: Record<string, Theme>, currentTheme) => {
+      accThemesMap[currentTheme.id] = currentTheme;
+      return accThemesMap;
+    },
+    {}
+  );
+  if (!themesMap[baseThemeId]) {
+    throw new Error(
+      `Specified baseThemeId '${baseThemeId}' is not available. Available values are ${Object.keys(themesMap)
+        .map((value) => `'${value}'`)
+        .join(', ')}.`
+    );
+  }
+  return themesMap[baseThemeId];
 }

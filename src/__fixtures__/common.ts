@@ -298,3 +298,8 @@ export const preset: ThemePreset = {
   propertiesMap: createStubPropertiesMap(rootTheme),
   variablesMap: createStubVariablesMap(rootTheme),
 };
+
+export const presetWithSecondaryTheme: ThemePreset = {
+  ...preset,
+  secondary: [secondaryTheme],
+};
