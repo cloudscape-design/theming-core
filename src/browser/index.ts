@@ -4,11 +4,12 @@ import { ThemePreset, Override, validateOverride } from '../shared/theme';
 import { createOverrideDeclarations } from '../shared/declaration';
 import { getNonce, createStyleNode, appendStyleNode } from './dom';
 import { createMultiThemeCustomizer } from '../shared/declaration/customizer';
-import { getContexts } from '../shared/theme/validate';
+import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
 
 export interface ApplyThemeParams {
   override: Override;
   preset: ThemePreset;
+  baseThemeId?: string;
 }
 
 export interface ApplyThemeResult {
@@ -16,17 +17,19 @@ export interface ApplyThemeResult {
 }
 
 export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
-  const { override, preset } = params;
+  const { override, preset, baseThemeId } = params;
 
   const availableContexts = getContexts(preset);
 
   const validated = validateOverride(override, preset.themeable, availableContexts);
 
+  const theme = getThemeFromPreset(preset, baseThemeId);
+
   const content = createOverrideDeclarations(
-    preset.theme,
+    theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(preset.theme.selector)
+    createMultiThemeCustomizer(theme.selector)
   );
   const nonce = getNonce();
   const styleNode = createStyleNode(content, nonce);
