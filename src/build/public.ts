@@ -6,7 +6,7 @@ import { calculatePropertiesMap } from './properties';
 import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from './internal';
 import { validateOverride, resolveTheme } from '../shared/theme';
 import { copyAllFiles } from './tasks/copy';
-import { getContexts } from '../shared/theme/validate';
+import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
 
 export interface BuildThemedComponentsParams
   extends Pick<BuildThemedComponentsInternalParams, 'scssDir' | 'componentsOutputDir'> {
@@ -22,17 +22,27 @@ export interface BuildThemedComponentsParams
   override: Override;
   templateDir: string;
   designTokensOutputDir: string;
+  baseThemeId?: string;
 }
 
 export async function buildThemedComponents(params: BuildThemedComponentsParams): Promise<void> {
-  const { componentsOutputDir, designTokensOutputDir, preset: originalPreset, templateDir, scssDir, override } = params;
+  const {
+    componentsOutputDir,
+    designTokensOutputDir,
+    preset: originalPreset,
+    templateDir,
+    scssDir,
+    override,
+    baseThemeId,
+  } = params;
 
-  const preset = createThemedPreset(originalPreset, override);
+  const preset = createThemedPreset(originalPreset, override, baseThemeId);
 
   copyAllFiles(templateDir, componentsOutputDir);
 
   await buildThemedComponentsInternal({
     primary: preset.theme,
+    secondary: preset.secondary,
     exposed: preset.exposed,
     themeable: preset.themeable,
     variablesMap: preset.variablesMap,
@@ -43,8 +53,8 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
   });
 }
 
-function createThemedPreset(preset: ThemePreset, override: Override): ThemePreset {
-  const { theme } = preset;
+function createThemedPreset(preset: ThemePreset, override: Override, baseThemeId?: string): ThemePreset {
+  const theme = getThemeFromPreset(preset, baseThemeId);
 
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
@@ -53,7 +63,13 @@ function createThemedPreset(preset: ThemePreset, override: Override): ThemePrese
   const propertiesMap = calculatePropertiesMap(resolution, preset.variablesMap);
   const newPreset = cloneDeep(preset);
 
-  newPreset.theme = result;
+  if (newPreset.theme.id === theme.id) {
+    newPreset.theme = result;
+  } else {
+    const themeIndex = (newPreset.secondary || []).findIndex((item) => item.id === theme.id);
+    (newPreset.secondary || [])[themeIndex] = result;
+  }
+
   newPreset.propertiesMap = propertiesMap;
 
   return newPreset;
