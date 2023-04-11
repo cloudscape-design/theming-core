@@ -4,8 +4,10 @@ import { promises as fsp } from 'fs';
 import { join } from 'path';
 import { ThemePreset } from '../../shared/theme';
 import { preset as _preset } from './__fixtures__/template/internal/generated/theming/index.js';
+import { preset as _presetWithSecondaryTheme } from './__fixtures__/template/internal/generated/theming/with-secondary-theme.js';
 
 export const preset = _preset as ThemePreset;
+export const presetWithSecondaryTheme = _presetWithSecondaryTheme as ThemePreset;
 export const outputDir = join(__dirname, 'out');
 export const scssDir = join(__dirname, '__fixtures__', 'scss');
 export const templateDir = join(__dirname, '__fixtures__', 'template');
