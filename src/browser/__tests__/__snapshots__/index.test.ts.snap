@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`with baseThemeId attaches one style node containing overrides with the correct theme selector 1`] = `
-".secondary-theme.secondary-theme{
+".secondary-theme.secondary-theme:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:purple;

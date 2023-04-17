@@ -29,7 +29,7 @@ export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
     theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(theme.selector)
+    createMultiThemeCustomizer(preset.theme.selector)
   );
   const nonce = getNonce();
   const styleNode = createStyleNode(content, nonce);
