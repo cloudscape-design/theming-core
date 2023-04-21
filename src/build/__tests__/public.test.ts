@@ -6,6 +6,7 @@ import {
   preset,
   scssDir,
   templateDir,
+  designTokensTemplateDir,
   loadInternalTokens,
   loadPreset,
   loadDesignTokens,
@@ -18,6 +19,7 @@ import {
   declarationRegex,
   loadComponentsSelectors,
   modulePrefix,
+  loadJSON,
 } from './common';
 import { buildThemedComponents, BuildThemedComponentsParams } from '../public';
 import postcss from 'postcss';
@@ -43,6 +45,7 @@ const params: BuildThemedComponentsParams = {
   designTokensOutputDir,
   scssDir,
   templateDir,
+  designTokensTemplateDir,
 };
 
 /*
@@ -52,6 +55,15 @@ const params: BuildThemedComponentsParams = {
  */
 beforeAll(async () => {
   await buildThemedComponents(params);
+});
+
+test('provides package.json for themed components and design tokens folders', async () => {
+  expect((await loadJSON(join(componentsOutputDir, 'package.json'))).name).toEqual(
+    '@cloudscape-design/themed-components-fixture'
+  );
+  expect((await loadJSON(join(designTokensOutputDir, 'package.json'))).name).toEqual(
+    '@cloudscape-design/themed-tokens-fixture'
+  );
 });
 
 test('updates internal tokens files', async () => {

@@ -11,6 +11,7 @@ export const presetWithSecondaryTheme = _presetWithSecondaryTheme as ThemePreset
 export const outputDir = join(__dirname, 'out');
 export const scssDir = join(__dirname, '__fixtures__', 'scss');
 export const templateDir = join(__dirname, '__fixtures__', 'template');
+export const designTokensTemplateDir = join(__dirname, '__fixtures__', 'template-tokens');
 
 export const presetPath: (componentsOutputDir: string) => string = (componentsOutputDir: string) =>
   `${componentsOutputDir}/internal/generated/theming/index.js`;
@@ -63,6 +64,11 @@ export function loadComponentsSelectors(componentsOutputDir: string): Promise<{ 
 export async function loadFile(path: string): Promise<string> {
   const buffer = await fsp.readFile(path);
   return buffer.toString();
+}
+
+export async function loadJSON(path: string): Promise<any> {
+  const content = await loadFile(path);
+  return JSON.parse(content);
 }
 
 export function varRegex(variable: string, value?: string): RegExp {

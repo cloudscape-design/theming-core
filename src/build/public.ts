@@ -21,6 +21,7 @@ export interface BuildThemedComponentsParams
   preset: ThemePreset;
   override: Override;
   templateDir: string;
+  designTokensTemplateDir?: string;
   designTokensOutputDir: string;
   baseThemeId?: string;
 }
@@ -30,6 +31,7 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
     componentsOutputDir,
     designTokensOutputDir,
     preset: originalPreset,
+    designTokensTemplateDir,
     templateDir,
     scssDir,
     override,
@@ -39,6 +41,9 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
   const preset = createThemedPreset(originalPreset, override, baseThemeId);
 
   copyAllFiles(templateDir, componentsOutputDir);
+  if (designTokensTemplateDir) {
+    copyAllFiles(designTokensTemplateDir, designTokensOutputDir);
+  }
 
   await buildThemedComponentsInternal({
     primary: preset.theme,
