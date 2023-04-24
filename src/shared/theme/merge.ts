@@ -15,7 +15,7 @@ export function merge(theme: Theme, override: Override): Theme {
   function withTokenApplied(
     originalValue: Assignment,
     token: string,
-    update: typeof override.tokens[string]
+    update: (typeof override.tokens)[string]
   ): Assignment | undefined {
     const isGlobal = isValue(update) || isReference(update);
     const mode = getMode(theme, token);
