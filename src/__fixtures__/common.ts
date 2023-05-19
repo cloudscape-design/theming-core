@@ -64,6 +64,21 @@ export const navigationContext: Context = {
   },
 };
 
+const anotherContext: Context = {
+  id: 'another-context',
+  selector: '.another-context',
+  tokens: {
+    shadow: {
+      light: '{black}', // example of a reference
+      dark: '{brown}',
+    },
+    boxShadow: {
+      dark: 'purple', // example of a literal value
+      light: 'purple',
+    },
+  },
+};
+
 const emptyTheme: Theme = {
   id: 'root',
   selector: ':root',
@@ -144,6 +159,18 @@ export const secondaryTheme: Theme = {
           dark: '{grey}',
         },
       },
+    },
+  },
+};
+
+const anotherSecondaryTheme: Theme = {
+  ...secondaryTheme,
+  contexts: {
+    navigation: {
+      ...navigationContext,
+    },
+    'another-context': {
+      ...anotherContext,
     },
   },
 };
@@ -302,4 +329,8 @@ export const preset: ThemePreset = {
 export const presetWithSecondaryTheme: ThemePreset = {
   ...preset,
   secondary: [secondaryTheme],
+};
+export const anotherPresetWithSecondaryTheme: ThemePreset = {
+  ...preset,
+  secondary: [anotherSecondaryTheme],
 };
