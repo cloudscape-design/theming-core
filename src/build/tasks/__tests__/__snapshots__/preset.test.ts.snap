@@ -25,6 +25,39 @@ export declare const preset: ThemePreset;
 "
 `;
 
+exports[`renderCJSDeclaration with secondary theme matches previous snapshot 1`] = `
+"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
+
+export declare interface TypedOverride {
+  tokens: {
+    shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+  },
+  contexts?: {
+    'navigation'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    };
+    'another-context'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    }
+  }
+}
+export declare const preset: ThemePreset;
+"
+`;
+
 exports[`renderCJSPreset matches previous snapshot 1`] = `
 "module.exports.preset = {
   \\"theme\\": {
@@ -184,6 +217,39 @@ export declare interface TypedOverride {
   },
   contexts?: {
     'navigation'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    }
+  }
+}
+export declare const preset: ThemePreset;
+"
+`;
+
+exports[`renderDeclaration with secondary theme matches previous snapshot 1`] = `
+"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-runtime';
+
+export declare interface TypedOverride {
+  tokens: {
+    shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+    lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+  },
+  contexts?: {
+    'navigation'?: {
+      tokens: {
+        shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        buttonShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+        lineShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
+      }
+    };
+    'another-context'?: {
       tokens: {
         shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
         boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;

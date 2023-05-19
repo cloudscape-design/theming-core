@@ -73,7 +73,11 @@ export function getContexts(preset: ThemePreset) {
   const contexts: string[] = [];
 
   for (const theme of themes) {
-    contexts.push(...Object.keys(theme.contexts));
+    Object.keys(theme.contexts).forEach((contextName) => {
+      if (contexts.indexOf(contextName) === -1) {
+        contexts.push(contextName);
+      }
+    });
   }
 
   return contexts;

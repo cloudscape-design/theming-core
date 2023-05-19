@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { preset } from '../../../__fixtures__/common';
+import { preset, anotherPresetWithSecondaryTheme } from '../../../__fixtures__/common';
 import { renderPreset, renderCJSPreset, renderPresetDeclaration, renderCJSPresetDeclaration } from '../preset';
 
 test('renderPreset matches previous snapshot', () => {
@@ -12,9 +12,17 @@ test('renderCJSPreset matches previous snapshot', () => {
 });
 
 test('renderDeclaration matches previous snapshot', () => {
-  expect(renderPresetDeclaration(preset.theme, preset.themeable)).toMatchSnapshot();
+  expect(renderPresetDeclaration(preset)).toMatchSnapshot();
 });
 
 test('renderCJSDeclaration matches previous snapshot', () => {
-  expect(renderCJSPresetDeclaration(preset.theme, preset.themeable)).toMatchSnapshot();
+  expect(renderCJSPresetDeclaration(preset)).toMatchSnapshot();
+});
+
+test('renderDeclaration with secondary theme matches previous snapshot', () => {
+  expect(renderPresetDeclaration(anotherPresetWithSecondaryTheme)).toMatchSnapshot();
+});
+
+test('renderCJSDeclaration with secondary theme matches previous snapshot', () => {
+  expect(renderCJSPresetDeclaration(anotherPresetWithSecondaryTheme)).toMatchSnapshot();
 });
