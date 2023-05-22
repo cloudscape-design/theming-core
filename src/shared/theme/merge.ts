@@ -50,7 +50,7 @@ export function merge(theme: Theme, override: Override): Theme {
     entries(override.contexts).forEach(([contextId, context]) => {
       const resultContext = result.contexts[contextId];
 
-      if (!context) {
+      if (!context || !resultContext) {
         return;
       }
 
