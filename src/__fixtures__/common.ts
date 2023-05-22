@@ -318,6 +318,22 @@ export const override: Override = {
   },
 };
 
+export const overrideWithRandomContext: Override = {
+  tokens: { ...override.tokens },
+  contexts: {
+    randomContext: {
+      tokens: {
+        shadow: {
+          light: 'pink',
+        },
+        buttonShadow: {
+          dark: 'green',
+        },
+      },
+    },
+  },
+};
+
 export const preset: ThemePreset = {
   theme: rootTheme,
   themeable: ['shadow', 'boxShadow', 'buttonShadow', 'lineShadow'],
