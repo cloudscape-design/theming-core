@@ -71,7 +71,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const resolution = resolveTheme(primary);
   const defaults = reduce(resolution, primary, defaultsReducer());
 
-  const propertiesMap = calculatePropertiesMap(resolution, variablesMap);
+  const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap);
   const styleTask = createStyles(
     getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
     componentsOutputDir,
