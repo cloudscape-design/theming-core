@@ -2,17 +2,17 @@
 
 exports[`builds internal themed components without errors 1`] = `
 ":root {
-  --font-family-base-ua1f64:\\"Amazon Ember\\", \\"Helvetica Neue\\", Roboto, Arial, sans-serif;
-  --color-background-button-primary-default-qvzkqw:#ec7211;
-  --color-background-button-primary-active-h11zge:#dd6b10;
-  --space-scaled-xs-6859qs:8px;
+  --font-family-base-91xi75:\\"Amazon Ember\\", \\"Helvetica Neue\\", Roboto, Arial, sans-serif;
+  --color-background-button-primary-default-nhput1:#ec7211;
+  --color-background-button-primary-active-xbf2p5:#dd6b10;
+  --space-scaled-xs-yqelf2:8px;
 }
 
 .compact-mode:not(#\\\\9) {
-  --space-scaled-xs-6859qs:4px;
+  --space-scaled-xs-yqelf2:4px;
 }
 
 .dark-mode:not(#\\\\9) {
-  --color-background-button-primary-active-h11zge:#ec7211;
+  --color-background-button-primary-active-xbf2p5:#ec7211;
 }"
 `;

@@ -4,7 +4,7 @@ import { cloneDeep } from '../shared/utils';
 import { ThemePreset, Override, merge } from '../shared/theme';
 import { calculatePropertiesMap } from './properties';
 import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from './internal';
-import { validateOverride, resolveTheme } from '../shared/theme';
+import { validateOverride } from '../shared/theme';
 import { copyAllFiles } from './tasks/copy';
 import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
 
@@ -59,8 +59,6 @@ function createThemedPreset(preset: ThemePreset, override: Override, baseThemeId
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
   const result = merge(theme, validated);
-  const resolution = resolveTheme(result);
-  const propertiesMap = calculatePropertiesMap(resolution, preset.variablesMap);
   const newPreset = cloneDeep(preset);
 
   if (newPreset.theme.id === theme.id) {
@@ -69,7 +67,7 @@ function createThemedPreset(preset: ThemePreset, override: Override, baseThemeId
     const themeIndex = (newPreset.secondary || []).findIndex((item) => item.id === theme.id);
     (newPreset.secondary || [])[themeIndex] = result;
   }
-
+  const propertiesMap = calculatePropertiesMap([newPreset.theme, ...(newPreset.secondary || [])], preset.variablesMap);
   newPreset.propertiesMap = propertiesMap;
 
   return newPreset;
