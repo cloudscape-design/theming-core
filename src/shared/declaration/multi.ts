@@ -68,7 +68,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       const optionalState = mode.states[state] as OptionalState;
       const modeResolution = reduce(secondaryResolution, secondary, modeReducer(mode, state));
       const modeRule = this.ruleCreator.create(
-        { global: [secondary.selector, optionalState.selector] },
+        { global: [secondary.selector, optionalState.selector], media: optionalState.media },
         modeResolution
       );
       const parentModeRule = stylesheet.findRule(
@@ -119,6 +119,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         {
           global: [secondary.selector, optionalState.selector],
           local: [context.selector],
+          media: optionalState.media,
         },
         contextResolution
       );
@@ -159,6 +160,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       const contextAndModeRuleGlobal = this.ruleCreator.create(
         {
           global: [secondary.selector, optionalState.selector, context.selector],
+          media: optionalState.media,
         },
         contextResolution
       );

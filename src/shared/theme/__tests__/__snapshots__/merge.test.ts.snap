@@ -28,6 +28,7 @@ Object {
       "id": "color",
       "states": Object {
         "dark": Object {
+          "media": "not print",
           "selector": ".dark",
         },
         "light": Object {

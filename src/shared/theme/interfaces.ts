@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 export interface OptionalState {
   selector: string;
+  media?: string;
 }
 
 export interface DefaultState {

@@ -29,7 +29,7 @@ export const colorMode: Mode = {
   id: 'color',
   states: {
     light: { default: true },
-    dark: { selector: '.dark' },
+    dark: { selector: '.dark', media: 'not print' },
   },
 };
 
