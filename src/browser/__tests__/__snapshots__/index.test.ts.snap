@@ -30,7 +30,7 @@ exports[`with baseThemeId attaches one style node containing overrides with the 
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark.secondary-theme:not(#\\\\9){
+@media not print {.dark.dark.secondary-theme:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:purple;
@@ -44,7 +44,7 @@ exports[`with baseThemeId attaches one style node containing overrides with the 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion.secondary-theme:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
@@ -115,7 +115,7 @@ exports[`with baseThemeId attaches one style node containing overrides with the 
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark.secondary-theme .navigation:not(#\\\\9){
+@media not print {.dark.dark.secondary-theme .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:purple;
@@ -129,8 +129,8 @@ exports[`with baseThemeId attaches one style node containing overrides with the 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.dark.dark.navigation.secondary-theme:not(#\\\\9){
+}}
+@media not print {.dark.dark.navigation.secondary-theme:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:purple;
@@ -144,7 +144,7 @@ exports[`with baseThemeId attaches one style node containing overrides with the 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion.secondary-theme .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
@@ -201,7 +201,7 @@ exports[`with secondary theme attaches one style node containing override 1`] = 
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark:not(#\\\\9){
+@media not print {.dark.dark:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -215,7 +215,7 @@ exports[`with secondary theme attaches one style node containing override 1`] = 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
@@ -269,7 +269,7 @@ exports[`with secondary theme attaches one style node containing override 1`] = 
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark .navigation:not(#\\\\9){
+@media not print {.dark.dark .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -283,8 +283,8 @@ exports[`with secondary theme attaches one style node containing override 1`] = 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.dark.dark.navigation:not(#\\\\9){
+}}
+@media not print {.dark.dark.navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -298,7 +298,7 @@ exports[`with secondary theme attaches one style node containing override 1`] = 
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
@@ -355,7 +355,7 @@ exports[`without secondary theme attaches one style node containing override 1`]
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark:not(#\\\\9){
+@media not print {.dark.dark:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -369,7 +369,7 @@ exports[`without secondary theme attaches one style node containing override 1`]
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
@@ -423,7 +423,7 @@ exports[`without secondary theme attaches one style node containing override 1`]
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.dark.dark .navigation:not(#\\\\9){
+@media not print {.dark.dark .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -437,8 +437,8 @@ exports[`without secondary theme attaches one style node containing override 1`]
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.dark.dark.navigation:not(#\\\\9){
+}}
+@media not print {.dark.dark.navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--black-css:black;
@@ -452,7 +452,7 @@ exports[`without secondary theme attaches one style node containing override 1`]
 	--medium-css:3px;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
+}}
 .disabled-motion.disabled-motion .navigation:not(#\\\\9){
 	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
 	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;

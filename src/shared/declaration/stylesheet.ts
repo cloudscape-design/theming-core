@@ -55,11 +55,13 @@ export default class Stylesheet {
 
 export class Rule {
   selector: string;
+  media?: string;
   declarationsMap: Map<string, [Declaration, number]> = new Map();
   counter = 0;
 
-  constructor(selector: string) {
+  constructor(selector: string, media?: string) {
     this.selector = selector;
+    this.media = media;
   }
 
   appendDeclaration(declaration: Declaration) {
@@ -81,7 +83,11 @@ export class Rule {
 
   toString(): string {
     const lines = asValuesArray(this.declarationsMap).map((decl) => decl.toString());
-    return `${this.selector}{\n\t${lines.join('\n\t')}\n}`;
+    const rule = `${this.selector}{\n\t${lines.join('\n\t')}\n}`;
+    if (this.media) {
+      return `@media ${this.media} {${rule}}`;
+    }
+    return rule;
   }
 }
 

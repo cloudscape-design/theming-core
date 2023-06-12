@@ -27,12 +27,12 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 .compact{
 	--scaledSize-css:1px;
 }
-.dark{
+@media not print {.dark{
 	--shadow-css:black;
 	--buttonShadow-css:black;
 	--boxShadow-css:brown;
 	--lineShadow-css:brown;
-}
+}}
 .disabled-motion{
 	--appear-css:0;
 }
@@ -42,26 +42,26 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 	--boxShadow-css:purple;
 	--lineShadow-css:black;
 }
-.dark .navigation{
+@media not print {.dark .navigation{
 	--shadow-css:brown;
 	--buttonShadow-css:brown;
 	--lineShadow-css:purple;
-}
-.dark.navigation{
+}}
+@media not print {.dark.navigation{
 	--shadow-css:brown;
 	--buttonShadow-css:brown;
 	--lineShadow-css:purple;
-}
+}}
 .secondary-theme{
 	--black-css:purple;
 	--brown-css:black;
 }
-.dark.secondary-theme{
+@media not print {.dark.secondary-theme{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
-}
+}}
 .secondary-theme .navigation{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
@@ -72,17 +72,17 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 	--buttonShadow-css:purple;
 	--lineShadow-css:purple;
 }
-.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
-}
-.dark.navigation.secondary-theme{
+}}
+@media not print {.dark.navigation.secondary-theme{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--lineShadow-css:black;
-}"
+}}"
 `;
 
 exports[`renderDeclarations renders declarations for theme with :root selector and context 1`] = `
@@ -106,12 +106,12 @@ exports[`renderDeclarations renders declarations for theme with :root selector a
 :global .compact{
 	--scaledSize-css:1px;
 }
-:global .dark{
+@media not print {:global .dark{
 	--shadow-css:black;
 	--buttonShadow-css:black;
 	--boxShadow-css:brown;
 	--lineShadow-css:brown;
-}
+}}
 :global .disabled-motion{
 	--appear-css:0;
 }
@@ -121,16 +121,16 @@ exports[`renderDeclarations renders declarations for theme with :root selector a
 	--boxShadow-css:purple;
 	--lineShadow-css:black;
 }
-:global .dark .navigation{
+@media not print {:global .dark .navigation{
 	--shadow-css:brown;
 	--buttonShadow-css:brown;
 	--lineShadow-css:purple;
-}
-:global .dark.navigation{
+}}
+@media not print {:global .dark.navigation{
 	--shadow-css:brown;
 	--buttonShadow-css:brown;
 	--lineShadow-css:purple;
-}"
+}}"
 `;
 
 exports[`renderDeclarations renders declarations for theme with non :root selector 1`] = `
@@ -154,12 +154,12 @@ exports[`renderDeclarations renders declarations for theme with non :root select
 .compact.secondary-theme{
 	--scaledSize-css:1px;
 }
-.dark.secondary-theme{
+@media not print {.dark.secondary-theme{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
-}
+}}
 .disabled-motion.secondary-theme{
 	--appear-css:0;
 }
@@ -175,16 +175,16 @@ exports[`renderDeclarations renders declarations for theme with non :root select
 	--boxShadow-css:purple;
 	--lineShadow-css:purple;
 }
-.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
-}
-.dark.navigation.secondary-theme{
+}}
+@media not print {.dark.navigation.secondary-theme{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
-}"
+}}"
 `;
