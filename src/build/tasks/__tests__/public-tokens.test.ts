@@ -1,8 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { preset, defaultsResolution } from '../../../__fixtures__/common';
-
-import { renderJS, renderSCSS, renderTS } from '../public-tokens';
+import { join } from 'path';
+import fs from 'fs';
+import { preset, presetWithSecondaryTheme, defaultsResolution } from '../../../__fixtures__/common';
+import { renderJS, renderSCSS, renderTS, writeJSONfiles } from '../public-tokens';
 
 const propertiesMap = preset.propertiesMap;
 const variablesMap = preset.variablesMap;
@@ -18,4 +19,20 @@ test('renderSCSS matches previous snapshot', () => {
 
 test('renderTS matches previous snapshot', () => {
   expect(renderTS(publicTokens)).toMatchSnapshot();
+});
+
+describe('writeJSONfiles', () => {
+  const fileName = 'index';
+  test('with primary theme only', async () => {
+    const outputDir = join(__dirname, 'out', 'first');
+    await writeJSONfiles(preset, outputDir, fileName);
+    expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
+    expect(() => fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toThrowError();
+  });
+  test('with primary and secondary theme', async () => {
+    const outputDir = join(__dirname, 'out', 'secondary');
+    await writeJSONfiles(presetWithSecondaryTheme, outputDir, fileName);
+    expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
+    expect(fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toBeDefined();
+  });
 });
