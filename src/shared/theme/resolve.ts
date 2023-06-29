@@ -5,8 +5,8 @@ import { cloneDeep } from '../utils';
 import { Theme, Value } from './interfaces';
 import { getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
 
-type ModeTokenResolution = Record<string, Value>;
-type SpecificTokenResolution = Value;
+export type ModeTokenResolution = Record<string, Value>;
+export type SpecificTokenResolution = Value;
 interface ThemeResolution<TR> {
   [token: string]: TR;
 }

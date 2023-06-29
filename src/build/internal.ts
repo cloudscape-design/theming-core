@@ -32,6 +32,8 @@ export interface BuildThemedComponentsInternalParams {
   designTokensOutputDir?: string;
   /** File name of the design token files with the endings ts.d., .js and .scss. Default: 'index' */
   designTokensFileName?: string;
+  /** Map between design tokens and their description */
+  descriptions?: Record<string, string>;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -60,6 +62,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     secondary = [],
     designTokensFileName = 'index',
     skip = [],
+    descriptions = {},
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -92,12 +95,11 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     skip.includes('design-tokens') || !designTokensOutputDir
       ? Promise.resolve()
       : createPublicTokenFiles({
-          exposed,
-          propertiesMap,
-          variablesMap,
+          preset,
           resolution: defaults,
           outputDir: designTokensOutputDir,
           fileName: designTokensFileName,
+          descriptions,
         });
   await Promise.all([internalTokensTask, designTokensTask, presetTask, styleTask]);
 }

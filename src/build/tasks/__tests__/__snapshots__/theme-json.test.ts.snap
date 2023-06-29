@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getThemeJson with contexts and descriptions 1`] = `
+Object {
+  "contexts": Object {
+    "navigation": Object {
+      "tokens": Object {
+        "boxShadow-var": Object {
+          "$value": Object {
+            "dark": "purple",
+            "light": "purple",
+          },
+        },
+        "buttonShadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+        "lineShadow-var": Object {
+          "$value": Object {
+            "dark": "purple",
+            "light": "black",
+          },
+        },
+        "scaledSize-var": Object {
+          "$description": "Scaled size",
+          "$value": Object {
+            "comfortable": "3px",
+            "compact": "1px",
+          },
+        },
+        "shadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+        "small-var": Object {
+          "$value": "1px",
+        },
+      },
+    },
+  },
+  "tokens": Object {
+    "boxShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "buttonShadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "lineShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "scaledSize-var": Object {
+      "$description": "Scaled size",
+      "$value": Object {
+        "comfortable": "3px",
+        "compact": "1px",
+      },
+    },
+    "shadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "small-var": Object {
+      "$value": "1px",
+    },
+  },
+}
+`;
+
+exports[`getThemeJson without contexts 1`] = `
+Object {
+  "contexts": Object {},
+  "tokens": Object {
+    "boxShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "buttonShadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "lineShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "scaledSize-var": Object {
+      "$value": Object {
+        "comfortable": "3px",
+        "compact": "1px",
+      },
+    },
+    "shadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "small-var": Object {
+      "$value": "1px",
+    },
+  },
+}
+`;
