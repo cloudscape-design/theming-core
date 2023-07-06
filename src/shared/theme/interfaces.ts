@@ -59,4 +59,5 @@ export interface ThemePreset {
   propertiesMap: Record<Token, string>;
   /** Map between design tokens and variable names */
   variablesMap: Record<Token, string>;
+  designTokensFileName: string;
 }

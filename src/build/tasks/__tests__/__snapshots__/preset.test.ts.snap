@@ -201,7 +201,8 @@ exports[`renderCJSPreset matches previous snapshot 1`] = `
     \\"appear\\": \\"appear-var\\",
     \\"containerShadowBase\\": \\"containerShadowBase-var\\",
     \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
-  }
+  },
+  \\"designTokensFileName\\": \\"index\\"
 };
 "
 `;
@@ -407,7 +408,8 @@ exports[`renderPreset matches previous snapshot 1`] = `
     \\"appear\\": \\"appear-var\\",
     \\"containerShadowBase\\": \\"containerShadowBase-var\\",
     \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
-  }
+  },
+  \\"designTokensFileName\\": \\"index\\"
 };
 "
 `;

@@ -94,14 +94,14 @@ test('updates preset files', async () => {
 });
 
 test('updates design tokens JS file', async () => {
-  const designTokens = await loadDesignTokens(designTokensOutputDir, preset.theme.id);
+  const designTokens = await loadDesignTokens(designTokensOutputDir, preset.designTokensFileName);
 
   expect(designTokens[token]).not.toContain(property);
   expect(designTokens[token]).toMatch(varRegex(variable, value));
 });
 
 test('updates design tokens SCSS file', async () => {
-  const designTokens = await loadFile(designTokensStylesPath(designTokensOutputDir, preset.theme.id));
+  const designTokens = await loadFile(designTokensStylesPath(designTokensOutputDir, preset.designTokensFileName));
 
   expect(designTokens).not.toContain(property);
   expect(designTokens).toMatch(varRegex(variable, value));

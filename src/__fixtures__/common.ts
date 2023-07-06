@@ -340,6 +340,7 @@ export const preset: ThemePreset = {
   exposed: ['shadow', 'buttonShadow', 'boxShadow', 'lineShadow'],
   propertiesMap: createStubPropertiesMap(rootTheme),
   variablesMap: createStubVariablesMap(rootTheme),
+  designTokensFileName: 'index',
 };
 
 export const presetWithSecondaryTheme: ThemePreset = {

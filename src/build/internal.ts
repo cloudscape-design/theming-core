@@ -89,6 +89,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     exposed,
     variablesMap,
     propertiesMap,
+    designTokensFileName,
   };
   const presetTask = skip.includes('preset') ? Promise.resolve() : createPresetFiles(preset, componentsOutputDir);
   const designTokensTask =

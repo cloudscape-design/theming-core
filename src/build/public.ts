@@ -54,7 +54,7 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
     componentsOutputDir,
     designTokensOutputDir,
     scssDir,
-    designTokensFileName: preset.theme.id,
+    designTokensFileName: preset.designTokensFileName,
   });
 }
 
