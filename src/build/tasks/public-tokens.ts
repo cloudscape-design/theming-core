@@ -6,6 +6,7 @@ import { ThemePreset, SpecificResolution } from '../../shared/theme';
 import { toSassName } from '../token';
 import { Token } from '../../shared/theme/interfaces';
 import { getThemeJSON } from './theme-json';
+import difference from 'lodash/difference';
 
 interface PublicTokensTaskParams {
   resolution: SpecificResolution;
@@ -13,16 +14,17 @@ interface PublicTokensTaskParams {
   outputDir: string;
   fileName: string;
   descriptions?: Record<string, string>;
+  excludedFromJson?: Array<string>;
 }
 
 export async function createPublicTokenFiles(params: PublicTokensTaskParams) {
-  const { resolution, preset, outputDir, fileName, descriptions = {} } = params;
+  const { resolution, preset, outputDir, fileName, descriptions = {}, excludedFromJson } = params;
   const { variablesMap, propertiesMap, exposed } = preset;
   await Promise.all([
     writeFile(join(outputDir, `${fileName}.scss`), renderSCSS(resolution, variablesMap, propertiesMap, exposed)),
     writeFile(join(outputDir, `${fileName}.js`), renderJS(resolution, propertiesMap, exposed)),
     writeFile(join(outputDir, `${fileName}.d.ts`), renderTS(exposed)),
-    writeJSONfiles(preset, outputDir, fileName, descriptions),
+    writeJSONfiles(preset, outputDir, fileName, descriptions, excludedFromJson),
   ]);
 }
 
@@ -51,14 +53,20 @@ export async function writeJSONfiles(
   preset: ThemePreset,
   outputDir: string,
   fileName: string,
-  descriptions?: Record<string, string>
+  descriptions?: Record<string, string>,
+  excluded?: Array<string>
 ) {
   const { theme, secondary = [], exposed, variablesMap } = preset;
+  const actuallyExposed = difference(exposed, excluded || []);
   return Promise.all(
     [theme, ...secondary].map((currentTheme) =>
       writeFile(
         join(outputDir, `${fileName}-${currentTheme.id}.json`),
-        JSON.stringify(getThemeJSON({ theme: currentTheme, exposed, variablesMap, descriptions }), null, 2)
+        JSON.stringify(
+          getThemeJSON({ theme: currentTheme, exposed: actuallyExposed, variablesMap, descriptions }),
+          null,
+          2
+        )
       )
     )
   );

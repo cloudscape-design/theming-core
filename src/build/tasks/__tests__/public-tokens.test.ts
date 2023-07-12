@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'path';
 import fs from 'fs';
-import { preset, presetWithSecondaryTheme, defaultsResolution } from '../../../__fixtures__/common';
+import { preset, presetWithSecondaryTheme, defaultsResolution, descriptions } from '../../../__fixtures__/common';
 import { renderJS, renderSCSS, renderTS, writeJSONfiles } from '../public-tokens';
 
 const propertiesMap = preset.propertiesMap;
@@ -23,16 +23,35 @@ test('renderTS matches previous snapshot', () => {
 
 describe('writeJSONfiles', () => {
   const fileName = 'index';
-  test('with primary theme only', async () => {
-    const outputDir = join(__dirname, 'out', 'first');
-    await writeJSONfiles(preset, outputDir, fileName);
-    expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
-    expect(() => fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toThrowError();
+  describe('generates the right files', () => {
+    test('with primary theme only', async () => {
+      const outputDir = join(__dirname, 'out', 'first');
+      await writeJSONfiles(preset, outputDir, fileName);
+      expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
+      expect(() => fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toThrowError();
+    });
+    test('with primary and secondary theme', async () => {
+      const outputDir = join(__dirname, 'out', 'secondary');
+      await writeJSONfiles(presetWithSecondaryTheme, outputDir, fileName);
+      expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
+      expect(fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toBeDefined();
+    });
   });
-  test('with primary and secondary theme', async () => {
-    const outputDir = join(__dirname, 'out', 'secondary');
-    await writeJSONfiles(presetWithSecondaryTheme, outputDir, fileName);
-    expect(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8')).toBeDefined();
-    expect(fs.readFileSync(join(outputDir, 'index-secondary.json'), 'utf-8')).toBeDefined();
+  describe('generates the right content', () => {
+    test('basic example', async () => {
+      const outputDir = join(__dirname, 'out', 'third');
+      await writeJSONfiles(preset, outputDir, fileName);
+      expect(JSON.parse(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8'))).toMatchSnapshot();
+    });
+    test('with descriptions', async () => {
+      const outputDir = join(__dirname, 'out', 'fourth');
+      await writeJSONfiles(preset, outputDir, fileName, descriptions);
+      expect(JSON.parse(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8'))).toMatchSnapshot();
+    });
+    test('with excluded tokens', async () => {
+      const outputDir = join(__dirname, 'out', 'fifth');
+      await writeJSONfiles(preset, outputDir, fileName, {}, ['boxShadow', 'lineShadow']);
+      expect(JSON.parse(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8'))).toMatchSnapshot();
+    });
   });
 });

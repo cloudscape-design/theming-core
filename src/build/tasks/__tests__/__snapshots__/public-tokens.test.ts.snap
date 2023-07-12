@@ -20,3 +20,170 @@ export const buttonShadow: string;
 export const boxShadow: string;
 export const lineShadow: string;"
 `;
+
+exports[`writeJSONfiles generates the right content basic example 1`] = `
+Object {
+  "contexts": Object {
+    "navigation": Object {
+      "tokens": Object {
+        "boxShadow-var": Object {
+          "$value": Object {
+            "dark": "purple",
+            "light": "purple",
+          },
+        },
+        "buttonShadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+        "lineShadow-var": Object {
+          "$value": Object {
+            "dark": "purple",
+            "light": "black",
+          },
+        },
+        "shadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+      },
+    },
+  },
+  "tokens": Object {
+    "boxShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "buttonShadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "lineShadow-var": Object {
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "shadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+  },
+}
+`;
+
+exports[`writeJSONfiles generates the right content with descriptions 1`] = `
+Object {
+  "contexts": Object {
+    "navigation": Object {
+      "tokens": Object {
+        "boxShadow-var": Object {
+          "$description": "box shadow",
+          "$value": Object {
+            "dark": "purple",
+            "light": "purple",
+          },
+        },
+        "buttonShadow-var": Object {
+          "$description": "button shadow",
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+        "lineShadow-var": Object {
+          "$description": "line shadow",
+          "$value": Object {
+            "dark": "purple",
+            "light": "black",
+          },
+        },
+        "shadow-var": Object {
+          "$description": "shadow",
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+      },
+    },
+  },
+  "tokens": Object {
+    "boxShadow-var": Object {
+      "$description": "box shadow",
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "buttonShadow-var": Object {
+      "$description": "button shadow",
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "lineShadow-var": Object {
+      "$description": "line shadow",
+      "$value": Object {
+        "dark": "brown",
+        "light": "grey",
+      },
+    },
+    "shadow-var": Object {
+      "$description": "shadow",
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+  },
+}
+`;
+
+exports[`writeJSONfiles generates the right content with excluded tokens 1`] = `
+Object {
+  "contexts": Object {
+    "navigation": Object {
+      "tokens": Object {
+        "buttonShadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+        "shadow-var": Object {
+          "$value": Object {
+            "dark": "brown",
+            "light": "black",
+          },
+        },
+      },
+    },
+  },
+  "tokens": Object {
+    "buttonShadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+    "shadow-var": Object {
+      "$value": Object {
+        "dark": "black",
+        "light": "grey",
+      },
+    },
+  },
+}
+`;
