@@ -350,3 +350,10 @@ export const anotherPresetWithSecondaryTheme: ThemePreset = {
   ...preset,
   secondary: [anotherSecondaryTheme],
 };
+
+export const descriptions: Record<string, string> = {
+  shadow: 'shadow',
+  buttonShadow: 'button shadow',
+  boxShadow: 'box shadow',
+  lineShadow: 'line shadow',
+};
