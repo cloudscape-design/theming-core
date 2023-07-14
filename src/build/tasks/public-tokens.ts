@@ -6,6 +6,7 @@ import { ThemePreset, SpecificResolution } from '../../shared/theme';
 import { toSassName } from '../token';
 import { Token } from '../../shared/theme/interfaces';
 import { getThemeJSON } from './theme-json';
+import { getThemeJSONSchema, validateJson } from './theme-json-schema';
 
 interface PublicTokensTaskParams {
   resolution: SpecificResolution;
@@ -13,16 +14,17 @@ interface PublicTokensTaskParams {
   outputDir: string;
   fileName: string;
   descriptions?: Record<string, string>;
+  jsonSchema?: boolean;
 }
 
 export async function createPublicTokenFiles(params: PublicTokensTaskParams) {
-  const { resolution, preset, outputDir, fileName, descriptions = {} } = params;
+  const { resolution, preset, outputDir, fileName, descriptions = {}, jsonSchema = false } = params;
   const { variablesMap, propertiesMap, exposed } = preset;
   await Promise.all([
     writeFile(join(outputDir, `${fileName}.scss`), renderSCSS(resolution, variablesMap, propertiesMap, exposed)),
     writeFile(join(outputDir, `${fileName}.js`), renderJS(resolution, propertiesMap, exposed)),
     writeFile(join(outputDir, `${fileName}.d.ts`), renderTS(exposed)),
-    writeJSONfiles(preset, outputDir, fileName, descriptions),
+    writeJSONfiles(preset, outputDir, fileName, descriptions, jsonSchema),
   ]);
 }
 
@@ -51,16 +53,22 @@ export async function writeJSONfiles(
   preset: ThemePreset,
   outputDir: string,
   fileName: string,
-  descriptions?: Record<string, string>
+  descriptions?: Record<string, string>,
+  jsonSchema?: boolean
 ) {
   const { theme, secondary = [], exposed, variablesMap } = preset;
-  return Promise.all(
-    [theme, ...secondary].map((currentTheme) =>
-      writeFile(
-        join(outputDir, `${fileName}-${currentTheme.id}.json`),
-        JSON.stringify(getThemeJSON({ theme: currentTheme, exposed, variablesMap, descriptions }), null, 2)
-      )
-    )
+  await Promise.all(
+    [theme, ...secondary].map(async (currentTheme) => {
+      const fullFileName = `${fileName}-${currentTheme.id}`;
+      const themeJson = getThemeJSON({ theme: currentTheme, exposed, variablesMap, descriptions });
+      await writeFile(join(outputDir, `${fullFileName}.json`), JSON.stringify(themeJson, null, 2));
+
+      if (jsonSchema) {
+        const themeJsonSchema = getThemeJSONSchema(currentTheme);
+        validateJson(themeJson, themeJsonSchema);
+        await writeFile(join(outputDir, `${fullFileName}-schema.json`), JSON.stringify(themeJsonSchema, null, 2));
+      }
+    })
   );
 }
 

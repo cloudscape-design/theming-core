@@ -2,7 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'path';
 import fs from 'fs';
-import { preset, presetWithSecondaryTheme, defaultsResolution, descriptions } from '../../../__fixtures__/common';
+import {
+  preset,
+  presetWithSecondaryTheme,
+  defaultsResolution,
+  descriptions,
+  presetWithValidSchema,
+  descriptionsForValidTheme,
+} from '../../../__fixtures__/common';
 import { renderJS, renderSCSS, renderTS, writeJSONfiles } from '../public-tokens';
 
 const propertiesMap = preset.propertiesMap;
@@ -48,5 +55,11 @@ describe('writeJSONfiles', () => {
       await writeJSONfiles(preset, outputDir, fileName, descriptions);
       expect(JSON.parse(fs.readFileSync(join(outputDir, 'index-root.json'), 'utf-8'))).toMatchSnapshot();
     });
+  });
+  test('generates JSON schemas files', async () => {
+    const outputDir = join(__dirname, 'out', 'fifth');
+    await writeJSONfiles(presetWithValidSchema, outputDir, fileName, descriptionsForValidTheme, true);
+    expect(fs.readFileSync(join(outputDir, 'index-valid.json'), 'utf-8')).toBeDefined();
+    expect(fs.readFileSync(join(outputDir, 'index-valid-schema.json'), 'utf-8')).toBeDefined();
   });
 });
