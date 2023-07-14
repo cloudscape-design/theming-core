@@ -357,3 +357,74 @@ export const descriptions: Record<string, string> = {
   boxShadow: 'box shadow',
   lineShadow: 'line shadow',
 };
+
+const themeWithValidSchema: Theme = {
+  id: 'valid',
+  selector: ':root',
+  tokens: {
+    fontFamilyBase: '"Helvetica Neue", Arial, sans-serif',
+    colorButton: '#ffffff',
+    shadowContainer: 'rgba(0, 7, 22, 0.2)',
+    spaceLarge: '26px',
+    borderRadiusAlert: '4px',
+    motionDurationOne: '5s',
+    motionEasingTwo: 'whatever',
+    motionKeyframesThree: 'something',
+  },
+  tokenModeMap: {
+    colorButton: 'color',
+    spaceLarge: 'density',
+    shadowContainer: 'color',
+    motionDurationOne: 'motion',
+    motionEasingTwo: 'motion',
+    motionKeyframesThree: 'motion',
+  },
+  contexts: {
+    navigation: {
+      id: 'navigation',
+      selector: '.navigation',
+      tokens: {
+        colorButton: '#000000',
+      },
+    },
+  },
+  modes: {
+    density: densityMode,
+    color: colorMode,
+    motion: motionMode,
+  },
+};
+
+const exposed = [
+  'fontFamilyBase',
+  'colorButton',
+  'shadowContainer',
+  'spaceLarge',
+  'borderRadiusAlert',
+  'motionDurationOne',
+  'motionEasingTwo',
+  'motionKeyframesThree',
+];
+
+export const presetWithValidSchema: ThemePreset = {
+  theme: themeWithValidSchema,
+  themeable: exposed,
+  exposed: exposed,
+  propertiesMap: createStubPropertiesMap(themeWithValidSchema),
+  variablesMap: {
+    fontFamilyBase: 'font-family-base',
+    colorButton: 'color-button',
+    shadowContainer: 'shadow-container',
+    spaceLarge: 'space-large',
+    borderRadiusAlert: 'border-radius-alert',
+    motionDurationOne: 'motion-duration-one',
+    motionEasingTwo: 'motion-easing-two',
+    motionKeyframesThree: 'motion-keyframes-three',
+  },
+};
+
+export const descriptionsForValidTheme = {
+  fontFamilyBase: 'font family',
+  colorButton: 'color',
+  shadowContainer: 'shadow',
+};

@@ -34,6 +34,8 @@ export interface BuildThemedComponentsInternalParams {
   designTokensFileName?: string;
   /** Map between design tokens and their description */
   descriptions?: Record<string, string>;
+  /** Indicates whether to generate a JSON schema for design tokens JSON format and validate against the schema **/
+  jsonSchema?: boolean;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -63,6 +65,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     designTokensFileName = 'index',
     skip = [],
     descriptions = {},
+    jsonSchema = false,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -100,6 +103,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
           outputDir: designTokensOutputDir,
           fileName: designTokensFileName,
           descriptions,
+          jsonSchema,
         });
   await Promise.all([internalTokensTask, designTokensTask, presetTask, styleTask]);
 }

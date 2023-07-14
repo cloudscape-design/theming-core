@@ -24,13 +24,13 @@ type ContextsJson = {
   };
 };
 
-interface ThemeJson {
+export interface ThemeJson {
   tokens: Record<string, TokenJson>;
   contexts: ContextsJson;
 }
 
 // Compliant with https://design-tokens.github.io/community-group/format/
-interface TokenJson {
+export interface TokenJson {
   $value: ModeTokenResolution | SpecificTokenResolution;
   $description?: string;
 }

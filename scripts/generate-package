@@ -20,6 +20,7 @@ const packages = [
     dependencies: [
       'autoprefixer',
       'glob',
+      'jsonschema',
       'loader-utils',
       'lodash',
       'postcss',
