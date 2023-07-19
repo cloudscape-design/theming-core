@@ -24,7 +24,7 @@ const colorValueSchema: GenericSchema = {
 };
 const spaceValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '\\d+(px|rem)',
+  pattern: '\\d+(px|rem|%)',
 };
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
