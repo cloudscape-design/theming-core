@@ -68,6 +68,9 @@ describe('validateJson', () => {
         'border-radius-three': {
           $value: '20rem',
         },
+        'border-radius-four': {
+          $value: '20%',
+        },
       })
     ).toBe(true);
     expect(() =>
@@ -77,7 +80,7 @@ describe('validateJson', () => {
         },
       })
     ).toThrowError(
-      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "\\\\d+(px|rem)"'
+      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "\\\\d+(px|rem|%)"'
     );
   });
 
@@ -146,9 +149,15 @@ describe('validateJson', () => {
               compact: '0rem',
             },
           },
+          'space-alert': {
+            $value: {
+              comfortable: '100%',
+              compact: '50%',
+            },
+          },
         })
       ).toBe(true);
-      ['100 px', '20ps', '100%'].forEach((invalidValue) => {
+      ['100 px', '20ps', '100 %'].forEach((invalidValue) => {
         expect(() =>
           validateTokens({
             'space-button': {
@@ -159,7 +168,7 @@ describe('validateJson', () => {
             },
           })
         ).toThrowError(
-          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "\\\\d+(px|rem)"'
+          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "\\\\d+(px|rem|%)"'
         );
       });
     });
