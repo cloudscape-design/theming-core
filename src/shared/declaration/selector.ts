@@ -31,6 +31,9 @@ export class Selector {
 
   private toSelector(individuals: string[]): string {
     // Sort to guarantee a stable generation
-    return individuals.slice().sort().join('');
+    return [
+      individuals.slice().sort().join(''),
+      'html' + individuals.slice().sort().join(' > ')
+    ].join(', ');
   }
 }
