@@ -26,6 +26,14 @@ const spaceValueSchema: GenericSchema = {
   type: 'string',
   pattern: '\\d+(px|rem|%)',
 };
+const textSizeValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '\\d+(px|rem|em)',
+};
+const textWeightValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '300|400|700|900|normal|bold|light|heavy',
+};
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
 const visualModes = ['light', 'dark'];
@@ -63,6 +71,10 @@ const tokensSchema: GenericSchema = {
     '^motion-easing-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^motion-keyframes-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^shadow-': getTokenSchema(getComplexValueSchema(stringValueSchema, visualModes)),
+    '^font-size-': getTokenSchema(textSizeValueSchema),
+    '^line-height-': getTokenSchema(textSizeValueSchema),
+    '^font-weight-': getTokenSchema(textWeightValueSchema),
+    '^letter-spacing-': getTokenSchema(textSizeValueSchema),
   },
   additionalProperties: false,
 };
