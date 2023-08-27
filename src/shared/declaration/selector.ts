@@ -3,7 +3,8 @@
 import type { SelectorCustomizer } from './interfaces';
 
 interface SelectorParams {
-  global: string[];
+  theme: string[];
+  modeAndContext?: string[];
   local?: string[];
 }
 
@@ -14,16 +15,27 @@ export class Selector {
     this.customizer = customizer;
   }
 
-  for({ global, local }: SelectorParams): string {
-    if (global.length === 1 && !local?.length && global[0] === ':root') {
+  // Function to generate .theme -> .mode/context -> .local seletor, it returns:
+  // ".themeORmode/context .local" OR ".theme.mode/context .local, html.theme .mode/context .local"
+  for({ theme, modeAndContext = [], local }: SelectorParams): string {
+    if ([...theme, ...modeAndContext].length === 1 && !local?.length && theme[0] === ':root') {
       // :root is only applied alone
       return this.customizer(':root');
     }
-    const globalWithoutRoot = global.filter((f) => f !== ':root');
+    const themeWithoutRoot = theme.filter((f) => f !== ':root');
 
-    let selector = this.toSelector(globalWithoutRoot);
-    if (local?.length) {
-      selector += ` ${this.toSelector(local)}`;
+    let selector = this.toSelector([...themeWithoutRoot, ...modeAndContext]);
+    const localSelector = local?.length ? ` ${this.toSelector(local)}` : '';
+    selector += localSelector;
+
+    // Only when .theme and mode/context both exist, we need additional "html.theme .modeORcontext .local" selector
+    // Because .theme can be in <html> or <body> while .mode/context can be only in <body>
+    if (themeWithoutRoot.length && modeAndContext.length) {
+      selector = [
+        selector,
+        `html${this.toSelector(themeWithoutRoot)} ${this.toSelector(modeAndContext)}` + localSelector,
+      ].join(', ');
+      return this.customizer(selector.trim());
     }
 
     return this.customizer(selector.trim());

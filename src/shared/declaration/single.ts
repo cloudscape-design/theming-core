@@ -32,14 +32,14 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
     const stylesheet = new Stylesheet();
 
     const defaults = reduce(this.resolution, this.theme, defaultsReducer());
-    const rootRule = this.ruleCreator.create({ global: [this.theme.selector] }, defaults);
+    const rootRule = this.ruleCreator.create({ theme: [this.theme.selector] }, defaults);
     SingleThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, []);
 
     SingleThemeCreator.forEachOptionalModeState(this.theme, (mode, state) => {
       const modeResolution = reduce(this.resolution, this.theme, modeReducer(mode, state));
       const stateDetails = mode.states[state] as OptionalState;
       const modeRule = this.ruleCreator.create(
-        { global: [this.theme.selector, stateDetails.selector], media: stateDetails.media },
+        { modeAndContext: [stateDetails.selector], theme: [this.theme.selector], media: stateDetails.media },
         modeResolution
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, [rootRule]);
@@ -48,13 +48,13 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
     SingleThemeCreator.forEachContext(this.theme, (context) => {
       const contextResolution = reduce(resolveContext(this.theme, context), this.theme, defaultsReducer());
       const contextRule = this.ruleCreator.create(
-        { global: [this.theme.selector], local: [context.selector] },
+        { theme: [this.theme.selector], local: [context.selector] },
         contextResolution
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule, [rootRule]);
 
       const contextRule2 = this.ruleCreator.create(
-        { global: [this.theme.selector, context.selector] },
+        { modeAndContext: [context.selector], theme: [this.theme.selector] },
         contextResolution
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule2, [rootRule]);
@@ -64,20 +64,26 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       const contextResolution = reduce(resolveContext(this.theme, context), this.theme, modeReducer(mode, state));
       const stateDetails = mode.states[state] as OptionalState;
       const contextAndModeRule = this.ruleCreator.create(
-        { global: [this.theme.selector, stateDetails.selector], local: [context.selector], media: stateDetails.media },
+        {
+          modeAndContext: [stateDetails.selector],
+          theme: [this.theme.selector],
+          local: [context.selector],
+          media: stateDetails.media,
+        },
         contextResolution
       );
       const contextRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [this.theme.selector], local: [context.selector] })
+        this.ruleCreator.selectorFor({ theme: [this.theme.selector], local: [context.selector] })
       );
       const modeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
-          global: [this.theme.selector, (mode.states[state] as OptionalState).selector],
+          modeAndContext: [(mode.states[state] as OptionalState).selector],
+          theme: [this.theme.selector],
         })
       );
 
       const contextRuleGlobal = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [this.theme.selector, context.selector] })
+        this.ruleCreator.selectorFor({ modeAndContext: [context.selector], theme: [this.theme.selector] })
       );
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
@@ -86,7 +92,11 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       );
 
       const contextRuleAndModeRuleGlobal = this.ruleCreator.create(
-        { global: [this.theme.selector, stateDetails.selector, context.selector], media: stateDetails.media },
+        {
+          modeAndContext: [stateDetails.selector, context.selector],
+          theme: [this.theme.selector],
+          media: stateDetails.media,
+        },
         contextResolution
       );
       SingleThemeCreator.appendRuleToStylesheet(

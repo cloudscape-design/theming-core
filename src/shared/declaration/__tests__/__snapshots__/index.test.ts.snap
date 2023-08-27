@@ -56,7 +56,7 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 	--black-css:purple;
 	--brown-css:black;
 }
-@media not print {.dark.secondary-theme{
+@media not print {.dark.secondary-theme, html.secondary-theme .dark{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--boxShadow-css:black;
@@ -67,18 +67,18 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 	--buttonShadow-css:purple;
 	--lineShadow-css:purple;
 }
-.navigation.secondary-theme{
+.navigation.secondary-theme, html.secondary-theme .navigation{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--lineShadow-css:purple;
 }
-@media not print {.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation, html.secondary-theme .dark .navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
 }}
-@media not print {.dark.navigation.secondary-theme{
+@media not print {.dark.navigation.secondary-theme, html.secondary-theme .dark.navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--lineShadow-css:black;
@@ -151,16 +151,16 @@ exports[`renderDeclarations renders declarations for theme with non :root select
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
 	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
-.compact.secondary-theme{
+.compact.secondary-theme, html.secondary-theme .compact{
 	--scaledSize-css:1px;
 }
-@media not print {.dark.secondary-theme{
+@media not print {.dark.secondary-theme, html.secondary-theme .dark{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
 }}
-.disabled-motion.secondary-theme{
+.disabled-motion.secondary-theme, html.secondary-theme .disabled-motion{
 	--appear-css:0;
 }
 .secondary-theme .navigation{
@@ -169,19 +169,19 @@ exports[`renderDeclarations renders declarations for theme with non :root select
 	--boxShadow-css:purple;
 	--lineShadow-css:purple;
 }
-.navigation.secondary-theme{
+.navigation.secondary-theme, html.secondary-theme .navigation{
 	--shadow-css:purple;
 	--buttonShadow-css:purple;
 	--boxShadow-css:purple;
 	--lineShadow-css:purple;
 }
-@media not print {.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation, html.secondary-theme .dark .navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;
 	--lineShadow-css:black;
 }}
-@media not print {.dark.navigation.secondary-theme{
+@media not print {.dark.navigation.secondary-theme, html.secondary-theme .dark.navigation{
 	--shadow-css:grey;
 	--buttonShadow-css:grey;
 	--boxShadow-css:black;

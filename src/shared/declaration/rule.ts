@@ -7,7 +7,8 @@ import { entries } from '../utils';
 import { SpecificResolution } from '../theme';
 
 export interface SelectorConfig {
-  global: string[];
+  theme: string[];
+  modeAndContext?: string[];
   local?: string[];
   media?: string;
 }

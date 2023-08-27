@@ -22,7 +22,7 @@ exports[`Build-time theming of main theme with matching baseThemeId generates th
   --color-background-button-primary-active-h8she0:#dd6baa;
 }
 
-.dark-mode.secondary:not(#\\\\9) {
+.dark-mode.secondary:not(#\\\\9), html.secondary .dark-mode:not(#\\\\9) {
   --color-background-button-primary-default-cqohzr:#dd6baa;
   --color-background-button-primary-active-h8she0:#ec72aa;
 }"
@@ -49,7 +49,7 @@ exports[`Build-time theming of secondary theme generates the correct css files 1
   --color-background-button-primary-active-h8she0:#dd6baa;
 }
 
-.dark-mode.secondary:not(#\\\\9) {
+.dark-mode.secondary:not(#\\\\9), html.secondary .dark-mode:not(#\\\\9) {
   --color-background-button-primary-default-l567s3:#bbbbbb;
   --color-background-button-primary-active-h8she0:#ec72aa;
 }"

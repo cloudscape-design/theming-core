@@ -7,9 +7,12 @@ import { includes } from '../utils';
 const specificitySuffix = ':not(#\\9)';
 
 export function increaseSpecificity(selector: string): string {
-  const [main, ...pseudo] = selector.split(':');
-  const pseudoSuffix = pseudo.length ? ':' + pseudo.join(':') : '';
-  return `${main}${specificitySuffix}${pseudoSuffix}`;
+  const split = selector.split(',').map((singleSelector) => {
+    const [main, ...pseudo] = singleSelector.split(':');
+    const pseudoSuffix = pseudo.length ? ':' + pseudo.join(':') : '';
+    return `${main}${specificitySuffix}${pseudoSuffix}`;
+  });
+  return split.join(',');
 }
 
 export const isIncreased: (selector: string) => boolean = (selector: string) => includes(selector, specificitySuffix);
