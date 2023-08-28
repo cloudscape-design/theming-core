@@ -29,7 +29,7 @@ export class Selector {
     selector += localSelector;
 
     // Only when .theme and mode/context both exist, we need additional "html.theme .modeORcontext .local" selector
-    // Because .theme can be in <html> or <body> while .mode/context can be only in <body>
+    // Because .theme can be in <html> or <body> while .mode/context only in <body>
     if (themeWithoutRoot.length && modeAndContext.length) {
       selector = [
         selector,
