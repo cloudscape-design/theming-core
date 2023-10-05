@@ -47,7 +47,7 @@
     "loader-utils": "^3.2.1",
     "lodash": "^4.17.21",
     "merge": "^2.1.1",
-    "postcss": "^8.4.16",
+    "postcss": "^8.4.31",
     "postcss-discard-empty": "^5.1.1",
     "postcss-initial": "^3.0.4",
     "postcss-inline-svg": "^6.0.0",
