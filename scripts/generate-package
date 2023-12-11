@@ -25,7 +25,7 @@ const packages = [
       'lodash',
       'postcss',
       'postcss-discard-empty',
-      'postcss-initial',
+      'postcss-preset-env',
       'postcss-inline-svg',
       'postcss-modules',
       'sass',
