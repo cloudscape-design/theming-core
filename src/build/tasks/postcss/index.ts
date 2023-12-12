@@ -29,9 +29,7 @@ export const postCSSAfterAll = (input: string, filename: string) => {
     }),
     postcssPresetEnv({
       features: {
-        // Reset only inherited properties, such as color or font-size. Do not reset own properties,
-        // like display or padding, so we could set them ourselves
-        'all-property': true,
+        'all-property': { preserve: true },
       },
     }),
     postCSSIncreaseSpecificity(),
