@@ -21,3 +21,4 @@ The [contribution guidelines](https://github.com/cloudscape-design/theming-core/
 ## License
 
 This project is licensed under the [Apache 2.0 License](/LICENSE).
+ 
