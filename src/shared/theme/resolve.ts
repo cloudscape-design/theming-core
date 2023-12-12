@@ -60,7 +60,9 @@ function resolveToken(theme: Theme, token: string, path: Array<string>, state?: 
 
   if (isModeValue(assignment)) {
     if (!state) {
-      throw new Error('Mode resolution needs state');
+      throw new Error(
+        `Mode resolution for token ${token} does not have any mode value. modes: ${JSON.stringify(assignment)}`
+      );
     }
     assignment = assignment[state];
   }
