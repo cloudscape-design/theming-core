@@ -29,7 +29,7 @@ export const postCSSAfterAll = (input: string, filename: string) => {
     }),
     postcssPresetEnv({
       features: {
-        'all-property': { preserve: true },
+        'all-property': { preserve: false },
       },
     }),
     postCSSIncreaseSpecificity(),
