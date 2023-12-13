@@ -4,7 +4,6 @@ import autoprefixer from 'autoprefixer';
 import path from 'path';
 import postcss from 'postcss';
 import postCSSDiscardEmpty from 'postcss-discard-empty';
-import postcssPresetEnv from 'postcss-preset-env';
 import postCSSInlineSVG from 'postcss-inline-svg';
 import postCSSModules from 'postcss-modules';
 
@@ -26,11 +25,6 @@ export const postCSSAfterAll = (input: string, filename: string) => {
   return postcss([
     autoprefixer({
       overrideBrowserslist: browserslist,
-    }),
-    postcssPresetEnv({
-      features: {
-        'all-property': { preserve: false },
-      },
     }),
     postCSSIncreaseSpecificity(),
     postCSSDiscardEmpty(),
