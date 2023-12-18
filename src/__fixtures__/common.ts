@@ -199,6 +199,13 @@ export const themeWithNonExistingToken: Theme = {
   },
 };
 
+export const themeWithTokenWithoutModeResolution: Theme = {
+  ...emptyTheme,
+  tokens: {
+    shadow: { notMode: '{token}' },
+  },
+};
+
 export const fullResolution: FullResolution = {
   black: 'black',
   grey: 'grey',
