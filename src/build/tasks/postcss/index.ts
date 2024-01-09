@@ -4,7 +4,6 @@ import autoprefixer from 'autoprefixer';
 import path from 'path';
 import postcss from 'postcss';
 import postCSSDiscardEmpty from 'postcss-discard-empty';
-import postCSSInitial from 'postcss-initial';
 import postCSSInlineSVG from 'postcss-inline-svg';
 import postCSSModules from 'postcss-modules';
 
@@ -27,9 +26,6 @@ export const postCSSAfterAll = (input: string, filename: string) => {
     autoprefixer({
       overrideBrowserslist: browserslist,
     }),
-    // Reset only inherited properties, such as color or font-size. Do not reset own properties,
-    // like display or padding, so we could set them ourselves
-    postCSSInitial({ reset: 'inherited', replace: true }),
     postCSSIncreaseSpecificity(),
     postCSSDiscardEmpty(),
   ]).process(input, { from: filename });
