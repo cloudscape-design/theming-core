@@ -1,21 +1,21 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`merge merges theme with override and matches previous snapshot 1`] = `
-Object {
-  "contexts": Object {
-    "navigation": Object {
+exports[`merge > merges theme with override and matches previous snapshot 1`] = `
+{
+  "contexts": {
+    "navigation": {
       "id": "navigation",
       "selector": ".navigation",
-      "tokens": Object {
-        "boxShadow": Object {
+      "tokens": {
+        "boxShadow": {
           "dark": "purple",
           "light": "purple",
         },
-        "buttonShadow": Object {
+        "buttonShadow": {
           "dark": "green",
           "light": "red",
         },
-        "shadow": Object {
+        "shadow": {
           "dark": "{brown}",
           "light": "pink",
         },
@@ -23,44 +23,44 @@ Object {
     },
   },
   "id": "root",
-  "modes": Object {
-    "color": Object {
+  "modes": {
+    "color": {
       "id": "color",
-      "states": Object {
-        "dark": Object {
+      "states": {
+        "dark": {
           "media": "not print",
           "selector": ".dark",
         },
-        "light": Object {
+        "light": {
           "default": true,
         },
       },
     },
-    "density": Object {
+    "density": {
       "id": "density",
-      "states": Object {
-        "comfortable": Object {
+      "states": {
+        "comfortable": {
           "default": true,
         },
-        "compact": Object {
+        "compact": {
           "selector": ".compact",
         },
       },
     },
-    "motion": Object {
+    "motion": {
       "id": "motion",
-      "states": Object {
-        "default": Object {
+      "states": {
+        "default": {
           "default": true,
         },
-        "disabled": Object {
+        "disabled": {
           "selector": ".disabled-motion",
         },
       },
     },
   },
   "selector": ":root",
-  "tokenModeMap": Object {
+  "tokenModeMap": {
     "appear": "motion",
     "boxShadow": "color",
     "buttonShadow": "color",
@@ -68,36 +68,36 @@ Object {
     "scaledSize": "density",
     "shadow": "color",
   },
-  "tokens": Object {
-    "appear": Object {
+  "tokens": {
+    "appear": {
       "default": "20ms",
       "disabled": "0",
     },
     "black": "black",
-    "boxShadow": Object {
+    "boxShadow": {
       "dark": "{brown}",
       "light": "green",
     },
     "brown": "brown",
-    "buttonShadow": Object {
+    "buttonShadow": {
       "dark": "red",
       "light": "red",
     },
     "containerShadowBase": "2px 3px orange, -1px 0 8px olive",
-    "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
+    "fontFamilyBase": ""Helvetica Neue", Arial, sans-serif",
     "fontFamilyBody": "{fontFamilyBase}",
     "grey": "grey",
-    "lineShadow": Object {
+    "lineShadow": {
       "dark": "pink",
       "light": "pink",
     },
     "medium": "3px",
     "modalShadowContainer": "{containerShadowBase}",
-    "scaledSize": Object {
+    "scaledSize": {
       "comfortable": "{medium}",
       "compact": "{small}",
     },
-    "shadow": Object {
+    "shadow": {
       "dark": "orange",
       "light": "yellow",
     },

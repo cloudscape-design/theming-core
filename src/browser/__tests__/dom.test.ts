@@ -1,5 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { describe, test, expect, afterEach } from 'vitest';
 import { getNonce, createStyleNode, appendStyleNode } from '../dom';
 
 function addMetaTag(name: string, content: string) {

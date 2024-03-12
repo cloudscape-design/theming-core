@@ -1,18 +1,18 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`builds internal themed components without errors 1`] = `
 ":root {
-  --font-family-base-91xi75:\\"Amazon Ember\\", \\"Helvetica Neue\\", Roboto, Arial, sans-serif;
+  --font-family-base-91xi75:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --color-background-button-primary-default-nhput1:#ec7211;
   --color-background-button-primary-active-xbf2p5:#dd6b10;
   --space-scaled-xs-yqelf2:8px;
 }
 
-.compact-mode:not(#\\\\9) {
+.compact-mode:not(#\\9) {
   --space-scaled-xs-yqelf2:4px;
 }
 
-.dark-mode:not(#\\\\9) {
+.dark-mode:not(#\\9) {
   --color-background-button-primary-active-xbf2p5:#ec7211;
 }"
 `;

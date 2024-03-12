@@ -1,6 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { join } from 'path';
+import { beforeAll, test, expect } from 'vitest';
+import { join } from 'node:path';
 import {
   outputDir,
   preset,

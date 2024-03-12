@@ -1,7 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { describe, expect, test } from 'vitest';
+import { join } from 'node:path';
 import findNeededTokens from '..';
-import { join } from 'path';
 import { variablesMap } from './__fixtures__/variables-map';
 
 const scssDir = join(__dirname, '__fixtures__', 'scss');

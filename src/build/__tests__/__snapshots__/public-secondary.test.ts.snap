@@ -1,28 +1,28 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Build-time theming of main theme with matching baseThemeId generates the correct css files 1`] = `
 ":root {
-  --font-family-base-rpbu7d:\\"Amazon Ember\\", \\"Helvetica Neue\\", Roboto, Arial, sans-serif;
+  --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --color-background-button-primary-default-cqohzr:#aaaaaa;
   --color-background-button-primary-active-h8she0:#dd6b10;
   --space-scaled-xs-26ut8b:8px;
 }
 
-.compact-mode:not(#\\\\9) {
+.compact-mode:not(#\\9) {
   --space-scaled-xs-26ut8b:4px;
 }
 
-.dark-mode:not(#\\\\9) {
+.dark-mode:not(#\\9) {
   --color-background-button-primary-default-cqohzr:#bbbbbb;
   --color-background-button-primary-active-h8she0:#ec7211;
 }
 
-.secondary:not(#\\\\9) {
+.secondary:not(#\\9) {
   --color-background-button-primary-default-cqohzr:#ec72aa;
   --color-background-button-primary-active-h8she0:#dd6baa;
 }
 
-.dark-mode.secondary:not(#\\\\9) {
+.dark-mode.secondary:not(#\\9) {
   --color-background-button-primary-default-cqohzr:#dd6baa;
   --color-background-button-primary-active-h8she0:#ec72aa;
 }"
@@ -30,26 +30,26 @@ exports[`Build-time theming of main theme with matching baseThemeId generates th
 
 exports[`Build-time theming of secondary theme generates the correct css files 1`] = `
 ":root {
-  --font-family-base-rpbu7d:\\"Amazon Ember\\", \\"Helvetica Neue\\", Roboto, Arial, sans-serif;
+  --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --color-background-button-primary-default-l567s3:#ec7211;
   --color-background-button-primary-active-h8she0:#dd6b10;
   --space-scaled-xs-26ut8b:8px;
 }
 
-.compact-mode:not(#\\\\9) {
+.compact-mode:not(#\\9) {
   --space-scaled-xs-26ut8b:4px;
 }
 
-.dark-mode:not(#\\\\9) {
+.dark-mode:not(#\\9) {
   --color-background-button-primary-active-h8she0:#ec7211;
 }
 
-.secondary:not(#\\\\9) {
+.secondary:not(#\\9) {
   --color-background-button-primary-default-l567s3:#aaaaaa;
   --color-background-button-primary-active-h8she0:#dd6baa;
 }
 
-.dark-mode.secondary:not(#\\\\9) {
+.dark-mode.secondary:not(#\\9) {
   --color-background-button-primary-default-l567s3:#bbbbbb;
   --color-background-button-primary-active-h8she0:#ec72aa;
 }"

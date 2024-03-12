@@ -1,7 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { join } from 'path';
-import fs from 'fs';
+import { join } from 'node:path';
+import fs from 'node:fs';
+import { test, expect } from 'vitest';
 
 import { outputDir, preset, scssDir, presetPath } from './common';
 import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from '../internal';

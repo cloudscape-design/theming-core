@@ -1,18 +1,18 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`jsonToSass converts empty json to sass map 1`] = `
+exports[`jsonToSass > converts empty json to sass map 1`] = `
 "(
     
   )"
 `;
 
-exports[`jsonToSass converts json to sass map 1`] = `
+exports[`jsonToSass > converts json to sass map 1`] = `
 "(
-    'first': \\"abcd\\",
+    'first': "abcd",
 'second': (
-    'third': \\"efgh\\",
+    'third': "efgh",
 'fourth': (
-    'fifth': \\"ilmn\\"
+    'fifth': "ilmn"
   )
   )
   )"
