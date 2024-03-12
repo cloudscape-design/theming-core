@@ -14,6 +14,10 @@ const packages = [
     manifest: {
       name: '@cloudscape-design/theming-build',
       main: './build/index.js',
+      exports: {
+        '.': './build/index.js',
+        './internal': './build/internal.js'
+      },
       files: ['shared', 'build'],
     },
     packageRoot: path.join(root, './lib/node'),

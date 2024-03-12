@@ -1,0 +1,5 @@
+@use 'awsui:tokens' as tokens;
+
+.root {
+  background: tokens.$color-background;
+}
