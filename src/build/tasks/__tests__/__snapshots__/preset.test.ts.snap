@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderCJSDeclaration matches previous snapshot 1`] = `
 "import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
@@ -60,147 +60,147 @@ export declare const preset: ThemePreset;
 
 exports[`renderCJSPreset matches previous snapshot 1`] = `
 "module.exports.preset = {
-  \\"theme\\": {
-    \\"id\\": \\"root\\",
-    \\"selector\\": \\":root\\",
-    \\"tokens\\": {
-      \\"fontFamilyBase\\": \\"\\\\\\"Helvetica Neue\\\\\\", Arial, sans-serif\\",
-      \\"fontFamilyBody\\": \\"{fontFamilyBase}\\",
-      \\"black\\": \\"black\\",
-      \\"grey\\": \\"grey\\",
-      \\"brown\\": \\"brown\\",
-      \\"shadow\\": {
-        \\"light\\": \\"{grey}\\",
-        \\"dark\\": \\"{black}\\"
+  "theme": {
+    "id": "root",
+    "selector": ":root",
+    "tokens": {
+      "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
+      "fontFamilyBody": "{fontFamilyBase}",
+      "black": "black",
+      "grey": "grey",
+      "brown": "brown",
+      "shadow": {
+        "light": "{grey}",
+        "dark": "{black}"
       },
-      \\"buttonShadow\\": \\"{shadow}\\",
-      \\"boxShadow\\": {
-        \\"light\\": \\"{shadow}\\",
-        \\"dark\\": \\"{brown}\\"
+      "buttonShadow": "{shadow}",
+      "boxShadow": {
+        "light": "{shadow}",
+        "dark": "{brown}"
       },
-      \\"lineShadow\\": {
-        \\"light\\": \\"{buttonShadow}\\",
-        \\"dark\\": \\"{boxShadow}\\"
+      "lineShadow": {
+        "light": "{buttonShadow}",
+        "dark": "{boxShadow}"
       },
-      \\"small\\": \\"1px\\",
-      \\"medium\\": \\"3px\\",
-      \\"scaledSize\\": {
-        \\"compact\\": \\"{small}\\",
-        \\"comfortable\\": \\"{medium}\\"
+      "small": "1px",
+      "medium": "3px",
+      "scaledSize": {
+        "compact": "{small}",
+        "comfortable": "{medium}"
       },
-      \\"appear\\": {
-        \\"default\\": \\"20ms\\",
-        \\"disabled\\": \\"0\\"
+      "appear": {
+        "default": "20ms",
+        "disabled": "0"
       },
-      \\"containerShadowBase\\": \\"2px 3px orange, -1px 0 8px olive\\",
-      \\"modalShadowContainer\\": \\"{containerShadowBase}\\"
+      "containerShadowBase": "2px 3px orange, -1px 0 8px olive",
+      "modalShadowContainer": "{containerShadowBase}"
     },
-    \\"tokenModeMap\\": {
-      \\"shadow\\": \\"color\\",
-      \\"buttonShadow\\": \\"color\\",
-      \\"boxShadow\\": \\"color\\",
-      \\"lineShadow\\": \\"color\\",
-      \\"scaledSize\\": \\"density\\",
-      \\"appear\\": \\"motion\\"
+    "tokenModeMap": {
+      "shadow": "color",
+      "buttonShadow": "color",
+      "boxShadow": "color",
+      "lineShadow": "color",
+      "scaledSize": "density",
+      "appear": "motion"
     },
-    \\"contexts\\": {
-      \\"navigation\\": {
-        \\"id\\": \\"navigation\\",
-        \\"selector\\": \\".navigation\\",
-        \\"tokens\\": {
-          \\"shadow\\": {
-            \\"light\\": \\"{black}\\",
-            \\"dark\\": \\"{brown}\\"
+    "contexts": {
+      "navigation": {
+        "id": "navigation",
+        "selector": ".navigation",
+        "tokens": {
+          "shadow": {
+            "light": "{black}",
+            "dark": "{brown}"
           },
-          \\"boxShadow\\": {
-            \\"dark\\": \\"purple\\",
-            \\"light\\": \\"purple\\"
+          "boxShadow": {
+            "dark": "purple",
+            "light": "purple"
           }
         }
       }
     },
-    \\"modes\\": {
-      \\"density\\": {
-        \\"id\\": \\"density\\",
-        \\"states\\": {
-          \\"compact\\": {
-            \\"selector\\": \\".compact\\"
+    "modes": {
+      "density": {
+        "id": "density",
+        "states": {
+          "compact": {
+            "selector": ".compact"
           },
-          \\"comfortable\\": {
-            \\"default\\": true
+          "comfortable": {
+            "default": true
           }
         }
       },
-      \\"color\\": {
-        \\"id\\": \\"color\\",
-        \\"states\\": {
-          \\"light\\": {
-            \\"default\\": true
+      "color": {
+        "id": "color",
+        "states": {
+          "light": {
+            "default": true
           },
-          \\"dark\\": {
-            \\"selector\\": \\".dark\\",
-            \\"media\\": \\"not print\\"
+          "dark": {
+            "selector": ".dark",
+            "media": "not print"
           }
         }
       },
-      \\"motion\\": {
-        \\"id\\": \\"motion\\",
-        \\"states\\": {
-          \\"default\\": {
-            \\"default\\": true
+      "motion": {
+        "id": "motion",
+        "states": {
+          "default": {
+            "default": true
           },
-          \\"disabled\\": {
-            \\"selector\\": \\".disabled-motion\\"
+          "disabled": {
+            "selector": ".disabled-motion"
           }
         }
       }
     }
   },
-  \\"themeable\\": [
-    \\"shadow\\",
-    \\"boxShadow\\",
-    \\"buttonShadow\\",
-    \\"lineShadow\\"
+  "themeable": [
+    "shadow",
+    "boxShadow",
+    "buttonShadow",
+    "lineShadow"
   ],
-  \\"exposed\\": [
-    \\"shadow\\",
-    \\"buttonShadow\\",
-    \\"boxShadow\\",
-    \\"lineShadow\\"
+  "exposed": [
+    "shadow",
+    "buttonShadow",
+    "boxShadow",
+    "lineShadow"
   ],
-  \\"propertiesMap\\": {
-    \\"fontFamilyBase\\": \\"--fontFamilyBase-css\\",
-    \\"fontFamilyBody\\": \\"--fontFamilyBody-css\\",
-    \\"black\\": \\"--black-css\\",
-    \\"grey\\": \\"--grey-css\\",
-    \\"brown\\": \\"--brown-css\\",
-    \\"shadow\\": \\"--shadow-css\\",
-    \\"buttonShadow\\": \\"--buttonShadow-css\\",
-    \\"boxShadow\\": \\"--boxShadow-css\\",
-    \\"lineShadow\\": \\"--lineShadow-css\\",
-    \\"small\\": \\"--small-css\\",
-    \\"medium\\": \\"--medium-css\\",
-    \\"scaledSize\\": \\"--scaledSize-css\\",
-    \\"appear\\": \\"--appear-css\\",
-    \\"containerShadowBase\\": \\"--containerShadowBase-css\\",
-    \\"modalShadowContainer\\": \\"--modalShadowContainer-css\\"
+  "propertiesMap": {
+    "fontFamilyBase": "--fontFamilyBase-css",
+    "fontFamilyBody": "--fontFamilyBody-css",
+    "black": "--black-css",
+    "grey": "--grey-css",
+    "brown": "--brown-css",
+    "shadow": "--shadow-css",
+    "buttonShadow": "--buttonShadow-css",
+    "boxShadow": "--boxShadow-css",
+    "lineShadow": "--lineShadow-css",
+    "small": "--small-css",
+    "medium": "--medium-css",
+    "scaledSize": "--scaledSize-css",
+    "appear": "--appear-css",
+    "containerShadowBase": "--containerShadowBase-css",
+    "modalShadowContainer": "--modalShadowContainer-css"
   },
-  \\"variablesMap\\": {
-    \\"fontFamilyBase\\": \\"fontFamilyBase-var\\",
-    \\"fontFamilyBody\\": \\"fontFamilyBody-var\\",
-    \\"black\\": \\"black-var\\",
-    \\"grey\\": \\"grey-var\\",
-    \\"brown\\": \\"brown-var\\",
-    \\"shadow\\": \\"shadow-var\\",
-    \\"buttonShadow\\": \\"buttonShadow-var\\",
-    \\"boxShadow\\": \\"boxShadow-var\\",
-    \\"lineShadow\\": \\"lineShadow-var\\",
-    \\"small\\": \\"small-var\\",
-    \\"medium\\": \\"medium-var\\",
-    \\"scaledSize\\": \\"scaledSize-var\\",
-    \\"appear\\": \\"appear-var\\",
-    \\"containerShadowBase\\": \\"containerShadowBase-var\\",
-    \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
+  "variablesMap": {
+    "fontFamilyBase": "fontFamilyBase-var",
+    "fontFamilyBody": "fontFamilyBody-var",
+    "black": "black-var",
+    "grey": "grey-var",
+    "brown": "brown-var",
+    "shadow": "shadow-var",
+    "buttonShadow": "buttonShadow-var",
+    "boxShadow": "boxShadow-var",
+    "lineShadow": "lineShadow-var",
+    "small": "small-var",
+    "medium": "medium-var",
+    "scaledSize": "scaledSize-var",
+    "appear": "appear-var",
+    "containerShadowBase": "containerShadowBase-var",
+    "modalShadowContainer": "modalShadowContainer-var"
   }
 };
 "
@@ -266,147 +266,147 @@ export declare const preset: ThemePreset;
 
 exports[`renderPreset matches previous snapshot 1`] = `
 "export var preset = {
-  \\"theme\\": {
-    \\"id\\": \\"root\\",
-    \\"selector\\": \\":root\\",
-    \\"tokens\\": {
-      \\"fontFamilyBase\\": \\"\\\\\\"Helvetica Neue\\\\\\", Arial, sans-serif\\",
-      \\"fontFamilyBody\\": \\"{fontFamilyBase}\\",
-      \\"black\\": \\"black\\",
-      \\"grey\\": \\"grey\\",
-      \\"brown\\": \\"brown\\",
-      \\"shadow\\": {
-        \\"light\\": \\"{grey}\\",
-        \\"dark\\": \\"{black}\\"
+  "theme": {
+    "id": "root",
+    "selector": ":root",
+    "tokens": {
+      "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
+      "fontFamilyBody": "{fontFamilyBase}",
+      "black": "black",
+      "grey": "grey",
+      "brown": "brown",
+      "shadow": {
+        "light": "{grey}",
+        "dark": "{black}"
       },
-      \\"buttonShadow\\": \\"{shadow}\\",
-      \\"boxShadow\\": {
-        \\"light\\": \\"{shadow}\\",
-        \\"dark\\": \\"{brown}\\"
+      "buttonShadow": "{shadow}",
+      "boxShadow": {
+        "light": "{shadow}",
+        "dark": "{brown}"
       },
-      \\"lineShadow\\": {
-        \\"light\\": \\"{buttonShadow}\\",
-        \\"dark\\": \\"{boxShadow}\\"
+      "lineShadow": {
+        "light": "{buttonShadow}",
+        "dark": "{boxShadow}"
       },
-      \\"small\\": \\"1px\\",
-      \\"medium\\": \\"3px\\",
-      \\"scaledSize\\": {
-        \\"compact\\": \\"{small}\\",
-        \\"comfortable\\": \\"{medium}\\"
+      "small": "1px",
+      "medium": "3px",
+      "scaledSize": {
+        "compact": "{small}",
+        "comfortable": "{medium}"
       },
-      \\"appear\\": {
-        \\"default\\": \\"20ms\\",
-        \\"disabled\\": \\"0\\"
+      "appear": {
+        "default": "20ms",
+        "disabled": "0"
       },
-      \\"containerShadowBase\\": \\"2px 3px orange, -1px 0 8px olive\\",
-      \\"modalShadowContainer\\": \\"{containerShadowBase}\\"
+      "containerShadowBase": "2px 3px orange, -1px 0 8px olive",
+      "modalShadowContainer": "{containerShadowBase}"
     },
-    \\"tokenModeMap\\": {
-      \\"shadow\\": \\"color\\",
-      \\"buttonShadow\\": \\"color\\",
-      \\"boxShadow\\": \\"color\\",
-      \\"lineShadow\\": \\"color\\",
-      \\"scaledSize\\": \\"density\\",
-      \\"appear\\": \\"motion\\"
+    "tokenModeMap": {
+      "shadow": "color",
+      "buttonShadow": "color",
+      "boxShadow": "color",
+      "lineShadow": "color",
+      "scaledSize": "density",
+      "appear": "motion"
     },
-    \\"contexts\\": {
-      \\"navigation\\": {
-        \\"id\\": \\"navigation\\",
-        \\"selector\\": \\".navigation\\",
-        \\"tokens\\": {
-          \\"shadow\\": {
-            \\"light\\": \\"{black}\\",
-            \\"dark\\": \\"{brown}\\"
+    "contexts": {
+      "navigation": {
+        "id": "navigation",
+        "selector": ".navigation",
+        "tokens": {
+          "shadow": {
+            "light": "{black}",
+            "dark": "{brown}"
           },
-          \\"boxShadow\\": {
-            \\"dark\\": \\"purple\\",
-            \\"light\\": \\"purple\\"
+          "boxShadow": {
+            "dark": "purple",
+            "light": "purple"
           }
         }
       }
     },
-    \\"modes\\": {
-      \\"density\\": {
-        \\"id\\": \\"density\\",
-        \\"states\\": {
-          \\"compact\\": {
-            \\"selector\\": \\".compact\\"
+    "modes": {
+      "density": {
+        "id": "density",
+        "states": {
+          "compact": {
+            "selector": ".compact"
           },
-          \\"comfortable\\": {
-            \\"default\\": true
+          "comfortable": {
+            "default": true
           }
         }
       },
-      \\"color\\": {
-        \\"id\\": \\"color\\",
-        \\"states\\": {
-          \\"light\\": {
-            \\"default\\": true
+      "color": {
+        "id": "color",
+        "states": {
+          "light": {
+            "default": true
           },
-          \\"dark\\": {
-            \\"selector\\": \\".dark\\",
-            \\"media\\": \\"not print\\"
+          "dark": {
+            "selector": ".dark",
+            "media": "not print"
           }
         }
       },
-      \\"motion\\": {
-        \\"id\\": \\"motion\\",
-        \\"states\\": {
-          \\"default\\": {
-            \\"default\\": true
+      "motion": {
+        "id": "motion",
+        "states": {
+          "default": {
+            "default": true
           },
-          \\"disabled\\": {
-            \\"selector\\": \\".disabled-motion\\"
+          "disabled": {
+            "selector": ".disabled-motion"
           }
         }
       }
     }
   },
-  \\"themeable\\": [
-    \\"shadow\\",
-    \\"boxShadow\\",
-    \\"buttonShadow\\",
-    \\"lineShadow\\"
+  "themeable": [
+    "shadow",
+    "boxShadow",
+    "buttonShadow",
+    "lineShadow"
   ],
-  \\"exposed\\": [
-    \\"shadow\\",
-    \\"buttonShadow\\",
-    \\"boxShadow\\",
-    \\"lineShadow\\"
+  "exposed": [
+    "shadow",
+    "buttonShadow",
+    "boxShadow",
+    "lineShadow"
   ],
-  \\"propertiesMap\\": {
-    \\"fontFamilyBase\\": \\"--fontFamilyBase-css\\",
-    \\"fontFamilyBody\\": \\"--fontFamilyBody-css\\",
-    \\"black\\": \\"--black-css\\",
-    \\"grey\\": \\"--grey-css\\",
-    \\"brown\\": \\"--brown-css\\",
-    \\"shadow\\": \\"--shadow-css\\",
-    \\"buttonShadow\\": \\"--buttonShadow-css\\",
-    \\"boxShadow\\": \\"--boxShadow-css\\",
-    \\"lineShadow\\": \\"--lineShadow-css\\",
-    \\"small\\": \\"--small-css\\",
-    \\"medium\\": \\"--medium-css\\",
-    \\"scaledSize\\": \\"--scaledSize-css\\",
-    \\"appear\\": \\"--appear-css\\",
-    \\"containerShadowBase\\": \\"--containerShadowBase-css\\",
-    \\"modalShadowContainer\\": \\"--modalShadowContainer-css\\"
+  "propertiesMap": {
+    "fontFamilyBase": "--fontFamilyBase-css",
+    "fontFamilyBody": "--fontFamilyBody-css",
+    "black": "--black-css",
+    "grey": "--grey-css",
+    "brown": "--brown-css",
+    "shadow": "--shadow-css",
+    "buttonShadow": "--buttonShadow-css",
+    "boxShadow": "--boxShadow-css",
+    "lineShadow": "--lineShadow-css",
+    "small": "--small-css",
+    "medium": "--medium-css",
+    "scaledSize": "--scaledSize-css",
+    "appear": "--appear-css",
+    "containerShadowBase": "--containerShadowBase-css",
+    "modalShadowContainer": "--modalShadowContainer-css"
   },
-  \\"variablesMap\\": {
-    \\"fontFamilyBase\\": \\"fontFamilyBase-var\\",
-    \\"fontFamilyBody\\": \\"fontFamilyBody-var\\",
-    \\"black\\": \\"black-var\\",
-    \\"grey\\": \\"grey-var\\",
-    \\"brown\\": \\"brown-var\\",
-    \\"shadow\\": \\"shadow-var\\",
-    \\"buttonShadow\\": \\"buttonShadow-var\\",
-    \\"boxShadow\\": \\"boxShadow-var\\",
-    \\"lineShadow\\": \\"lineShadow-var\\",
-    \\"small\\": \\"small-var\\",
-    \\"medium\\": \\"medium-var\\",
-    \\"scaledSize\\": \\"scaledSize-var\\",
-    \\"appear\\": \\"appear-var\\",
-    \\"containerShadowBase\\": \\"containerShadowBase-var\\",
-    \\"modalShadowContainer\\": \\"modalShadowContainer-var\\"
+  "variablesMap": {
+    "fontFamilyBase": "fontFamilyBase-var",
+    "fontFamilyBody": "fontFamilyBody-var",
+    "black": "black-var",
+    "grey": "grey-var",
+    "brown": "brown-var",
+    "shadow": "shadow-var",
+    "buttonShadow": "buttonShadow-var",
+    "boxShadow": "boxShadow-var",
+    "lineShadow": "lineShadow-var",
+    "small": "small-var",
+    "medium": "medium-var",
+    "scaledSize": "scaledSize-var",
+    "appear": "appear-var",
+    "containerShadowBase": "containerShadowBase-var",
+    "modalShadowContainer": "modalShadowContainer-var"
   }
 };
 "

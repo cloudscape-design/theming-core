@@ -1,5 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { test, expect } from 'vitest';
 import { rootTheme, defaultsResolution, preset } from '../../../__fixtures__/common';
 
 import { generateTokensDeclarationFile, generateTokensFile } from '../internal-tokens';

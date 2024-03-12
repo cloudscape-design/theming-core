@@ -1,13 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { test, expect } from 'vitest';
 import useBrowser from '@cloudscape-design/browser-test-tools/use-browser';
 import { BasePageObject } from '@cloudscape-design/browser-test-tools/page-objects';
 import { rootTheme, preset, colorMode, navigationContext, defaultsResolution } from '../../../__fixtures__/common';
 import { createMultiThemeCustomizer, singleThemeCustomizer } from '../../declaration/customizer';
 import { createBuildDeclarations, createOverrideDeclarations } from '..';
 import { OptionalState, Override } from '../../theme';
-
-jest.setTimeout(30_000);
 
 test(
   'resolves properties for root',

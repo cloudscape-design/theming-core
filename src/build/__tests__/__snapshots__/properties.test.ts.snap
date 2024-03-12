@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`generates map from theme and variables 1`] = `
-Object {
+{
   "appear": "--appear-var-6p8h3e",
   "black": "--black-var-hzs4ll",
   "boxShadow": "--boxShadow-var-dagaav",
