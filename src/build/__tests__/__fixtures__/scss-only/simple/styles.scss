@@ -1,0 +1,9 @@
+$root-color: red;
+
+.root {
+  /* used in tests */
+}
+
+.red-text {
+  color: $root-color;
+}

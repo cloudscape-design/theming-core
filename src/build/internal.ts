@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { createStyles } from './tasks/style';
+import { buildStyles, InlineStylesheet } from './tasks/style';
 import { createPresetFiles } from './tasks/preset';
 import { createInternalTokenFiles } from './tasks/internal-tokens';
 import { createPublicTokenFiles } from './tasks/public-tokens';
@@ -8,6 +8,8 @@ import { reduce, defaultsReducer, Theme, ThemePreset, resolveTheme } from '../sh
 import { getInlineStylesheets } from './inline-stylesheets';
 import { calculatePropertiesMap } from './properties';
 import findNeededTokens from './needed-tokens';
+
+export { buildStyles, InlineStylesheet };
 
 export type Tasks = 'preset' | 'design-tokens';
 
@@ -78,10 +80,10 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const defaults = reduce(resolution, primary, defaultsReducer());
 
   const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap);
-  const styleTask = createStyles(
-    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
+  const styleTask = buildStyles(
+    scssDir,
     componentsOutputDir,
-    scssDir
+    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens)
   );
   const internalTokensTask = createInternalTokenFiles(primary, defaults, propertiesMap, exposed, componentsOutputDir);
 
