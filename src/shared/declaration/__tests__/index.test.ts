@@ -1,5 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { describe, test, expect } from 'vitest';
 import { rootTheme, preset, secondaryTheme } from '../../../__fixtures__/common';
 import { createBuildDeclarations } from '..';
 

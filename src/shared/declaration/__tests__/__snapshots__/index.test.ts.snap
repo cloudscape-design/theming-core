@@ -1,15 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`renderDeclarations does not render unnecessary declarations 1`] = `
+exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
 ":global :root{
-	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 }"
 `;
 
-exports[`renderDeclarations includes secondary theme 1`] = `
+exports[`renderDeclarations > includes secondary theme 1`] = `
 ":root{
-	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
-	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
 	--black-css:black;
 	--grey-css:grey;
 	--brown-css:brown;
@@ -85,10 +85,10 @@ exports[`renderDeclarations includes secondary theme 1`] = `
 }}"
 `;
 
-exports[`renderDeclarations renders declarations for theme with :root selector and context 1`] = `
+exports[`renderDeclarations > renders declarations for theme with :root selector and context 1`] = `
 ":global :root{
-	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
-	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
 	--black-css:black;
 	--grey-css:grey;
 	--brown-css:brown;
@@ -133,10 +133,10 @@ exports[`renderDeclarations renders declarations for theme with :root selector a
 }}"
 `;
 
-exports[`renderDeclarations renders declarations for theme with non :root selector 1`] = `
+exports[`renderDeclarations > renders declarations for theme with non :root selector 1`] = `
 ".secondary-theme{
-	--fontFamilyBase-css:\\"Helvetica Neue\\", Arial, sans-serif;
-	--fontFamilyBody-css:\\"Helvetica Neue\\", Arial, sans-serif;
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
 	--black-css:purple;
 	--grey-css:grey;
 	--brown-css:black;

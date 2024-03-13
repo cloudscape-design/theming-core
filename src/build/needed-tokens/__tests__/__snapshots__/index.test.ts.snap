@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`findNeededTokens returns correct tokens with exposed tokens, with variablesMap 1`] = `
-Array [
+exports[`findNeededTokens returns correct tokens > with exposed tokens, with variablesMap 1`] = `
+[
   "borderalertradius",
   "borderfieldwidth",
   "colorbackgroundbuttonnormalactive",
@@ -40,8 +40,8 @@ Array [
 ]
 `;
 
-exports[`findNeededTokens returns correct tokens without exposed tokens, with variablesMap 1`] = `
-Array [
+exports[`findNeededTokens returns correct tokens > without exposed tokens, with variablesMap 1`] = `
+[
   "borderalertradius",
   "borderfieldwidth",
   "colorbackgroundbuttonnormalactive",

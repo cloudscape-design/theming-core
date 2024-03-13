@@ -1,17 +1,16 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { test, expect } from 'vitest';
 import postcss from 'postcss';
 import postCSSIncreaseSpecificity from '../increase-specifity';
 
-function setupTest(
-  test: (process: (input: string) => Promise<string>) => Promise<void>
-): (callback: () => void) => void {
-  return (callback: () => void) => {
-    const process = (input: string) =>
-      postcss([postCSSIncreaseSpecificity()])
-        .process(input, { from: undefined })
-        .then(({ css }) => css);
-    test(process).then(callback);
+function setupTest(test: (process: (input: string) => Promise<string>) => Promise<void>): () => void {
+  return async () => {
+    const process = async (input: string) => {
+      const { css } = await postcss([postCSSIncreaseSpecificity()]).process(input, { from: undefined });
+      return css;
+    };
+    await test(process);
   };
 }
 

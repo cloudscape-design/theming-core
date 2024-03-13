@@ -1,12 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { afterAll, beforeEach, describe, test, expect, vi, MockInstance } from 'vitest';
 import { override, presetWithSecondaryTheme } from '../../../__fixtures__/common';
 import { Override } from '../interfaces';
 import { validateOverride, getThemeFromPreset } from '../validate';
 
-let spy: jest.SpyInstance<void>;
+let spy: MockInstance;
 beforeEach(() => {
-  spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 afterAll(() => {

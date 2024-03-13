@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`generateTokensDeclarationFile matches previous snapshot 1`] = `
 "export const shadow: string;
@@ -8,8 +8,8 @@ export const lineShadow: string;"
 `;
 
 exports[`generateTokensFile matches previous snapshot 1`] = `
-"export var shadow = \\"var(--shadow-css, grey)\\";
-export var buttonShadow = \\"var(--buttonShadow-css, grey)\\";
-export var boxShadow = \\"var(--boxShadow-css, grey)\\";
-export var lineShadow = \\"var(--lineShadow-css, grey)\\";"
+"export var shadow = "var(--shadow-css, grey)";
+export var buttonShadow = "var(--buttonShadow-css, grey)";
+export var boxShadow = "var(--boxShadow-css, grey)";
+export var lineShadow = "var(--lineShadow-css, grey)";"
 `;
