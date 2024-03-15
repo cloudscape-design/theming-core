@@ -9,7 +9,7 @@ import { preset as _presetWithSecondaryTheme } from './__fixtures__/template/int
 export const preset = _preset as ThemePreset;
 export const presetWithSecondaryTheme = _presetWithSecondaryTheme as ThemePreset;
 export const outputDir = join(__dirname, 'out');
-export const scssDir = join(__dirname, '__fixtures__', 'scss');
+export const scssDir = join(__dirname, '__fixtures__', 'scss-advanced');
 export const templateDir = join(__dirname, '__fixtures__', 'template');
 export const designTokensTemplateDir = join(__dirname, '__fixtures__', 'template-tokens');
 
