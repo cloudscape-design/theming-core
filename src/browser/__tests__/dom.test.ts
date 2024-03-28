@@ -3,16 +3,16 @@
 import { describe, test, expect, afterEach } from 'vitest';
 import { getNonce, createStyleNode, appendStyleNode } from '../dom';
 
-function addMetaTag(name: string, content: string) {
+function addMetaTag(name: string, content: string, targetDocument: Document = document) {
   const node = document.createElement('meta');
   node.name = name;
   node.content = content;
 
-  document.head.appendChild(node);
+  targetDocument.head.appendChild(node);
 }
 
-function removeMetaTag(name: string) {
-  document.querySelector(`meta[name=${name}]`)?.remove();
+function removeMetaTag(name: string, targetDocument: Document = document) {
+  targetDocument.querySelector(`meta[name=${name}]`)?.remove();
 }
 
 describe('getNonce', () => {
@@ -31,6 +31,16 @@ describe('getNonce', () => {
     addMetaTag('nonce', nonce);
 
     const actual = getNonce();
+
+    expect(actual).toEqual(nonce);
+  });
+
+  test('parses nonce from meta tag of the target document', () => {
+    const nonce = 'nonce-23safq34t';
+    const targetDocument = document.implementation.createHTMLDocument('');
+    addMetaTag('nonce', nonce, targetDocument);
+
+    const actual = getNonce(targetDocument);
 
     expect(actual).toEqual(nonce);
   });
@@ -57,5 +67,13 @@ describe('appendStyleNode', () => {
     appendStyleNode(node);
 
     expect(document.contains(node)).toBeTruthy();
+  });
+
+  test('is attached to the passed document', () => {
+    const node = document.createElement('style');
+    const targetDocument = document.implementation.createHTMLDocument('');
+    appendStyleNode(node, targetDocument);
+
+    expect(targetDocument.contains(node)).toBeTruthy();
   });
 });
