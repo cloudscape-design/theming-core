@@ -10,6 +10,7 @@ export interface ApplyThemeParams {
   override: Override;
   preset: ThemePreset;
   baseThemeId?: string;
+  targetDocument?: Document;
 }
 
 export interface ApplyThemeResult {
@@ -17,7 +18,7 @@ export interface ApplyThemeResult {
 }
 
 export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
-  const { override, preset, baseThemeId } = params;
+  const { override, preset, baseThemeId, targetDocument } = params;
 
   const availableContexts = getContexts(preset);
 
@@ -31,10 +32,10 @@ export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
     preset.propertiesMap,
     createMultiThemeCustomizer(preset.theme.selector)
   );
-  const nonce = getNonce();
+  const nonce = getNonce(targetDocument);
   const styleNode = createStyleNode(content, nonce);
 
-  appendStyleNode(styleNode);
+  appendStyleNode(styleNode, targetDocument);
 
   return {
     reset: () => {
