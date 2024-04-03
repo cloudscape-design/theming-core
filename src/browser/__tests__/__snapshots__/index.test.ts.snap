@@ -325,6 +325,160 @@ exports[`with secondary theme > attaches one style node containing override 1`] 
 }"
 `;
 
+exports[`with targetDocument > attaches one style node containing override on the target document 1`] = `
+":root:root{
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact.compact:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:1px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+@media not print {.dark.dark:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:orange;
+	--buttonShadow-css:red;
+	--boxShadow-css:brown;
+	--lineShadow-css:pink;
+	--small-css:1px;
+	--medium-css:3px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}}
+.disabled-motion.disabled-motion:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--appear-css:0;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.navigation.navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:pink;
+	--buttonShadow-css:red;
+	--boxShadow-css:purple;
+	--lineShadow-css:pink;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact.compact .navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:1px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact.compact.navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:1px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+@media not print {.dark.dark .navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:brown;
+	--buttonShadow-css:green;
+	--boxShadow-css:purple;
+	--lineShadow-css:pink;
+	--small-css:1px;
+	--medium-css:3px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}}
+@media not print {.dark.dark.navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:brown;
+	--buttonShadow-css:green;
+	--boxShadow-css:purple;
+	--lineShadow-css:pink;
+	--small-css:1px;
+	--medium-css:3px;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}}
+.disabled-motion.disabled-motion .navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--appear-css:0;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.disabled-motion.disabled-motion.navigation:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--small-css:1px;
+	--medium-css:3px;
+	--appear-css:0;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}"
+`;
+
 exports[`without secondary theme > attaches one style node containing override 1`] = `
 ":root:root{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;

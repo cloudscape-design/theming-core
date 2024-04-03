@@ -69,4 +69,27 @@ describe('with baseThemeId', () => {
   });
 });
 
-const allStyleNodes = () => document.head.querySelectorAll('style');
+describe('with targetDocument', () => {
+  test('attaches one style node containing override on the target document', () => {
+    const targetDocument = document.implementation.createHTMLDocument();
+    applyTheme({ override, preset, targetDocument });
+
+    const styleNodes = allStyleNodes(targetDocument);
+
+    expect(styleNodes).toHaveLength(1);
+    const themeNode = styleNodes[0];
+
+    expect(themeNode.innerHTML).toMatchSnapshot();
+  });
+
+  test('removes style node on reset on the target document', () => {
+    const targetDocument = document.implementation.createHTMLDocument();
+    const { reset } = applyTheme({ override, preset, targetDocument });
+
+    reset();
+
+    expect(allStyleNodes(targetDocument)).toHaveLength(0);
+  });
+});
+
+const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');

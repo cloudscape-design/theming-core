@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Creates a style elemenet from CSS String and an optional nonce value and returns it. The node
+ * Creates a style element from CSS String and an optional nonce value and returns it. The node
  * will have an extra attribute for identification.
  * @param content CSS string
  * @param nonce optional nonce to be added to the element
@@ -19,15 +19,16 @@ export function createStyleNode(content: string, nonce?: string): HTMLStyleEleme
   return node;
 }
 
-export function appendStyleNode(node: HTMLStyleElement): void {
-  document.head.appendChild(node);
+export function appendStyleNode(node: HTMLStyleElement, targetDocument: Document = document): void {
+  targetDocument.head.appendChild(node);
 }
 
 /**
  * Parses meta tags to find name="nonce" and returns the value
+ * @param targetDocument optional target HTML document to parse meta tags from. By default current document is used.
  * @returns nonce from meta tag
  */
-export function getNonce(): string | undefined {
-  const metaTag = document.querySelector<HTMLMetaElement>('meta[name="nonce"]');
+export function getNonce(targetDocument: Document = document): string | undefined {
+  const metaTag = targetDocument.querySelector<HTMLMetaElement>('meta[name="nonce"]');
   return metaTag?.content ?? undefined;
 }
