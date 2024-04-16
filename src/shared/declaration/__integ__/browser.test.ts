@@ -58,30 +58,6 @@ test(
 );
 
 test(
-  'resolves partial and full render to same result with single theme',
-  setupTest(async (page) => {
-    await injectRootTheme(page);
-
-    const partial = await page.getCSSPropertyResolution();
-    const partialContext = await page.getCSSPropertyResolution(contextClass);
-    await page.addClassToRoot(modeClass);
-    const partialMode = await page.getCSSPropertyResolution();
-
-    await page.removeStyles();
-    await injectOverride(page, { tokens: {} });
-
-    const fullMode = await page.getCSSPropertyResolution();
-    await page.removeClassFromRoot(modeClass);
-    const fullContext = await page.getCSSPropertyResolution(contextClass);
-    const full = await page.getCSSPropertyResolution();
-
-    expect(partial).toEqual(full);
-    expect(partialContext).toEqual(fullContext);
-    expect(partialMode).toEqual(fullMode);
-  })
-);
-
-test(
   'override takes priority over late injected theme',
   setupTest(async (page) => {
     const override: Override = {
@@ -130,6 +106,54 @@ test(
         scaledSize: '2px',
       })
     );
+  })
+);
+
+test(
+  'override styles only include overridden properties',
+  setupTest(async (page) => {
+    const override: Override = {
+      tokens: {
+        medium: '2px',
+        shadow: {
+          dark: '{grey}',
+          light: '{black}',
+        },
+      },
+    };
+    await injectOverride(page, override);
+
+    const resolution = await page.getCSSPropertyResolution();
+    const resolutionContext = await page.getCSSPropertyResolution(contextClass);
+    await page.addClassToRoot(modeClass);
+    const resolutionMode = await page.getCSSPropertyResolution();
+
+    expect(resolution).toEqual({
+      boxShadow: 'black',
+      buttonShadow: 'black',
+      lineShadow: 'black',
+      medium: '2px',
+      scaledSize: '2px',
+      shadow: 'black',
+    });
+    // base styles contain overrides for this context, but in this test
+    // they are not applied because only the override styles are rendered
+    expect(resolutionContext).toEqual({
+      boxShadow: 'black',
+      buttonShadow: 'black',
+      lineShadow: 'black',
+      medium: '2px',
+      scaledSize: '2px',
+      shadow: 'black',
+    });
+    expect(resolutionMode).toEqual({
+      boxShadow: 'brown',
+      buttonShadow: 'grey',
+      lineShadow: 'brown',
+      medium: '2px',
+      scaledSize: '2px',
+      shadow: 'grey',
+    });
   })
 );
 

@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { Context, Mode } from '.';
-import { cloneDeep } from '../utils';
+import { cloneDeep, values } from '../utils';
 import { Theme, Value } from './interfaces';
 import { getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
 
@@ -23,40 +23,61 @@ interface FullResolutionWithPaths {
   resolutionPaths: FullResolutionPaths;
 }
 
-export function resolveTheme(theme: Theme): FullResolution {
-  return resolveThemeWithPaths(theme).resolvedTheme;
+/**
+ * If a base theme is provided, only keep tokens that are in the override theme or those that
+ * have an overridden token in their resolution path
+ */
+export function resolveTheme(theme: Theme, baseTheme?: Theme): FullResolution {
+  return resolveThemeWithPaths(theme, baseTheme).resolvedTheme;
 }
-export function resolveThemeWithPaths(theme: Theme): FullResolutionWithPaths {
+export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullResolutionWithPaths {
   const resolvedTheme: FullResolution = {};
   const resolutionPaths: FullResolutionPaths = {};
 
-  Object.keys(theme.tokens).forEach((token) => {
-    const mode = getMode(theme, token);
+  Object.keys(baseTheme?.tokens ?? theme.tokens).forEach((token) => {
+    const mode = getMode(baseTheme ?? theme, token);
     if (mode) {
-      resolutionPaths[token] = {};
-      resolvedTheme[token] = Object.keys(mode.states).reduce((acc, state: string) => {
-        (resolutionPaths[token] as ModeTokenResolutionPath)[state] = [];
-        acc[state] = resolveToken(theme, token, (resolutionPaths[token] as ModeTokenResolutionPath)[state], state);
+      const modeTokenResolutionPaths: ModeTokenResolutionPath = {};
+      const resolvedToken = Object.keys(mode.states).reduce<Record<string, string>>((acc, state: string) => {
+        modeTokenResolutionPaths[state] = [];
+        acc[state] = resolveToken(theme, token, modeTokenResolutionPaths[state], state, baseTheme);
         return acc;
-      }, {} as Record<string, string>);
+      }, {});
+
+      const tokenResolutionPathContainsOverriddenTokens = values(modeTokenResolutionPaths).some((tokenResolutionPath) =>
+        tokenResolutionPath.some((pathToken) => pathToken in theme.tokens)
+      );
+      if (!baseTheme || tokenResolutionPathContainsOverriddenTokens) {
+        resolutionPaths[token] = modeTokenResolutionPaths;
+        resolvedTheme[token] = resolvedToken;
+      }
     } else {
-      resolutionPaths[token] = [];
-      resolvedTheme[token] = resolveToken(theme, token, resolutionPaths[token] as SpecificTokenResolutionPath);
+      const tokenResolutionPath: SpecificTokenResolutionPath = [];
+      const resolvedToken = resolveToken(theme, token, tokenResolutionPath, undefined, baseTheme);
+
+      if (!baseTheme || tokenResolutionPath.some((pathToken) => pathToken in theme.tokens)) {
+        resolutionPaths[token] = tokenResolutionPath;
+        resolvedTheme[token] = resolvedToken;
+      }
     }
   });
 
   return { resolvedTheme, resolutionPaths };
 }
 
-function resolveToken(theme: Theme, token: string, path: Array<string>, state?: string): string {
-  if (!theme.tokens[token]) {
+function resolveToken(theme: Theme, token: string, path: Array<string>, state?: string, baseTheme?: Theme): string {
+  if (!theme.tokens[token] && !baseTheme?.tokens[token]) {
     throw new Error(`Token ${token} does not exist in the theme.`);
   }
   if (path.indexOf(token) !== -1) {
     throw new Error(`Token ${token} has a circular dependency.`);
   }
   path.push(token);
-  let assignment = theme.tokens[token];
+  let assignment = theme.tokens[token] || baseTheme?.tokens[token];
+
+  if (!assignment) {
+    throw new Error(`Empty assignment for token ${token}`);
+  }
 
   if (isModeValue(assignment)) {
     if (!state) {
@@ -69,34 +90,38 @@ function resolveToken(theme: Theme, token: string, path: Array<string>, state?: 
 
   if (isReference(assignment)) {
     const ref = getReference(assignment);
-    return resolveToken(theme, ref, path, state);
+    return resolveToken(theme, ref, path, state, baseTheme);
   } else {
     return assignment;
   }
 }
 
-export function resolveContext(theme: Theme, context: Context): FullResolution {
+export function resolveContext(theme: Theme, context: Context, baseTheme?: Theme): FullResolution {
   const tmp = cloneDeep(theme);
-  tmp.tokens = {
-    ...tmp.tokens,
-    ...context.tokens,
-  };
-  return resolveTheme(tmp);
+  tmp.tokens = baseTheme
+    ? { ...context.tokens }
+    : {
+        ...tmp.tokens,
+        ...context.tokens,
+      };
+  return resolveTheme(tmp, baseTheme);
 }
 
 type Reducer = (
   tokenResolution: ModeTokenResolution | SpecificTokenResolution,
   token: string,
-  theme: Theme
+  theme: Theme,
+  baseTheme?: Theme
 ) => SpecificTokenResolution | undefined;
 
 export function reduce(
   resolution: FullResolution | SpecificResolution,
   theme: Theme,
-  reducer: Reducer
+  reducer: Reducer,
+  baseTheme?: Theme
 ): SpecificResolution {
   return Object.keys(resolution).reduce((acc, token) => {
-    const reduced = reducer(resolution[token], token, theme);
+    const reduced = reducer(resolution[token], token, theme, baseTheme);
     if (reduced) {
       acc[token] = reduced;
     }
@@ -105,22 +130,23 @@ export function reduce(
 }
 
 export const defaultsReducer =
-  () => (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme) => {
-    const mode = getMode(theme, token);
+  () =>
+  (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme, baseTheme?: Theme) => {
+    const mode = getMode(baseTheme ?? theme, token);
     if (mode && isModeTokenResolution(tokenResolution)) {
       const defaultState = getDefaultState(mode);
       return tokenResolution[defaultState];
     } else if (isSpecificTokenResolution(tokenResolution)) {
       return tokenResolution;
     } else {
-      throw new Error(`Mismatch between resolution ${tokenResolution} and mode ${mode}`);
+      throw new Error(`Mismatch between resolution ${JSON.stringify(tokenResolution)} and mode ${mode}`);
     }
   };
 
 export const modeReducer =
   (mode: Mode, state: string) =>
-  (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme) => {
-    const tokenMode = getMode(theme, token);
+  (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme, baseTheme?: Theme) => {
+    const tokenMode = getMode(baseTheme ?? theme, token);
     if (tokenMode && tokenMode.id === mode.id && isModeTokenResolution(tokenResolution)) {
       return tokenResolution[state];
     } else if (isSpecificTokenResolution(tokenResolution)) {
