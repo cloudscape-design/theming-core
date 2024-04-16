@@ -2,633 +2,134 @@
 
 exports[`with baseThemeId > attaches one style node containing overrides with the correct theme selector 1`] = `
 ".secondary-theme.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
 @media not print {.dark.dark.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
 	--shadow-css:orange;
 	--buttonShadow-css:red;
-	--boxShadow-css:black;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }}
-.disabled-motion.disabled-motion.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
 .secondary-theme.secondary-theme .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:pink;
+	--lineShadow-css:red;
 }
 .navigation.navigation.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.secondary-theme .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.navigation.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:pink;
+	--lineShadow-css:red;
 }
 @media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--shadow-css:grey;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
 	--boxShadow-css:black;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--lineShadow-css:black;
 }}
 @media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--shadow-css:grey;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
 	--boxShadow-css:black;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}}
-.disabled-motion.disabled-motion.secondary-theme .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.disabled-motion.disabled-motion.navigation.secondary-theme:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:purple;
-	--grey-css:grey;
-	--brown-css:black;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}"
+	--lineShadow-css:black;
+}}"
 `;
 
 exports[`with secondary theme > attaches one style node containing override 1`] = `
 ":root:root{
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
 @media not print {.dark.dark:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:orange;
 	--buttonShadow-css:red;
-	--boxShadow-css:brown;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }}
-.disabled-motion.disabled-motion:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
 .navigation.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:pink;
+	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}}
-.disabled-motion.disabled-motion .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.disabled-motion.disabled-motion.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}"
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}}"
 `;
 
 exports[`with targetDocument > attaches one style node containing override on the target document 1`] = `
 ":root:root{
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
 @media not print {.dark.dark:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:orange;
 	--buttonShadow-css:red;
-	--boxShadow-css:brown;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }}
-.disabled-motion.disabled-motion:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
 .navigation.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:pink;
+	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}}
-.disabled-motion.disabled-motion .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.disabled-motion.disabled-motion.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}"
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}}"
 `;
 
 exports[`without secondary theme > attaches one style node containing override 1`] = `
 ":root:root{
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }
 @media not print {.dark.dark:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:orange;
 	--buttonShadow-css:red;
-	--boxShadow-css:brown;
 	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
 }}
-.disabled-motion.disabled-motion:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
 .navigation.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:3px;
-	--appear-css:20ms;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.compact.compact.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--scaledSize-css:1px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:pink;
+	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--shadow-css:brown;
+	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
-	--small-css:1px;
-	--medium-css:3px;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}}
-.disabled-motion.disabled-motion .navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}
-.disabled-motion.disabled-motion.navigation:not(#\\9){
-	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
-	--black-css:black;
-	--grey-css:grey;
-	--brown-css:brown;
-	--small-css:1px;
-	--medium-css:3px;
-	--appear-css:0;
-	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
-}"
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}}"
 `;
