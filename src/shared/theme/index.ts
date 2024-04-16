@@ -26,4 +26,4 @@ export {
   FullResolutionPaths,
 } from './resolve';
 export { validateOverride } from './validate';
-export { merge } from './merge';
+export { merge, mergeInPlace } from './merge';

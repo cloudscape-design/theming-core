@@ -6,12 +6,9 @@ import { getMode, isModeValue, isReference, isValue } from './utils';
 
 /**
  * This function applies all tokens from the override to the theme.
- * It returns the resulting theme. The original theme object is not
- * modified.
+ * It returns the resulting theme. The original theme object is modified.
  */
-export function merge(theme: Theme, override: Override): Theme {
-  const result = cloneDeep(theme);
-
+export function mergeInPlace(theme: Theme, override: Override): Theme {
   function withTokenApplied(
     originalValue: Assignment,
     token: string,
@@ -41,27 +38,37 @@ export function merge(theme: Theme, override: Override): Theme {
   entries(override.tokens).forEach(([token, update]) => {
     const newValue = withTokenApplied(theme.tokens[token], token, update);
     if (newValue) {
-      result.tokens[token] = newValue;
+      theme.tokens[token] = newValue;
     }
   });
 
   // Merge context-specific tokens into each context
   if (override.contexts) {
     entries(override.contexts).forEach(([contextId, context]) => {
-      const resultContext = result.contexts[contextId];
+      const themeContext = theme.contexts[contextId];
 
-      if (!context || !resultContext) {
+      if (!context || !themeContext) {
         return;
       }
 
       entries(context.tokens).forEach(([token, update]) => {
-        const originalValue = resultContext.tokens[token] ?? result.tokens[token];
+        const originalValue = themeContext.tokens[token] ?? theme.tokens[token];
         const newValue = withTokenApplied(originalValue, token, update);
         if (newValue) {
-          result.contexts[contextId].tokens[token] = newValue;
+          theme.contexts[contextId].tokens[token] = newValue;
         }
       });
     });
   }
-  return result;
+  return theme;
+}
+
+/**
+ * This function applies all tokens from the override to the theme.
+ * It returns the resulting theme. The original theme object is not
+ * modified.
+ */
+export function merge(theme: Theme, override: Override): Theme {
+  const result = cloneDeep(theme);
+  return mergeInPlace(result, override);
 }
