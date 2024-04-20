@@ -49,7 +49,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContext(this.theme, (context) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution),
         this.theme,
         defaultsReducer(),
         this.baseTheme
@@ -69,7 +69,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContextWithinOptionalModeState(this.theme, (context, mode, state) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution),
         this.theme,
         modeReducer(mode, state),
         this.baseTheme

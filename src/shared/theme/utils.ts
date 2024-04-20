@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { DefaultState, OptionalState, Theme } from './interfaces';
+import { Assignment, DefaultState, OptionalState, Theme } from './interfaces';
 import { Value, Reference, ModeValue, Mode } from './interfaces';
 
 export function isValue(val: unknown): val is Value {
@@ -16,6 +16,16 @@ export function isModeValue(val: unknown): val is ModeValue {
     typeof val === 'object' &&
     val !== null &&
     !Object.keys(val).some((state) => !(isValue((val as ModeValue)[state]) || isReference((val as ModeValue)[state])))
+  );
+}
+
+export function areAssignmentsEqual(valueA: Assignment, valueB: Assignment): boolean {
+  return (
+    valueA === valueB ||
+    (typeof valueA === 'object' &&
+      typeof valueB == 'object' &&
+      Object.keys(valueA).length === Object.keys(valueB).length &&
+      Object.keys(valueA).every((key) => valueA[key] === valueB[key]))
   );
 }
 
