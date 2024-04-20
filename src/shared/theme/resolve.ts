@@ -116,7 +116,7 @@ export function resolveContext(
    * The precedence of tokens as specified by the API from highest to lowest is:
    * [override theme context] > [base theme context] > [override theme] > [base theme]
    *
-   * The CSS precedence as defined in the generated CSS is generally:
+   * The precedence of tokens as defined in the generated CSS is generally:
    * [override theme context] > [override theme] > [base theme context] > [base theme]
    *
    * To counteract this we can re-baseline the override context using all keys used
