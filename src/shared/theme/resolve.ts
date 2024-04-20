@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { Context, Mode } from '.';
 import { cloneDeep, values } from '../utils';
-import { Assignment, Theme, Value } from './interfaces';
+import { Theme, Value } from './interfaces';
 import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
 
 export type ModeTokenResolution = Record<string, Value>;
@@ -126,7 +126,7 @@ export function resolveContext(
   tmp.tokens = {
     ...Object.keys(themeResolution).reduce((acc, key) => {
       const shouldSkipReset =
-        !(key in baseContext.tokens) ||
+        (!(key in baseContext.tokens) && !(key in tmp.tokens)) ||
         areAssignmentsEqual(
           baseContext.tokens[key],
           tmp.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
@@ -136,7 +136,7 @@ export function resolveContext(
         ? acc
         : {
             ...acc,
-            [key]: baseContext.tokens[key],
+            [key]: baseContext.tokens[key] ?? tmp.tokens[key] ?? baseTheme.tokens[key],
           };
     }, {}),
     ...context.tokens,

@@ -22,7 +22,7 @@ export function createOverrideDeclarations(
     context.tokens = {};
   });
   // create theme containing only modified tokens
-  const merged = mergeInPlace(emptyBase, override);
+  const merged = mergeInPlace(emptyBase, override, base);
   const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
   const stylesheetCreator = new SingleThemeCreator(merged, ruleCreator, base);
   const stylesheet = stylesheetCreator.create();
