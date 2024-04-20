@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { Context, Mode } from '.';
 import { cloneDeep, values } from '../utils';
-import { Theme, Value } from './interfaces';
-import { getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
+import { Assignment, Theme, Value } from './interfaces';
+import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
 
 export type ModeTokenResolution = Record<string, Value>;
 export type SpecificTokenResolution = Value;
@@ -96,14 +96,51 @@ function resolveToken(theme: Theme, token: string, path: Array<string>, state?: 
   }
 }
 
-export function resolveContext(theme: Theme, context: Context, baseTheme?: Theme): FullResolution {
+export function resolveContext(
+  theme: Theme,
+  context: Context,
+  baseTheme?: Theme,
+  themeResolution?: FullResolution
+): FullResolution {
   const tmp = cloneDeep(theme);
-  tmp.tokens = baseTheme
-    ? { ...context.tokens }
-    : {
-        ...tmp.tokens,
-        ...context.tokens,
-      };
+
+  if (!baseTheme || !themeResolution) {
+    tmp.tokens = {
+      ...tmp.tokens,
+      ...context.tokens,
+    };
+    return resolveTheme(tmp, baseTheme);
+  }
+
+  /**
+   * The precedence of tokens as specified by the API from highest to lowest is:
+   * [override theme context] > [base theme context] > [override theme] > [base theme]
+   *
+   * The CSS precedence as defined in the generated CSS is generally:
+   * [override theme context] > [override theme] > [base theme context] > [base theme]
+   *
+   * To counteract this we can re-baseline the override context using all keys used
+   * in the override theme with their respective values from the base theme context
+   */
+  const baseContext = baseTheme.contexts[context.id];
+  tmp.tokens = {
+    ...Object.keys(themeResolution).reduce((acc, key) => {
+      const shouldSkipReset =
+        !(key in baseContext.tokens) ||
+        areAssignmentsEqual(
+          baseContext.tokens[key],
+          tmp.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
+        );
+
+      return shouldSkipReset
+        ? acc
+        : {
+            ...acc,
+            [key]: baseContext.tokens[key],
+          };
+    }, {}),
+    ...context.tokens,
+  };
   return resolveTheme(tmp, baseTheme);
 }
 

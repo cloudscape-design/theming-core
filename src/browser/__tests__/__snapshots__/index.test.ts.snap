@@ -53,20 +53,20 @@ exports[`with secondary theme > attaches one style node containing override 1`] 
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:pink;
+	--boxShadow-css:purple;
 	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}"
 `;
 
@@ -85,20 +85,20 @@ exports[`with targetDocument > attaches one style node containing override on th
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:pink;
+	--boxShadow-css:purple;
 	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}"
 `;
 
@@ -117,19 +117,19 @@ exports[`without secondary theme > attaches one style node containing override 1
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:pink;
+	--boxShadow-css:purple;
 	--lineShadow-css:red;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:green;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }}"
 `;

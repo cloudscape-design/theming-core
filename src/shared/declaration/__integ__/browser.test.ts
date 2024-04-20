@@ -136,10 +136,8 @@ test(
       scaledSize: '2px',
       shadow: 'black',
     });
-    // base styles contain overrides for this context, but in this test
-    // they are not applied because only the override styles are rendered
     expect(resolutionContext).toEqual({
-      boxShadow: 'black',
+      boxShadow: 'purple',
       buttonShadow: 'black',
       lineShadow: 'black',
       medium: '2px',
