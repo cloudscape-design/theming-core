@@ -10,31 +10,32 @@ exports[`with baseThemeId > attaches one style node containing overrides with th
 @media not print {.dark.dark.secondary-theme:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:red;
+	--boxShadow-css:black;
 	--lineShadow-css:pink;
 }}
 .secondary-theme.secondary-theme .navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:pink;
-	--lineShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
 }
 .navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
-	--boxShadow-css:pink;
-	--lineShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
 }
 @media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:grey;
 	--buttonShadow-css:green;
 	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:grey;
 	--buttonShadow-css:green;
 	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--lineShadow-css:pink;
 }}"
 `;
 
@@ -48,25 +49,26 @@ exports[`with secondary theme > attaches one style node containing override 1`] 
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:red;
+	--boxShadow-css:brown;
 	--lineShadow-css:pink;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:red;
+	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}"
 `;
 
@@ -80,25 +82,26 @@ exports[`with targetDocument > attaches one style node containing override on th
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:red;
+	--boxShadow-css:brown;
 	--lineShadow-css:pink;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:red;
+	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}"
 `;
 
@@ -112,24 +115,25 @@ exports[`without secondary theme > attaches one style node containing override 1
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
 	--buttonShadow-css:red;
+	--boxShadow-css:brown;
 	--lineShadow-css:pink;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
 	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:red;
+	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:orange;
+	--shadow-css:brown;
 	--buttonShadow-css:green;
 	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--lineShadow-css:pink;
 }}"
 `;

@@ -8,7 +8,7 @@ import { getMode, isModeValue, isReference, isValue } from './utils';
  * This function applies all tokens from the override to the theme.
  * It returns the resulting theme. The original theme object is modified.
  */
-export function mergeInPlace(theme: Theme, override: Override): Theme {
+export function mergeInPlace(theme: Theme, override: Override, baseTheme?: Theme): Theme {
   function withTokenApplied(
     originalValue: Assignment,
     token: string,
@@ -36,7 +36,7 @@ export function mergeInPlace(theme: Theme, override: Override): Theme {
 
   // Merge root-level tokens into the theme
   entries(override.tokens).forEach(([token, update]) => {
-    const newValue = withTokenApplied(theme.tokens[token], token, update);
+    const newValue = withTokenApplied(theme.tokens[token] ?? baseTheme?.tokens[token], token, update);
     if (newValue) {
       theme.tokens[token] = newValue;
     }
@@ -52,7 +52,11 @@ export function mergeInPlace(theme: Theme, override: Override): Theme {
       }
 
       entries(context.tokens).forEach(([token, update]) => {
-        const originalValue = themeContext.tokens[token] ?? theme.tokens[token];
+        const originalValue =
+          themeContext.tokens[token] ??
+          baseTheme?.contexts[contextId].tokens[token] ??
+          theme.tokens[token] ??
+          baseTheme?.tokens[token];
         const newValue = withTokenApplied(originalValue, token, update);
         if (newValue) {
           theme.contexts[contextId].tokens[token] = newValue;
