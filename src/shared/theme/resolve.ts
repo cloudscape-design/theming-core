@@ -113,11 +113,14 @@ export function resolveContext(
   }
 
   /**
-   * The precedence of tokens as specified by the API from highest to lowest is:
-   * [override theme context] > [base theme context] > [override theme] > [base theme]
+   * The precedence of context tokens as specified by the API from highest to lowest is:
+   * [override theme context] > [base theme context] > [override theme] [base theme].
    *
-   * The precedence of tokens as defined in the generated CSS is generally:
-   * [override theme context] > [override theme] > [base theme context] > [base theme]
+   * The precedence of tokens as defined in the generated CSS follows this order.
+   * However, tokens that are declared in both the base theme and base theme
+   * context and share the same value are only included in the base theme css. This
+   * results in override theme tokens incorrectly taking precedence over base theme
+   * context.
    *
    * To counteract this we can re-baseline the override context using all keys used
    * in the override theme with their respective values from the base theme context
@@ -126,21 +129,22 @@ export function resolveContext(
   tmp.tokens = {
     ...Object.keys(themeResolution).reduce((acc, key) => {
       const shouldSkipReset =
-        (!(key in baseContext.tokens) && !(key in tmp.tokens)) ||
+        (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
         areAssignmentsEqual(
           baseContext.tokens[key],
-          tmp.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
+          theme.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
         );
 
       return shouldSkipReset
         ? acc
         : {
             ...acc,
-            [key]: baseContext.tokens[key] ?? tmp.tokens[key] ?? baseTheme.tokens[key],
+            [key]: baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key],
           };
     }, {}),
     ...context.tokens,
   };
+
   return resolveTheme(tmp, baseTheme);
 }
 

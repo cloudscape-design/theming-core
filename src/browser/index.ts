@@ -10,16 +10,12 @@ export interface GenerateThemeStylesheetParams {
   override: Override;
   preset: ThemePreset;
   baseThemeId?: string;
-  targetDocument?: Document;
 }
 
 export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): string {
   const { override, preset, baseThemeId } = params;
-
   const availableContexts = getContexts(preset);
-
   const validated = validateOverride(override, preset.themeable, availableContexts);
-
   const theme = getThemeFromPreset(preset, baseThemeId);
 
   return createOverrideDeclarations(
