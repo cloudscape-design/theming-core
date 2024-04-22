@@ -27,6 +27,7 @@ function createMinimalTheme(base: Theme, override: Override): Theme {
       delete minimalTheme.tokens[key];
     }
   });
+
   return mergeInPlace(minimalTheme, override);
 }
 
