@@ -85,7 +85,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     componentsOutputDir,
     getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens)
   );
-  const internalTokensTask = createInternalTokenFiles(primary, defaults, propertiesMap, exposed, componentsOutputDir);
+  const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
 
   const preset: ThemePreset = {
     theme: primary,

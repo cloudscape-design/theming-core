@@ -2,43 +2,31 @@
 // SPDX-License-Identifier: Apache-2.0
 import { writeFile } from '../file';
 import { join } from 'path';
-import { SpecificResolution, Theme, ThemePreset } from '../../shared/theme';
+import { SpecificResolution, ThemePreset } from '../../shared/theme';
 
 export async function createInternalTokenFiles(
-  theme: Theme,
   resolution: SpecificResolution,
   propertiesMap: ThemePreset['propertiesMap'],
-  publicTokens: string[],
   outputDir: string
 ) {
   await writeFile(
     join(outputDir, 'internal/generated/styles/tokens.js'),
-    generateTokensFile(theme, resolution, propertiesMap, publicTokens)
+    generateTokensFile(resolution, propertiesMap)
   );
-  await writeFile(
-    join(outputDir, 'internal/generated/styles/tokens.d.ts'),
-    generateTokensDeclarationFile(publicTokens)
-  );
+  await writeFile(join(outputDir, 'internal/generated/styles/tokens.d.ts'), generateTokensDeclarationFile(resolution));
 }
 
 export function generateTokensFile(
-  theme: Theme,
   resolution: SpecificResolution,
-  propertiesMap: ThemePreset['propertiesMap'],
-  publicTokens: string[]
+  propertiesMap: ThemePreset['propertiesMap']
 ): string {
-  return publicTokens
-    .map((token) => {
-      const cssName = propertiesMap[token];
-      if (!cssName) {
-        throw new Error(`Token ${token} is not mapped to a CSS Custom Property`);
-      }
-      const value = resolution[token];
-      return `export var ${token} = "var(${cssName}, ${value})";`;
-    })
+  return Object.entries(resolution)
+    .map(([token, value]) => `export var ${token} = "var(${propertiesMap[token]}, ${value})";`)
     .join('\n');
 }
 
-export function generateTokensDeclarationFile(publicTokens: string[]): string {
-  return publicTokens.map((token) => `export const ${token}: string;`).join('\n');
+export function generateTokensDeclarationFile(resolution: SpecificResolution): string {
+  return Object.keys(resolution)
+    .map((token) => `export const ${token}: string;`)
+    .join('\n');
 }
