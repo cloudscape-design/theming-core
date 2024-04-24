@@ -1,15 +1,37 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`generateTokensDeclarationFile matches previous snapshot 1`] = `
-"export const shadow: string;
+"export const fontFamilyBase: string;
+export const fontFamilyBody: string;
+export const black: string;
+export const grey: string;
+export const brown: string;
+export const shadow: string;
 export const buttonShadow: string;
 export const boxShadow: string;
-export const lineShadow: string;"
+export const lineShadow: string;
+export const small: string;
+export const medium: string;
+export const scaledSize: string;
+export const appear: string;
+export const containerShadowBase: string;
+export const modalShadowContainer: string;"
 `;
 
 exports[`generateTokensFile matches previous snapshot 1`] = `
-"export var shadow = "var(--shadow-css, grey)";
+"export var black = "var(--black-css, black)";
+export var grey = "var(--grey-css, grey)";
+export var brown = "var(--brown-css, brown)";
+export var shadow = "var(--shadow-css, grey)";
 export var buttonShadow = "var(--buttonShadow-css, grey)";
 export var boxShadow = "var(--boxShadow-css, grey)";
-export var lineShadow = "var(--lineShadow-css, grey)";"
+export var lineShadow = "var(--lineShadow-css, grey)";
+export var small = "var(--small-css, 1px)";
+export var medium = "var(--medium-css, 3px)";
+export var scaledSize = "var(--scaledSize-css, 3px)";
+export var appear = "var(--appear-css, 20ms)";
+export var fontFamilyBase = "var(--fontFamilyBase-css, "Helvetica Neue", Arial, sans-serif)";
+export var fontFamilyBody = "var(--fontFamilyBody-css, "Helvetica Neue", Arial, sans-serif)";
+export var containerShadowBase = "var(--containerShadowBase-css, 2px 3px orange, -1px 0 8px olive)";
+export var modalShadowContainer = "var(--modalShadowContainer-css, 2px 3px orange, -1px 0 8px olive)";"
 `;
