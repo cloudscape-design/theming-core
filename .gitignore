@@ -4,3 +4,4 @@ src/builder/__tests__/actual
 node_modules
 coverage
 out
+.idea/
