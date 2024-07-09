@@ -3,9 +3,8 @@
 @use 'sass:string';
 @use 'awsui:resolved-tokens' as resolved-tokens;
 @use '../internal/styles/tokens' as awsui;
-@use '@cloudscape-design/component-toolkit/internal/focus-visible' as focus-visible;
 
-$tokens: map.get(list.nth(resolved-tokens.$resolved-tokens, 1), 'tokens');
+$tokens: map.get(list.nth(resolved-tokens.$resolved-tokens , 1), 'tokens');
 $colorBackgroundButtonPrimaryDefault: map.get($tokens, 'colorBackgroundButtonPrimaryDefault');
 $elementColor: string.unquote(map.get($colorBackgroundButtonPrimaryDefault, 'dark'));
 
@@ -22,3 +21,4 @@ $elementColor: string.unquote(map.get($colorBackgroundButtonPrimaryDefault, 'dar
 .caret {
   background: svg-load('./assets/icon.svg', stroke=black);
 }
+

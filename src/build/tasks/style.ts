@@ -6,7 +6,6 @@ import { postCSSForEach, postCSSAfterAll, scopedFileExt } from './postcss';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
-import { pathToFileURL } from 'url';
 
 export interface InlineStylesheet {
   url: string;
@@ -46,15 +45,6 @@ function createImporter(inlines: InlineStylesheet[]): sass.Importer {
   return importer;
 }
 
-const cloudscapeNpmImports = {
-  findFileUrl(url: string) {
-    if (url.startsWith('@cloudscape-design')) {
-      return new URL(`${pathToFileURL('node_modules')}/${url}`);
-    }
-    return null;
-  },
-};
-
 function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir: string) {
   const importer = createImporter(inlines);
   return async (file: string) => {
@@ -62,7 +52,7 @@ function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir:
 
     const sassResult = sass.compile(input, {
       style: 'expanded',
-      importers: [importer, cloudscapeNpmImports],
+      importers: [importer],
     });
     const intermediate = path.join(sassDir, rename(file, '.css'));
     const postCSSForEachResult = await postCSSForEach(sassDir, outputDir, sassResult.css, intermediate);
