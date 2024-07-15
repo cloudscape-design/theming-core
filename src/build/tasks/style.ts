@@ -48,10 +48,10 @@ function createImporter(inlines: InlineStylesheet[]): sass.Importer {
 
 const npmImports = {
   findFileUrl(url: string) {
-    if (url.startsWith('@cloudscape-design/')) {
-      return new URL(`${pathToFileURL('node_modules')}/${url}`);
+    if (url.startsWith('.') || url.startsWith('~')) {
+      return null;
     }
-    return null;
+    return new URL(`${pathToFileURL('node_modules')}/${url}`);
   },
 };
 
