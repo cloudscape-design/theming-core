@@ -65,5 +65,8 @@
     "package-lock.json": [
       "./scripts/unlock-packages.js"
     ]
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.1"
   }
 }
