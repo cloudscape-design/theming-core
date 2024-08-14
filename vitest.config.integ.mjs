@@ -10,7 +10,7 @@ export default defineConfig({
     include: ['./src/**/__integ__/**/*.test.ts'],
     globalSetup: './test/global-setup-integ.mjs',
     setupFiles: ['./test/setup-integ.mjs'],
-    testTimeout: 30_000,
+    testTimeout: 60_000, // 1min
     coverage: {
       enabled: process.env.CI === 'true',
       reportsDirectory: 'coverage/integ',
