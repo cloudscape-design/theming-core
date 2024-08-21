@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { buildStyles, InlineStylesheet } from './tasks/style';
+import { buildStyles, InlineStylesheet, BuildStylesOptions } from './tasks/style';
 import { createPresetFiles } from './tasks/preset';
 import { createInternalTokenFiles } from './tasks/internal-tokens';
 import { createPublicTokenFiles } from './tasks/public-tokens';
@@ -9,7 +9,7 @@ import { getInlineStylesheets } from './inline-stylesheets';
 import { calculatePropertiesMap } from './properties';
 import findNeededTokens from './needed-tokens';
 
-export { buildStyles, InlineStylesheet };
+export { buildStyles, InlineStylesheet, BuildStylesOptions };
 
 export type Tasks = 'preset' | 'design-tokens';
 
@@ -38,6 +38,8 @@ export interface BuildThemedComponentsInternalParams {
   descriptions?: Record<string, string>;
   /** Indicates whether to generate a JSON schema for design tokens JSON format and validate against the schema **/
   jsonSchema?: boolean;
+  /** Fail the build when SASS deprecation warning occurs **/
+  failOnDeprecations?: boolean;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -68,6 +70,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     skip = [],
     descriptions = {},
     jsonSchema = false,
+    failOnDeprecations,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -83,7 +86,8 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const styleTask = buildStyles(
     scssDir,
     componentsOutputDir,
-    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens)
+    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
+    { failOnDeprecations }
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
 

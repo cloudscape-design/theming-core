@@ -1,0 +1,11 @@
+.example {
+  color: red;
+
+  a {
+    font-weight: bold;
+  }
+
+  // top level style after the nested rule to trigger this deprecation warning
+  // https://sass-lang.com/documentation/breaking-changes/mixed-decls/
+  font-weight: normal;
+}
