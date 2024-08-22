@@ -13,9 +13,18 @@ export interface InlineStylesheet {
   contents: string;
 }
 
-export async function buildStyles(sassDir: string, outputDir: string, inlines: InlineStylesheet[] = []) {
+export interface BuildStylesOptions {
+  failOnDeprecations?: boolean;
+}
+
+export async function buildStyles(
+  sassDir: string,
+  outputDir: string,
+  inlines: InlineStylesheet[] = [],
+  options: BuildStylesOptions = {}
+) {
   const files = await promisify(glob)('**/styles.scss', { cwd: sassDir });
-  const compiler = createCompiler(inlines, outputDir, sassDir);
+  const compiler = createCompiler(inlines, outputDir, sassDir, options);
 
   const promises = files.map((file) => compiler(file));
 
@@ -55,15 +64,31 @@ const npmImports = {
   },
 };
 
-function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir: string) {
+function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir: string, options: BuildStylesOptions) {
   const importer = createImporter(inlines);
   return async (file: string) => {
     const input = path.join(sassDir, file);
+    const deprecations: Array<string> = [];
 
     const sassResult = sass.compile(input, {
+      logger: {
+        warn(message, meta) {
+          if (meta.deprecation && options.failOnDeprecations) {
+            deprecations.push(message);
+          } else {
+            console.warn(message);
+          }
+        },
+      },
       style: 'expanded',
       importers: [importer, npmImports],
     });
+    if (deprecations.length > 0) {
+      for (const deprecation of deprecations) {
+        console.error(deprecation);
+      }
+      throw new Error('Unexpected deprecation warnings during sass build.');
+    }
     const intermediate = path.join(sassDir, rename(file, '.css'));
     const postCSSForEachResult = await postCSSForEach(sassDir, outputDir, sassResult.css, intermediate);
     const postCSSAfterAllResult = await postCSSAfterAll(postCSSForEachResult.css, intermediate);

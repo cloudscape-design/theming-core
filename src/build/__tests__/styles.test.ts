@@ -1,16 +1,19 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect, test } from 'vitest';
-import { buildStyles, InlineStylesheet } from '../internal';
+import { buildStyles, InlineStylesheet, BuildStylesOptions } from '../internal';
 import { join } from 'node:path';
 import { readFileSync, readdirSync } from 'node:fs';
 
 const fixturesRoot = join(__dirname, '__fixtures__', 'scss-only');
 const outputRoot = join(__dirname, 'out', 'scss-only');
 
-async function buildWithFixtures(suiteName: string, inlines?: InlineStylesheet[]) {
+async function buildWithFixtures(
+  suiteName: string,
+  { inlines, options }: { inlines?: InlineStylesheet[]; options?: BuildStylesOptions } = {}
+) {
   const outDir = join(outputRoot, suiteName);
-  await buildStyles(join(fixturesRoot, suiteName), join(outputRoot, suiteName), inlines);
+  await buildStyles(join(fixturesRoot, suiteName), join(outputRoot, suiteName), inlines, options);
   return outDir;
 }
 
@@ -40,7 +43,9 @@ test('bundles all imports for styles.scss entry point', async () => {
 });
 
 test('supports virtual stylesheets', async () => {
-  const outDir = await buildWithFixtures('inlines', [{ url: 'awsui:tokens', contents: '$color-background: #abcabc' }]);
+  const outDir = await buildWithFixtures('inlines', {
+    inlines: [{ url: 'awsui:tokens', contents: '$color-background: #abcabc' }],
+  });
   expect(readdirSync(outDir)).toEqual(['styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
   const cssContent = readFileSync(join(outDir, 'styles.scoped.css'), 'utf8');
   expect(cssContent).toContain('#abcabc');
@@ -49,6 +54,16 @@ test('supports virtual stylesheets', async () => {
 test('throws an error if a virtual stylesheet is not defined', async () => {
   // rejects with an error containing message 'Can\'t find stylesheet to import'
   await expect(() => buildWithFixtures('inlines')).rejects.toThrowError(/awsui:tokens/);
+});
+
+test('ignores deprecation warnings by default', async () => {
+  await expect(buildWithFixtures('mixed-declarations')).resolves.toEqual(expect.any(String));
+});
+
+test('throws an error if errors on deprecation warnings are enabled', async () => {
+  await expect(() =>
+    buildWithFixtures('mixed-declarations', { options: { failOnDeprecations: true } })
+  ).rejects.toThrowError(/Unexpected deprecation warnings during sass build/);
 });
 
 test('mirrors directory structure of the sources', async () => {
