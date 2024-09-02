@@ -73,10 +73,11 @@ function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir:
     const sassResult = sass.compile(input, {
       logger: {
         warn(message, meta) {
+          const fullMessage = [message, meta.stack].join('\n');
           if (meta.deprecation && options.failOnDeprecations) {
-            deprecations.push(message);
+            deprecations.push(fullMessage);
           } else {
-            console.warn(message);
+            console.warn(fullMessage);
           }
         },
       },
