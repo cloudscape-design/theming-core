@@ -66,6 +66,7 @@ const tokensSchema: GenericSchema = {
     '^color-': getTokenSchema(getComplexValueSchema(colorValueSchema, visualModes)),
     '^font-family-': getTokenSchema(stringValueSchema),
     '^border-radius-': getTokenSchema(spaceValueSchema),
+    '^border-width-': getTokenSchema(spaceValueSchema),
     '^space-': getTokenSchema(getComplexValueSchema(spaceValueSchema, densityModes)),
     '^motion-duration-': getTokenSchema(getComplexValueSchema(durationValueSchema, motionModes)),
     '^motion-easing-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
