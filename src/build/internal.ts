@@ -1,15 +1,18 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { buildStyles, InlineStylesheet, BuildStylesOptions } from './tasks/style';
-import { createPresetFiles } from './tasks/preset';
-import { createInternalTokenFiles } from './tasks/internal-tokens';
-import { createPublicTokenFiles } from './tasks/public-tokens';
-import { reduce, defaultsReducer, Theme, ThemePreset, resolveTheme } from '../shared/theme';
-import { getInlineStylesheets } from './inline-stylesheets';
-import { calculatePropertiesMap } from './properties';
-import findNeededTokens from './needed-tokens';
+import type { InlineStylesheet, BuildStylesOptions } from './tasks/style.js';
+import { buildStyles } from './tasks/style.js';
+import { createPresetFiles } from './tasks/preset.js';
+import { createInternalTokenFiles } from './tasks/internal-tokens.js';
+import { createPublicTokenFiles } from './tasks/public-tokens.js';
+import type { Theme, ThemePreset } from '../shared/theme/index.js';
+import { reduce, defaultsReducer, resolveTheme } from '../shared/theme/index.js';
+import { getInlineStylesheets } from './inline-stylesheets.js';
+import { calculatePropertiesMap } from './properties.js';
+import findNeededTokens from './needed-tokens/index.js';
 
-export { buildStyles, InlineStylesheet, BuildStylesOptions };
+export { buildStyles };
+export type { InlineStylesheet, BuildStylesOptions };
 
 export type Tasks = 'preset' | 'design-tokens';
 

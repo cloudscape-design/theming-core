@@ -2,7 +2,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-const fs = require('node:fs');
+import fs from 'node:fs';
+
 const lockfiles = ['package-lock.json'];
 
 for (const filename of lockfiles) {

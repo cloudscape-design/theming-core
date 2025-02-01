@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
-import { preset, rootTheme, secondaryTheme, navigationContext } from '../../__fixtures__/common';
-import { calculatePropertiesMap } from '../properties';
+import { preset, rootTheme, secondaryTheme, navigationContext } from '../../__fixtures__/common.js';
+import { calculatePropertiesMap } from '../properties.js';
 
 test('generates map from theme and variables', () => {
   const map = calculatePropertiesMap([preset.theme], preset.variablesMap);

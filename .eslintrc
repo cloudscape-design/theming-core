@@ -8,6 +8,7 @@
   "plugins": ["@typescript-eslint", "unicorn", "header"],
   "rules": {
     "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
     "header/header": [
       "error",
       "line",

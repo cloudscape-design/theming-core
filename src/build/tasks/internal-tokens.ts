@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { writeFile } from '../file';
-import { join } from 'path';
-import { SpecificResolution, ThemePreset } from '../../shared/theme';
+import { join } from 'node:path';
+import { writeFile } from '../file.js';
+import type { SpecificResolution, ThemePreset } from '../../shared/theme/index.js';
 
 export async function createInternalTokenFiles(
   resolution: SpecificResolution,

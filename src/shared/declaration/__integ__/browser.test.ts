@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
 import useBrowser from '@cloudscape-design/browser-test-tools/use-browser';
-import { BasePageObject } from '@cloudscape-design/browser-test-tools/page-objects';
-import { rootTheme, preset, colorMode, navigationContext, defaultsResolution } from '../../../__fixtures__/common';
-import { createMultiThemeCustomizer, singleThemeCustomizer } from '../../declaration/customizer';
-import { createBuildDeclarations, createOverrideDeclarations } from '..';
-import { OptionalState, Override } from '../../theme';
+import pages from '@cloudscape-design/browser-test-tools/page-objects';
+import { rootTheme, preset, colorMode, navigationContext, defaultsResolution } from '../../../__fixtures__/common.js';
+import { createMultiThemeCustomizer, singleThemeCustomizer } from '../customizer.js';
+import { createBuildDeclarations, createOverrideDeclarations } from '../index.js';
+import type { OptionalState, Override } from '../../theme/index.js';
 
 test(
   'resolves properties for root',
@@ -156,7 +156,7 @@ test(
 );
 
 function setupTest(testFn: (page: DeclarationPage) => Promise<void>) {
-  return useBrowser(async (browser) => {
+  return useBrowser.default(async (browser) => {
     await browser.url('about:blank');
     const page = new DeclarationPage(browser);
     await page.waitForVisible('body');
@@ -164,7 +164,7 @@ function setupTest(testFn: (page: DeclarationPage) => Promise<void>) {
   });
 }
 
-class DeclarationPage extends BasePageObject {
+class DeclarationPage extends pages.BasePageObject {
   async injectStyles(css: string): Promise<void> {
     await this.browser.executeAsync((css: string, done: () => void) => {
       const styleNode = document.createElement('style');

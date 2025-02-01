@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { toCssVarName, toSassName } from '../token';
+import { toCssVarName, toSassName } from '../token.js';
 
 const reference = toCssVarName('color', ['red', 'blue']);
 

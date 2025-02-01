@@ -8,8 +8,8 @@ import {
   themesWithCircularDependencies,
   themeWithNonExistingToken,
   themeWithTokenWithoutModeResolution,
-} from '../../../__fixtures__/common';
-import { resolveTheme, resolveThemeWithPaths } from '../resolve';
+} from '../../../__fixtures__/common.js';
+import { resolveTheme, resolveThemeWithPaths } from '../resolve.js';
 
 describe('resolve', () => {
   test('resolves theme to full resolution', () => {

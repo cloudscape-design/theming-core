@@ -1,7 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { FullResolution, Theme, ThemePreset, resolveContext, resolveTheme } from '../shared/theme';
-import { toCssVarName } from './token';
+import type { FullResolution, Theme, ThemePreset } from '../shared/theme/index.js';
+import { resolveContext, resolveTheme } from '../shared/theme/index.js';
+import { toCssVarName } from './token.js';
 
 interface TokensValuesMap {
   [token: string]: Array<string>;

@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Theme, Override, Assignment } from './interfaces';
-import { cloneDeep, entries } from '../utils';
-import { getMode, isModeValue, isReference, isValue } from './utils';
+import type { Theme, Override, Assignment } from './interfaces.js';
+import { cloneDeep, entries } from '../utils.js';
+import { getMode, isModeValue, isReference, isValue } from './utils.js';
 
 /**
  * This function applies all tokens from the override to the theme.

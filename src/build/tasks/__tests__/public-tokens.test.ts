@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
 import { join } from 'node:path';
-import fs from 'node:fs';
+import * as fs from 'node:fs';
 import {
   preset,
   presetWithSecondaryTheme,
@@ -10,8 +10,8 @@ import {
   descriptions,
   presetWithValidSchema,
   descriptionsForValidTheme,
-} from '../../../__fixtures__/common';
-import { renderJS, renderSCSS, renderTS, writeJSONfiles } from '../public-tokens';
+} from '../../../__fixtures__/common.js';
+import { renderJS, renderSCSS, renderTS, writeJSONfiles } from '../public-tokens.js';
 
 const propertiesMap = preset.propertiesMap;
 const variablesMap = preset.variablesMap;

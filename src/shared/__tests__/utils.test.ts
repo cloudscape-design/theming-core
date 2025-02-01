@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, test } from 'vitest';
-import { jsonToSass } from '../utils';
+import { jsonToSass } from '../utils.js';
 
 describe('jsonToSass', () => {
   test('converts json to sass map', () => {

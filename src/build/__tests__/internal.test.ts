@@ -1,12 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'node:path';
-import fs from 'node:fs';
+import * as fs from 'node:fs';
 import { test, expect } from 'vitest';
 
-import { outputDir, preset, scssDir, presetPath } from './common';
-import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from '../internal';
-import { ThemePreset } from '../../shared/theme';
+import { outputDir, preset, scssDir, presetPath } from './common.js';
+import type { BuildThemedComponentsInternalParams } from '../internal.js';
+import { buildThemedComponentsInternal } from '../internal.js';
+import type { ThemePreset } from '../../shared/theme/index.js';
 
 const presetToParams = (preset: ThemePreset) => ({
   primary: preset.theme,

@@ -21,8 +21,9 @@ import {
   loadComponentsSelectors,
   modulePrefix,
   loadJSON,
-} from './common';
-import { buildThemedComponents, BuildThemedComponentsParams } from '../public';
+} from './common.js';
+import type { BuildThemedComponentsParams } from '../public.js';
+import { buildThemedComponents } from '../public.js';
 import postcss from 'postcss';
 
 const publicOutputDir = join(outputDir, 'public-test');

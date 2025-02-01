@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import * as sass from 'sass';
 import glob from 'glob';
-import { postCSSForEach, postCSSAfterAll, scopedFileExt } from './postcss';
+import { postCSSForEach, postCSSAfterAll, scopedFileExt } from './postcss/index.js';
 import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';

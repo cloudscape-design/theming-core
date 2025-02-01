@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, test } from 'vitest';
 import { join } from 'node:path';
-import findNeededTokens from '..';
-import { variablesMap } from './__fixtures__/variables-map';
+import findNeededTokens from '../index.js';
+import { variablesMap } from './__fixtures__/variables-map.js';
 
 const scssDir = join(__dirname, '__fixtures__', 'scss');
 

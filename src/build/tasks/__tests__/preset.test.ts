@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
-import { preset, anotherPresetWithSecondaryTheme } from '../../../__fixtures__/common';
-import { renderPreset, renderCJSPreset, renderPresetDeclaration, renderCJSPresetDeclaration } from '../preset';
+import { preset, anotherPresetWithSecondaryTheme } from '../../../__fixtures__/common.js';
+import { renderPreset, renderCJSPreset, renderPresetDeclaration, renderCJSPresetDeclaration } from '../preset.js';
 
 test('renderPreset matches previous snapshot', () => {
   expect(renderPreset(preset)).toMatchSnapshot();

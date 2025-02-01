@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ThemePreset } from '.';
-import { SpecificResolution } from '../shared/theme';
-import { toSassName } from './token';
+import type { ThemePreset } from './index.js';
+import type { SpecificResolution } from '../shared/theme/index.js';
+import { toSassName } from './token.js';
 
 /**
  * Maps all design tokens of a theme to var() assignments of their custom properties

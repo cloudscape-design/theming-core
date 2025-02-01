@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterEach, describe, test, expect } from 'vitest';
-import { preset, presetWithSecondaryTheme, override } from '../../__fixtures__/common';
-import { applyTheme, generateThemeStylesheet } from '../index';
+import { preset, presetWithSecondaryTheme, override } from '../../__fixtures__/common.js';
+import { applyTheme, generateThemeStylesheet } from '../index.js';
 
 const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');
 

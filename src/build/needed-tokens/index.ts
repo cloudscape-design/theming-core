@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import fs from 'fs';
+import fs from 'node:fs';
 import glob from 'glob';
-import flatten from 'lodash/flatten';
-import uniq from 'lodash/uniq';
+import flatten from 'lodash/flatten.js';
+import uniq from 'lodash/uniq.js';
 
 const findUsedSassVariablesInFile = (filePath: string, sassVariablesList: string[]): string[] => {
   const content = fs.readFileSync(filePath, 'utf-8');

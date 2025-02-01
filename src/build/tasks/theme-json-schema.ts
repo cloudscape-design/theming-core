@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { validate } from 'jsonschema';
-import { Theme } from '../../shared/theme';
-import { ThemeJson } from './theme-json';
+import type { Theme } from '../../shared/theme/index.js';
+import type { ThemeJson } from './theme-json.js';
 
 interface ThemeJsonSchema extends GenericSchema {
   $schema: string;

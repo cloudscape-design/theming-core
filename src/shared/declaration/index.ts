@@ -1,14 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme } from '../theme';
-import type { PropertiesMap, SelectorCustomizer } from './interfaces';
-import { RuleCreator } from './rule';
-import { SingleThemeCreator } from './single';
-import { MultiThemeCreator } from './multi';
-import { Selector } from './selector';
-import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
-import { MinimalTransformer } from './transformer';
-import { cloneDeep, values } from '../utils';
+import type { Override, Theme } from '../theme/index.js';
+import { mergeInPlace } from '../theme/index.js';
+import type { PropertiesMap, SelectorCustomizer } from './interfaces.js';
+import { RuleCreator } from './rule.js';
+import { SingleThemeCreator } from './single.js';
+import { MultiThemeCreator } from './multi.js';
+import { Selector } from './selector.js';
+import { AllPropertyRegistry, UsedPropertyRegistry } from './registry.js';
+import { MinimalTransformer } from './transformer.js';
+import { cloneDeep, values } from '../utils.js';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);

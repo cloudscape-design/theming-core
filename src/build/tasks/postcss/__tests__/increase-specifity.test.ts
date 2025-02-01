@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
 import postcss from 'postcss';
-import postCSSIncreaseSpecificity from '../increase-specifity';
+import postCSSIncreaseSpecificity from '../increase-specifity.js';
 
 function setupTest(test: (process: (input: string) => Promise<string>) => Promise<void>): () => void {
   return async () => {

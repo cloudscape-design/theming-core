@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Theme, Context, Mode } from './interfaces';
+import type { Theme, Context, Mode } from './interfaces.js';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
 

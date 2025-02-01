@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { beforeEach, describe, test, expect } from 'vitest';
-import { Selector } from '../selector';
+import { Selector } from '../selector.js';
 
 describe('Selector', () => {
   let selector: Selector;

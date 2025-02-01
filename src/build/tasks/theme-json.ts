@@ -1,8 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { FullResolution, resolveTheme, resolveContext } from '../../shared/theme';
-import { Theme } from '../../shared/theme/interfaces';
-import { ModeTokenResolution, SpecificTokenResolution } from '../../shared/theme/resolve';
+import type { FullResolution } from '../../shared/theme/index.js';
+import { resolveTheme, resolveContext } from '../../shared/theme/index.js';
+import type { Theme } from '../../shared/theme/interfaces.js';
+import type { ModeTokenResolution, SpecificTokenResolution } from '../../shared/theme/resolve.js';
 
 interface BaseParams {
   exposed: Array<string>;

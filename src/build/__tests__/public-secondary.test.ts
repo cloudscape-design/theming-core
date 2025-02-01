@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
 import { join } from 'node:path';
-import fs from 'node:fs';
-import { outputDir, presetWithSecondaryTheme, scssDir, templateDir } from './common';
-import { buildThemedComponents, BuildThemedComponentsParams } from '../public';
+import * as fs from 'node:fs';
+import { outputDir, presetWithSecondaryTheme, scssDir, templateDir } from './common.js';
+import type { BuildThemedComponentsParams } from '../public.js';
+import { buildThemedComponents } from '../public.js';
 
 const publicOutputDir = join(outputDir, 'public-secondary-test');
 const componentsOutputDir = join(publicOutputDir, 'components');

@@ -1,20 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import {
-  defaultsReducer,
-  FullResolution,
-  modeReducer,
-  OptionalState,
-  reduce,
-  resolveContext,
-  resolveTheme,
-  Theme,
-} from '../theme';
-import Stylesheet from './stylesheet';
-import { AbstractCreator } from './abstract';
-import type { StylesheetCreator } from './interfaces';
-import type { RuleCreator } from './rule';
-import { compact } from './utils';
+import type { FullResolution, OptionalState, Theme } from '../theme/index.js';
+import { defaultsReducer, modeReducer, reduce, resolveContext, resolveTheme } from '../theme/index.js';
+import Stylesheet from './stylesheet.js';
+import { AbstractCreator } from './abstract.js';
+import type { StylesheetCreator } from './interfaces.js';
+import type { RuleCreator } from './rule.js';
+import { compact } from './utils.js';
 
 export class SingleThemeCreator extends AbstractCreator implements StylesheetCreator {
   theme: Theme;
