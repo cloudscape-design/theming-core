@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import path from 'node:path';
+import fs from 'node:fs';
+import url from 'node:url';
+import lodash from 'lodash';
 
-const path = require('path');
-const fs = require('fs');
-
-const root = path.join(__dirname, '..');
+const root = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const original = path.join(root, 'package.json');
 const originalContent = JSON.parse(fs.readFileSync(original).toString());
+const themingBuildRoot = path.join(root, './lib/node');
 
 const packages = [
   {
@@ -15,12 +17,20 @@ const packages = [
       name: '@cloudscape-design/theming-build',
       main: './build/index.js',
       exports: {
-        '.': './build/index.js',
-        './internal': './build/internal.js'
+        '.': {
+          types: './build/index.d.js',
+          import: './build/index.js',
+          require: './build/index.cjs',
+        },
+        './internal': {
+          types: './build/internal.d.js',
+          import: './build/internal.js',
+          require: './build/internal.cjs',
+        },
       },
       files: ['shared', 'build'],
     },
-    packageRoot: path.join(root, './lib/node'),
+    packageRoot: themingBuildRoot,
     dependencies: [
       'autoprefixer',
       'glob',
@@ -40,6 +50,9 @@ const packages = [
     manifest: {
       name: '@cloudscape-design/theming-runtime',
       main: './browser/index.js',
+      exports: {
+        '.': './browser/index.js',
+      },
       files: ['shared', 'browser'],
     },
     packageRoot: path.join(root, './lib/browser'),
@@ -47,18 +60,15 @@ const packages = [
   },
 ];
 
-packages.forEach((package) => {
-  const { packageRoot, dependencies, manifest } = package;
-  const { version } = originalContent;
+packages.forEach((pkg) => {
+  const { packageRoot, dependencies, manifest } = pkg;
 
-  const pkg = {
-    version,
+  const pkgJson = {
+    ...lodash.pick(originalContent, ['version', 'type', 'repository', 'homepage']),
     ...manifest,
     dependencies: pickDependenciesWithVersions(dependencies, originalContent.dependencies),
-    repository: originalContent.repository,
-    homepage: originalContent.homepage,
   };
-  fs.writeFileSync(path.join(packageRoot, './package.json'), JSON.stringify(pkg, null, 2));
+  fs.writeFileSync(path.join(packageRoot, './package.json'), JSON.stringify(pkgJson, null, 2));
 });
 
 function pickDependenciesWithVersions(dependencies, options) {

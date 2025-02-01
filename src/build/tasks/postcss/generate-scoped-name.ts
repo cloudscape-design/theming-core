@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import path from 'path';
+import path from 'node:path';
 import stringHash from 'string-hash';
 
 function toHash(value: string) {

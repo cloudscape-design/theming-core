@@ -1,10 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Selector } from './selector';
-import type { PropertyRegistry } from './registry';
-import { Rule, Declaration } from './stylesheet';
-import { entries } from '../utils';
-import { SpecificResolution } from '../theme';
+import type { Selector } from './selector.js';
+import type { PropertyRegistry } from './registry.js';
+import { Rule, Declaration } from './stylesheet.js';
+import { entries } from '../utils.js';
+import type { SpecificResolution } from '../theme/index.js';
 
 export interface SelectorConfig {
   global: string[];

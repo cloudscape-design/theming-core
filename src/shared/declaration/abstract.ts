@@ -1,10 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Mode, Context, Theme } from '../theme';
-import { isOptionalState } from '../theme/utils';
-import { entries } from '../utils';
-import type Stylesheet from './stylesheet';
-import type { Rule } from './stylesheet';
+import type { Mode, Context, Theme } from '../theme/index.js';
+import { isOptionalState } from '../theme/utils.js';
+import { entries } from '../utils.js';
+import type { Rule, default as Stylesheet } from './stylesheet.js';
 
 /**
  * Common used helpers by stylesheet creator

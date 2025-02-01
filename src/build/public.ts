@@ -1,12 +1,14 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { cloneDeep } from '../shared/utils';
-import { ThemePreset, Override, merge } from '../shared/theme';
-import { calculatePropertiesMap } from './properties';
-import { buildThemedComponentsInternal, BuildThemedComponentsInternalParams } from './internal';
-import { validateOverride } from '../shared/theme';
-import { copyAllFiles } from './tasks/copy';
-import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
+import { cloneDeep } from '../shared/utils.js';
+import type { ThemePreset, Override } from '../shared/theme/index.js';
+import { merge } from '../shared/theme/index.js';
+import { calculatePropertiesMap } from './properties.js';
+import type { BuildThemedComponentsInternalParams } from './internal.js';
+import { buildThemedComponentsInternal } from './internal.js';
+import { validateOverride } from '../shared/theme/index.js';
+import { copyAllFiles } from './tasks/copy.js';
+import { getContexts, getThemeFromPreset } from '../shared/theme/validate.js';
 
 export interface BuildThemedComponentsParams
   extends Pick<BuildThemedComponentsInternalParams, 'scssDir' | 'componentsOutputDir'> {

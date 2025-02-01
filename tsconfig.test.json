@@ -1,8 +1,10 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string", "DOM"],
+    "lib": ["es2023", "DOM"],
     "types": [],
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "noEmit": true
   },
   "include": ["**/__tests__/**/*.ts", "**/__integ__/**/*.ts", "**/__fixtures__/**/*.ts"],

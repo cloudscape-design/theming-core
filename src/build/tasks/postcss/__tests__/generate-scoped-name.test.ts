@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { beforeAll, test, expect } from 'vitest';
-import { createRelativeScopedNameFunction } from '../generate-scoped-name';
-import { modulePrefix } from '../../../__tests__/common';
+import { createRelativeScopedNameFunction } from '../generate-scoped-name.js';
+import { modulePrefix } from '../../../__tests__/common.js';
 
 let generateScopedName: ReturnType<typeof createRelativeScopedNameFunction>;
 beforeAll(() => {

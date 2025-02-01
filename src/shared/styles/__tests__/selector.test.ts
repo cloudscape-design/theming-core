@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, it, expect } from 'vitest';
-import { increaseSpecificity, increaseSpecificityGradually } from '../selector';
+import { increaseSpecificity, increaseSpecificityGradually } from '../selector.js';
 
 describe('Increase Specificity', () => {
   it.each([

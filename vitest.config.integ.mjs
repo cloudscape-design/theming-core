@@ -7,6 +7,10 @@ import process from 'node:process';
 
 export default defineConfig({
   test: {
+    deps: {
+      // enable strict node.js ESM resolution
+      interopDefault: false,
+    },
     include: ['./src/**/__integ__/**/*.test.ts'],
     globalSetup: './test/global-setup-integ.mjs',
     setupFiles: ['./test/setup-integ.mjs'],

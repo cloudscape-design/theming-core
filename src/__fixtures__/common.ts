@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import {
+import type {
   Theme,
   Mode,
   Context,
@@ -9,7 +9,7 @@ import {
   FullResolution,
   SpecificResolution,
   FullResolutionPaths,
-} from '../shared/theme';
+} from '../shared/theme/index.js';
 
 export function createStubPropertiesMap(theme: Theme): Record<string, string> {
   return Object.keys(theme.tokens).reduce((acc, curr) => {

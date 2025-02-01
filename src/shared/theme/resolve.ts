@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Context, Mode } from '.';
-import { cloneDeep, values } from '../utils';
-import { Theme, Value } from './interfaces';
-import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
+import type { Context, Mode } from './index.js';
+import { cloneDeep, values } from '../utils.js';
+import type { Theme, Value } from './interfaces.js';
+import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils.js';
 
 export type ModeTokenResolution = Record<string, Value>;
 export type SpecificTokenResolution = Value;

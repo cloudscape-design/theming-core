@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { test, expect } from 'vitest';
-import { defaultsResolution, preset } from '../../../__fixtures__/common';
+import { defaultsResolution, preset } from '../../../__fixtures__/common.js';
 
-import { generateTokensDeclarationFile, generateTokensFile } from '../internal-tokens';
+import { generateTokensDeclarationFile, generateTokensFile } from '../internal-tokens.js';
 
 const propertiesMap = preset.propertiesMap;
 

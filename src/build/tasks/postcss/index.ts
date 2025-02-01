@@ -7,9 +7,9 @@ import postCSSDiscardEmpty from 'postcss-discard-empty';
 import postCSSInlineSVG from 'postcss-inline-svg';
 import postCSSModules from 'postcss-modules';
 
-import postCSSIncreaseSpecificity from './increase-specifity';
-import { createRelativeScopedNameFunction } from './generate-scoped-name';
-import { writeCssModule } from './write-css-modules';
+import postCSSIncreaseSpecificity from './increase-specifity.js';
+import { createRelativeScopedNameFunction } from './generate-scoped-name.js';
+import { writeCssModule } from './write-css-modules.js';
 
 export const scopedFileExt = '.scoped.css';
 

@@ -1,7 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Assignment, DefaultState, OptionalState, Theme } from './interfaces';
-import { Value, Reference, ModeValue, Mode } from './interfaces';
+import type {
+  Assignment,
+  DefaultState,
+  OptionalState,
+  Theme,
+  Value,
+  Reference,
+  ModeValue,
+  Mode,
+} from './interfaces.js';
 
 export function isValue(val: unknown): val is Value {
   return typeof val === 'string' && !isReference(val);

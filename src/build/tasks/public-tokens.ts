@@ -1,12 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'path';
-import { writeFile } from '../file';
-import { ThemePreset, SpecificResolution } from '../../shared/theme';
-import { toSassName } from '../token';
-import { Token } from '../../shared/theme/interfaces';
-import { getThemeJSON } from './theme-json';
-import { getThemeJSONSchema, validateJson } from './theme-json-schema';
+import { writeFile } from '../file.js';
+import type { ThemePreset, SpecificResolution } from '../../shared/theme/index.js';
+import { toSassName } from '../token.js';
+import type { Token } from '../../shared/theme/interfaces.js';
+import { getThemeJSON } from './theme-json.js';
+import { getThemeJSONSchema, validateJson } from './theme-json-schema.js';
 
 interface PublicTokensTaskParams {
   resolution: SpecificResolution;

@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { beforeEach, describe, test, expect } from 'vitest';
-import Stylesheet, { Declaration, Rule } from '../stylesheet';
+import Stylesheet, { Declaration, Rule } from '../stylesheet.js';
 
 describe('Stylesheet', () => {
   let stylesheet: Stylesheet;

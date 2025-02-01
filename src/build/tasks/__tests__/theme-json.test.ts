@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { preset } from '../../../__fixtures__/common';
-import { getThemeJSON } from '../theme-json';
+import { preset } from '../../../__fixtures__/common.js';
+import { getThemeJSON } from '../theme-json.js';
 
 describe('getThemeJson', () => {
   const exposed = [...preset.exposed, 'scaledSize', 'small'];

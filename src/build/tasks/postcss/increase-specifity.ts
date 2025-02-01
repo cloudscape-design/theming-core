@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Rule, PluginCreator, AtRule } from 'postcss';
-import { singleThemeCustomizer } from '../../../shared/declaration/customizer';
+import type { Rule, PluginCreator, AtRule } from 'postcss';
+import { singleThemeCustomizer } from '../../../shared/declaration/customizer.js';
 
 function increaseSpecificityForRule(rule: Rule) {
   rule.selectors = rule.selectors.map(singleThemeCustomizer);

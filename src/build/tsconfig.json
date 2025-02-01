@@ -1,12 +1,13 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "typeRoots": ["../../typings", "../../node_modules/@types"],
     "declaration": true,
     "composite": true,
     "outDir": "../../lib/node",
     "rootDir": "..",
-    "moduleResolution": "node",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
     "importHelpers": true,
     "tsBuildInfoFile": "../../lib/node/._tsbuildinfo"
   },

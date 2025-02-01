@@ -1,10 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'path';
-import { ThemePreset } from '../../shared/theme';
-import { getMode } from '../../shared/theme/utils';
-import { getContexts } from '../../shared/theme/validate';
-import { writeFile } from '../file';
+import type { ThemePreset } from '../../shared/theme/index.js';
+import { getMode } from '../../shared/theme/utils.js';
+import { getContexts } from '../../shared/theme/validate.js';
+import { writeFile } from '../file.js';
 
 const generatedThemingDir = 'internal/generated/theming';
 

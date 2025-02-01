@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { PropertiesMap } from './interfaces';
+import type { PropertiesMap } from './interfaces.js';
 
 export interface PropertyRegistry {
   get(token: string): string | undefined;

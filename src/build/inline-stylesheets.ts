@@ -1,11 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { SpecificResolution, Theme, resolveTheme } from '../shared/theme';
-import { createBuildDeclarations } from '../shared/declaration';
-import { renderMappings } from './mappings';
-import { InlineStylesheet } from './tasks/style';
-import { jsonToSass } from '../shared/utils';
-import { markGlobal } from './tasks/postcss/modules';
+import type { SpecificResolution, Theme } from '../shared/theme/index.js';
+import { resolveTheme } from '../shared/theme/index.js';
+import { createBuildDeclarations } from '../shared/declaration/index.js';
+import { renderMappings } from './mappings.js';
+import type { InlineStylesheet } from './tasks/style.js';
+import { jsonToSass } from '../shared/utils.js';
+import { markGlobal } from './tasks/postcss/modules.js';
 
 /**
  * Generates a list of inline stylesheets used during the SCSS compilation. The primary

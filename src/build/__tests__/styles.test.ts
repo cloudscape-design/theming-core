@@ -1,7 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect, test } from 'vitest';
-import { buildStyles, InlineStylesheet, BuildStylesOptions } from '../internal';
+import type { InlineStylesheet, BuildStylesOptions } from '../internal.js';
+import { buildStyles } from '../internal.js';
 import { join } from 'node:path';
 import { readFileSync, readdirSync } from 'node:fs';
 

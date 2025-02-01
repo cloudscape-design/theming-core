@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { promises as fsp } from 'fs';
-import { join } from 'path';
-import { ThemePreset } from '../../shared/theme';
+import { promises as fsp } from 'node:fs';
+import { join } from 'node:path';
+import type { ThemePreset } from '../../shared/theme/index.js';
 import { preset as _preset } from './__fixtures__/template/internal/generated/theming/index.js';
 import { preset as _presetWithSecondaryTheme } from './__fixtures__/template/internal/generated/theming/with-secondary-theme.js';
 

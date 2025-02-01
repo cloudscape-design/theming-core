@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-export {
+export type {
   Theme,
   ThemePreset,
   Override,
@@ -11,8 +11,9 @@ export {
   GlobalValue,
   ModeValue,
   TypedModeValueOverride,
-} from './interfaces';
-export { ThemeBuilder, TokenCategory } from './builder';
+} from './interfaces.js';
+export type { ThemeBuilder, TokenCategory } from './builder.js';
+export type { FullResolution, SpecificResolution, FullResolutionPaths } from './resolve.js';
 export {
   resolveTheme,
   resolveThemeWithPaths,
@@ -21,9 +22,6 @@ export {
   defaultsReducer,
   modeReducer,
   difference,
-  FullResolution,
-  SpecificResolution,
-  FullResolutionPaths,
-} from './resolve';
-export { validateOverride } from './validate';
-export { merge, mergeInPlace } from './merge';
+} from './resolve.js';
+export { validateOverride } from './validate.js';
+export { merge, mergeInPlace } from './merge.js';
