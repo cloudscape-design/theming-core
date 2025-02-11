@@ -42,6 +42,7 @@
     "eslint-plugin-unicorn": "^41.0.1",
     "glob": "^7.2.3",
     "husky": "^7.0.4",
+    "jsdom": "^26.0.0",
     "jsonschema": "^1.4.1",
     "lint-staged": "^12.5.0",
     "loader-utils": "^3.2.1",
