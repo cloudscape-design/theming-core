@@ -72,6 +72,7 @@ const tokensSchema: GenericSchema = {
     '^border-radius-': getTokenSchema(spaceValueSchema),
     '^border-width-': getTokenSchema(borderWidthValueSchema),
     '^space-': getTokenSchema(getComplexValueSchema(spaceValueSchema, densityModes)),
+    '^size-': getTokenSchema(getComplexValueSchema(spaceValueSchema, densityModes)),
     '^motion-duration-': getTokenSchema(getComplexValueSchema(durationValueSchema, motionModes)),
     '^motion-easing-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^motion-keyframes-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
