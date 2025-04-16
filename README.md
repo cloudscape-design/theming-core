@@ -12,7 +12,7 @@ Browse the [components repository](https://github.com/cloudscape-design/componen
 
 ## Getting help
 
-You can [create bug reports or feature requests](https://github.com/cloudscape-design/theming-core/issues/new/choose), or [start a discussion](https://github.com/cloudscape-design/components/discussions) to ask a question. To minimize duplicates, we recommend that you search for existing bug reports, feature requests, or discussions before initiating a new thread.
+You can [create bug reports or feature requests](https://github.com/cloudscape-design/components/issues/new/choose), or [start a discussion](https://github.com/cloudscape-design/components/discussions) to ask a question. To minimize duplicates, we recommend that you search for existing bug reports, feature requests, or discussions before initiating a new thread.
 
 ## Contributing
 
