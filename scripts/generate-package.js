@@ -8,6 +8,7 @@ const fs = require('fs');
 const root = path.join(__dirname, '..');
 const original = path.join(root, 'package.json');
 const originalContent = JSON.parse(fs.readFileSync(original).toString());
+const requiredFiles = ['README.md', 'NOTICE', 'LICENSE'];
 
 const packages = [
   {
@@ -16,7 +17,7 @@ const packages = [
       main: './build/index.js',
       exports: {
         '.': './build/index.js',
-        './internal': './build/internal.js'
+        './internal': './build/internal.js',
       },
       files: ['shared', 'build'],
     },
@@ -50,6 +51,10 @@ const packages = [
 packages.forEach((package) => {
   const { packageRoot, dependencies, manifest } = package;
   const { version } = originalContent;
+
+  requiredFiles.forEach((filename) => {
+    fs.cpSync(path.join(root, filename), path.join(packageRoot, filename));
+  });
 
   const pkg = {
     version,
