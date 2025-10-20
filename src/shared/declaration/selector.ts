@@ -1,6 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { SelectorCustomizer } from './interfaces';
+import { isGlobalSelector } from '../styles/selector';
 
 interface SelectorParams {
   global: string[];
@@ -15,13 +16,13 @@ export class Selector {
   }
 
   for({ global, local }: SelectorParams): string {
-    if (global.length === 1 && !local?.length && global[0] === ':root') {
-      // :root is only applied alone
-      return this.customizer(':root');
+    if (global.length === 1 && !local?.length && isGlobalSelector(global[0])) {
+      // Global selectors (:root, body, html) are only applied alone
+      return this.customizer(global[0]);
     }
-    const globalWithoutRoot = global.filter((f) => f !== ':root');
+    const customGlobal = global.filter((f) => !isGlobalSelector(f));
 
-    let selector = this.toSelector(globalWithoutRoot);
+    let selector = this.toSelector(customGlobal);
     if (local?.length) {
       selector += ` ${this.toSelector(local)}`;
     }
