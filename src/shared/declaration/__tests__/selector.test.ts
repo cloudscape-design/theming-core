@@ -20,7 +20,7 @@ describe('Selector', () => {
   test('creates selector for context', () => {
     expect(selector.for({ global: ['.theme'], local: ['.context'] })).toEqual('.theme .context');
     expect(selector.for({ global: [':root'], local: ['.context'] })).toEqual('.context');
-    expect(selector.for({ global: ['html', '.theme'], local: ['.context'] })).toEqual('.theme .context');
+    expect(selector.for({ global: ['html', '.awsui-theme'], local: ['.context'] })).toEqual('.awsui-theme .context');
   });
 
   test('creates selector for context within mode', () => {
@@ -34,6 +34,7 @@ describe('Selector', () => {
   test('customizes each selector when multiple', () => {
     const selector = new Selector((sel) => `${sel}:not(.theme)`);
     expect(selector.for({ global: [':root', '.mode'], local: ['.context'] })).toEqual('.mode .context:not(.theme)');
+    expect(selector.for({ global: ['body', '.mode'], local: ['.context'] })).toEqual('.mode .context:not(.theme)');
   });
 
   test('applies global selectors alone when no local selectors', () => {
