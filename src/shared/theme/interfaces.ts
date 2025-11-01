@@ -35,6 +35,62 @@ export interface Theme {
   modes: Record<string, Mode>;
   tokenModeMap: Record<string, string>;
   contexts: Record<string, Context>;
+  referenceTokens?: ReferenceTokens;
+}
+
+/**
+ * Reference tokens enable seed-based palette generation and semantic token organization.
+ */
+export interface ReferenceTokens {
+  color?: ColorReferenceTokens;
+}
+
+export interface ColorReferenceTokens {
+  primary?: ColorPaletteInput;
+  neutral?: ColorPaletteInput;
+  error?: ColorPaletteInput;
+  success?: ColorPaletteInput;
+  warning?: ColorPaletteInput;
+  info?: ColorPaletteInput;
+}
+
+/**
+ * Color reference tokens organized by semantic color categories.
+ * Each category can be defined using a seed color (string) or detailed palette definition.
+ */
+export type ColorPaletteInput = string | ColorPaletteDefinition;
+
+/**
+ * Palette steps available across all color types. Different color categories
+ * may use different subsets of these steps.
+ */
+export type PaletteStep =
+  | 50
+  | 100
+  | 150
+  | 200
+  | 250
+  | 300
+  | 350
+  | 400
+  | 450
+  | 500
+  | 550
+  | 600
+  | 650
+  | 700
+  | 750
+  | 800
+  | 850
+  | 900
+  | 950
+  | 1000;
+
+/**
+ * Color palette definition supporting both seed generation and explicit overrides.
+ */
+export interface ColorPaletteDefinition extends Partial<Record<PaletteStep, string>> {
+  seed?: string;
 }
 
 type Tokens = Partial<Record<string, GlobalValue | TypedModeValueOverride>>;

@@ -55,3 +55,26 @@ test('theme adds context', () => {
     },
   });
 });
+
+test('theme adds reference tokens', () => {
+  builder.addReferenceTokens({
+    color: {
+      neutral: { 900: '#242E3C' },
+      warning: { 400: '#ff9900' },
+    },
+  });
+
+  const theme = builder.build();
+
+  expect(theme.referenceTokens).toMatchObject({
+    color: {
+      neutral: { 900: '#242E3C' },
+      warning: { 400: '#ff9900' },
+    },
+  });
+
+  expect(theme.tokens).toMatchObject({
+    colorNeutral900: '#242E3C',
+    colorWarning400: '#ff9900',
+  });
+});
