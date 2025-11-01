@@ -11,6 +11,11 @@ export {
   GlobalValue,
   ModeValue,
   TypedModeValueOverride,
+  ReferenceTokens,
+  ColorReferenceTokens,
+  ColorPaletteInput,
+  ColorPaletteDefinition,
+  PaletteStep,
 } from './interfaces';
 export { ThemeBuilder, TokenCategory } from './builder';
 export {

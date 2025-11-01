@@ -13,4 +13,9 @@ export {
   Value,
   resolveTheme,
   resolveThemeWithPaths,
+  ReferenceTokens,
+  ColorReferenceTokens,
+  ColorPaletteInput,
+  ColorPaletteDefinition,
+  PaletteStep,
 } from '../shared/theme';
