@@ -8,6 +8,7 @@ import {
   ColorReferenceTokens,
   ColorPaletteInput,
   PaletteStep,
+  ColorPaletteDefinition,
 } from './interfaces';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
@@ -70,8 +71,8 @@ export class ThemeBuilder {
     return this.theme;
   }
 
-  private processReferenceTokens(colorTokens: ColorReferenceTokens): Record<string, string> {
-    const generatedTokens: Record<string, string> = {};
+  private processReferenceTokens(colorTokens: ColorReferenceTokens): TokenCategory<string, string> {
+    const generatedTokens: TokenCategory<string, string> = {};
 
     Object.entries(colorTokens).forEach(([colorName, paletteInput]) => {
       const palette = this.processColorPaletteInput(paletteInput);
@@ -86,58 +87,25 @@ export class ThemeBuilder {
     return generatedTokens;
   }
 
-  private processColorPaletteInput(input: ColorPaletteInput): Record<PaletteStep, string> {
-    if (typeof input === 'string') {
-      // Simple seed case: generate basic palette from seed
-      return this.generateBasicPalette(input);
-    } else {
-      // Complex case: object with seed and/or explicit step values
-      const validSteps = [
-        50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000,
-      ];
-
-      // Start with generated palette if seed is provided, otherwise empty
-      const result: Record<PaletteStep, string> = input.seed
-        ? this.generateBasicPalette(input.seed)
-        : ({} as Record<PaletteStep, string>);
-
-      // Override with explicit step values
-      Object.entries(input).forEach(([step, value]) => {
-        const numStep = Number(step);
-        if (step !== 'seed' && value && validSteps.includes(numStep)) {
-          result[numStep as PaletteStep] = value;
-        }
-      });
-
-      return result;
+  // Right now just validates steps, but will also handle seed token color generation in a future PR
+  private processColorPaletteInput(input: ColorPaletteInput): ColorPaletteDefinition {
+    const validSteps: number[] = [];
+    // Add steps 50-1000 in increments of 50
+    for (let i = 50; i <= 1000; i += 50) {
+      validSteps.push(i);
     }
-  }
 
-  private generateBasicPalette(seed: string): Record<PaletteStep, string> {
-    // Placeholder implementation - will be replaced with HCT generation later
-    // For now, just return the seed color for all steps to establish the plumbing
-    return {
-      50: seed,
-      100: seed,
-      150: seed,
-      200: seed,
-      250: seed,
-      300: seed,
-      350: seed,
-      400: seed,
-      450: seed,
-      500: seed,
-      550: seed,
-      600: seed,
-      650: seed,
-      700: seed,
-      750: seed,
-      800: seed,
-      850: seed,
-      900: seed,
-      950: seed,
-      1000: seed,
-    };
+    const result: ColorPaletteDefinition = {};
+
+    // Add explicit step values
+    Object.entries(input).forEach(([step, value]) => {
+      const numStep = Number(step);
+      if (value && validSteps.includes(numStep)) {
+        result[numStep as PaletteStep] = value;
+      }
+    });
+
+    return result;
   }
 
   private capitalize(str: string): string {

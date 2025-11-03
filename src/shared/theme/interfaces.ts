@@ -56,9 +56,9 @@ export interface ColorReferenceTokens {
 
 /**
  * Color reference tokens organized by semantic color categories.
- * Each category can be defined using a seed color (string) or detailed palette definition.
+ * Each category is defined as a palette definition with explicit color values.
  */
-export type ColorPaletteInput = string | ColorPaletteDefinition;
+export type ColorPaletteInput = ColorPaletteDefinition;
 
 /**
  * Palette steps available across all color types. Different color categories
@@ -87,11 +87,9 @@ export type PaletteStep =
   | 1000;
 
 /**
- * Color palette definition supporting both seed generation and explicit overrides.
+ * Color palette definition with explicit color values for palette steps.
  */
-export interface ColorPaletteDefinition extends Partial<Record<PaletteStep, string>> {
-  seed?: string;
-}
+export type ColorPaletteDefinition = Partial<Record<PaletteStep, string>>;
 
 type Tokens = Partial<Record<string, GlobalValue | TypedModeValueOverride>>;
 
