@@ -1,6 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme } from '../theme';
+import { mergeInPlace, Override, Theme, ResolveOptions } from '../theme';
+import { generateReferenceTokenName } from '../theme/utils';
 import type { PropertiesMap, SelectorCustomizer } from './interfaces';
 import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
@@ -35,12 +36,13 @@ export function createOverrideDeclarations(
   base: Theme,
   override: Override,
   propertiesMap: PropertiesMap,
-  selectorCustomizer: SelectorCustomizer
+  selectorCustomizer: SelectorCustomizer,
+  options?: ResolveOptions
 ): string {
   // create theme containing only modified tokens
   const minimalTheme = createMinimalTheme(base, override);
   const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
-  const stylesheetCreator = new SingleThemeCreator(minimalTheme, ruleCreator, base);
+  const stylesheetCreator = new SingleThemeCreator(minimalTheme, ruleCreator, base, options);
   const stylesheet = stylesheetCreator.create();
   return stylesheet.toString();
 }
@@ -50,10 +52,33 @@ export function createBuildDeclarations(
   secondary: Theme[],
   propertiesMap: PropertiesMap,
   selectorCustomizer: SelectorCustomizer,
-  used: string[]
+  used: string[],
+  options?: ResolveOptions
 ): string {
-  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new UsedPropertyRegistry(propertiesMap, used));
-  const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator);
+  // When CSS vars are enabled, include reference tokens from all themes in the used list
+  let effectiveUsed = used;
+  if (options?.useCssVars) {
+    const allThemes = [primary, ...secondary];
+    const referenceTokens: string[] = [];
+    allThemes.forEach((theme) => {
+      if (theme.referenceTokens?.color) {
+        Object.entries(theme.referenceTokens.color).forEach(([colorName, palette]) => {
+          if (palette) {
+            Object.keys(palette).forEach((step) => {
+              referenceTokens.push(generateReferenceTokenName(colorName, step));
+            });
+          }
+        });
+      }
+    });
+    effectiveUsed = [...used, ...referenceTokens];
+  }
+
+  const ruleCreator = new RuleCreator(
+    new Selector(selectorCustomizer),
+    new UsedPropertyRegistry(propertiesMap, effectiveUsed)
+  );
+  const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator, options);
   const stylesheet = stylesheetCreator.create();
   const transformer = new MinimalTransformer();
   const minimal = transformer.transform(stylesheet);

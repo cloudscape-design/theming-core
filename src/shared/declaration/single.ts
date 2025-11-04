@@ -9,7 +9,9 @@ import {
   resolveContext,
   resolveTheme,
   Theme,
+  ResolveOptions,
 } from '../theme';
+import { generateReferenceTokenDefaults } from '../theme/utils';
 import Stylesheet from './stylesheet';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
@@ -21,19 +23,28 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
   baseTheme?: Theme;
   resolution: FullResolution;
   ruleCreator: RuleCreator;
+  options?: ResolveOptions;
 
-  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme) {
+  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme, options?: ResolveOptions) {
     super();
     this.theme = theme;
     this.baseTheme = baseTheme;
-    this.resolution = resolveTheme(theme, this.baseTheme);
+    this.resolution = resolveTheme(theme, this.baseTheme, options);
     this.ruleCreator = ruleCreator;
+    this.options = options;
   }
 
   create(): Stylesheet {
     const stylesheet = new Stylesheet();
 
     const defaults = reduce(this.resolution, this.theme, defaultsReducer(), this.baseTheme);
+
+    // Add CSS variable declarations for reference tokens when useCssVars is enabled
+    if (this.options?.useCssVars && this.options?.propertiesMap) {
+      const referenceDefaults = generateReferenceTokenDefaults(this.theme, this.options.propertiesMap);
+      Object.assign(defaults, referenceDefaults);
+    }
+
     const rootRule = this.ruleCreator.create({ global: [this.theme.selector] }, defaults);
     SingleThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, []);
 
@@ -49,7 +60,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContext(this.theme, (context) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.options),
         this.theme,
         defaultsReducer(),
         this.baseTheme
@@ -69,7 +80,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContextWithinOptionalModeState(this.theme, (context, mode, state) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.options),
         this.theme,
         modeReducer(mode, state),
         this.baseTheme
