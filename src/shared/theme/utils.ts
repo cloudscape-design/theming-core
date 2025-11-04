@@ -3,6 +3,42 @@
 import { Assignment, DefaultState, OptionalState, Theme } from './interfaces';
 import { Value, Reference, ModeValue, Mode } from './interfaces';
 
+export function isReferenceToken(theme: Theme, token: string): boolean {
+  if (!theme.referenceTokens?.color) return false;
+
+  return Object.entries(theme.referenceTokens.color).some(([colorName, palette]) => {
+    if (!palette) return false;
+    return Object.keys(palette).some((step) => generateReferenceTokenName(colorName, step) === token);
+  });
+}
+
+export function generateReferenceTokenDefaults(
+  theme: Theme,
+  propertiesMap: Record<string, string>
+): Record<string, string> {
+  const defaults: Record<string, string> = {};
+
+  if (theme.referenceTokens?.color) {
+    Object.entries(theme.referenceTokens.color).forEach(([colorName, palette]) => {
+      if (palette) {
+        Object.entries(palette).forEach(([step, value]) => {
+          const tokenName = generateReferenceTokenName(colorName, step);
+          const cssVarName = propertiesMap[tokenName];
+          if (cssVarName && typeof value === 'string') {
+            defaults[cssVarName] = value;
+          }
+        });
+      }
+    });
+  }
+
+  return defaults;
+}
+
+export function generateReferenceTokenName(colorName: string, step: string): string {
+  return `color${colorName.charAt(0).toUpperCase() + colorName.slice(1)}${step}`;
+}
+
 export function isValue(val: unknown): val is Value {
   return typeof val === 'string' && !isReference(val);
 }
