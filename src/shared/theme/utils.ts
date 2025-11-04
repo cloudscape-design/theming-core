@@ -1,7 +1,52 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Assignment, DefaultState, OptionalState, Theme } from './interfaces';
+import { Assignment, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces';
 import { Value, Reference, ModeValue, Mode } from './interfaces';
+
+export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, token: string): boolean {
+  const categoryTokens = theme.referenceTokens?.[category];
+  if (!categoryTokens) return false;
+
+  return Object.entries(categoryTokens).some(([type, set]) => {
+    if (!set) return false;
+    return Object.keys(set).some((step) => generateReferenceTokenName(category, type, step) === token);
+  });
+}
+
+export function flattenObject(obj: any, prefix: string[] = []): Record<string, string> {
+  const result: Record<string, string> = {};
+
+  if (!obj || typeof obj !== 'object') {
+    return result;
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    const path = [...prefix, key];
+
+    if (typeof value === 'string') {
+      result[generateCamelCaseName(...path)] = value;
+    } else if (value && typeof value === 'object') {
+      Object.assign(result, flattenObject(value, path));
+    }
+  }
+
+  return result;
+}
+
+export function generateCamelCaseName(...segments: string[]): string {
+  return segments.reduce(
+    (acc, segment, index) => acc + (index === 0 ? segment : segment.charAt(0).toUpperCase() + segment.slice(1)),
+    ''
+  );
+}
+
+export function flattenReferenceTokens(theme: Theme): Record<string, string> {
+  return theme.referenceTokens?.color ? flattenObject(theme.referenceTokens.color, ['color']) : {};
+}
+
+export function generateReferenceTokenName(category: string, type: string, step: string): string {
+  return generateCamelCaseName(category, type, step);
+}
 
 export function isValue(val: unknown): val is Value {
   return typeof val === 'string' && !isReference(val);
