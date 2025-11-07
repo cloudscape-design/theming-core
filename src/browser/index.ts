@@ -42,7 +42,7 @@ export interface ApplyThemeResult {
 
 export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
   const { targetDocument } = params;
-  const content = generateThemeStylesheet({ ...params });
+  const content = generateThemeStylesheet({ ...params, useCssVars: true });
   const nonce = getNonce(targetDocument);
   const styleNode = createStyleNode(content, nonce);
 

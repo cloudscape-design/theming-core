@@ -12,76 +12,37 @@ import { MinimalTransformer } from './transformer';
 import { cloneDeep, values } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override, options?: ResolveOptions): Theme {
-  // Resolve both themes
-  const resolvedBase = resolveTheme(base, undefined, options);
-  const resolvedOverride = resolveTheme(override as Theme, base, options);
-
-  // Get only the different tokens with mode-level granularity
-  const differentTokens = difference(resolvedBase, resolvedOverride);
-
-  // Create minimal theme with only changed tokens
   const minimalTheme = cloneDeep(base);
+  const contextTokens: Set<string> = new Set();
 
-  // Keep only tokens that have differences AND are explicitly overridden
-  Object.keys(minimalTheme.tokens).forEach((key) => {
-    const isDifferent = key in differentTokens;
-    const isExplicitlyOverridden = key in override.tokens;
-
-    // When useCssVars=true, only keep tokens that are both different AND explicitly overridden
-    // This allows tokens that changed due to reference changes to fall back to CSS variables
-    if (options?.useCssVars) {
-      if (!isDifferent || !isExplicitlyOverridden) {
-        delete minimalTheme.tokens[key];
-      }
-    } else {
-      // When useCssVars=false, keep all different tokens (original behavior)
-      if (!isDifferent) {
-        delete minimalTheme.tokens[key];
-      }
-    }
-  });
-
-  // Handle contexts - only keep tokens that are different or in override contexts
   values(minimalTheme.contexts).forEach((context) => {
     Object.keys(context.tokens).forEach((key) => {
       const isInOverrideContext = key in (override?.contexts?.[context.id]?.tokens ?? {});
-      if (!(key in differentTokens) && !isInOverrideContext) {
-        delete context.tokens[key];
+      if (options?.useCssVars) {
+        // useCssVars: only keep explicitly overridden tokens
+        if (!(key in override.tokens) && !isInOverrideContext) {
+          delete context.tokens[key];
+        } else {
+          contextTokens.add(key);
+        }
+      } else {
+        // non-useCssVars: keep tokens in override or in override contexts
+        if (!isInOverrideContext) {
+          delete context.tokens[key];
+        } else {
+          contextTokens.add(key);
+        }
       }
     });
   });
 
-  // Create filtered override with mode-aware token filtering
-  const filteredTokens: Record<string, any> = {};
-  for (const key in override.tokens) {
-    if (key in differentTokens) {
-      const overrideToken = override.tokens[key];
-      const differentToken = differentTokens[key];
-
-      // If it's a mode token and difference function returned partial modes, filter the override token
-      if (isModeValue(overrideToken) && typeof differentToken === 'object' && differentToken !== null) {
-        // Only include mode values from override that are actually different
-        const filteredModeToken: Record<string, any> = {};
-        for (const mode in differentToken) {
-          if (mode in overrideToken) {
-            filteredModeToken[mode] = overrideToken[mode];
-          }
-        }
-        if (Object.keys(filteredModeToken).length > 0) {
-          filteredTokens[key] = filteredModeToken;
-        }
-      } else {
-        // Non-mode token, include as-is
-        filteredTokens[key] = overrideToken;
-      }
+  Object.keys(minimalTheme.tokens).forEach((key) => {
+    if (!contextTokens.has(key) && !(key in override.tokens)) {
+      delete minimalTheme.tokens[key];
     }
-  }
-  const filteredOverride: Override = {
-    ...override,
-    tokens: filteredTokens,
-  };
+  });
 
-  return mergeInPlace(minimalTheme, filteredOverride);
+  return mergeInPlace(minimalTheme, override);
 }
 
 export function createOverrideDeclarations(
