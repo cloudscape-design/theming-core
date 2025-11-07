@@ -1,10 +1,81 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterEach, describe, test, expect } from 'vitest';
-import { preset, presetWithSecondaryTheme, override } from '../../__fixtures__/common';
+import {
+  preset,
+  presetWithSecondaryTheme,
+  override,
+  rootTheme,
+  createStubPropertiesMap,
+  createStubVariablesMap,
+} from '../../__fixtures__/common';
 import { applyTheme, generateThemeStylesheet } from '../index';
+import { Theme, ThemePreset, Override } from '../../shared/theme';
 
 const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');
+
+// Create a theme with reference tokens to test useCssVars
+const themeWithReferenceTokens: Theme = {
+  ...rootTheme,
+  referenceTokens: {
+    color: {
+      primary: {
+        600: '#006ce0',
+        700: '#0053ba',
+        800: '#064695',
+      },
+    },
+  },
+  tokens: {
+    ...rootTheme.tokens,
+    // Generated reference tokens (normally created by ThemeBuilder)
+    colorPrimary600: '#006ce0',
+    colorPrimary700: '#0053ba',
+    colorPrimary800: '#064695',
+    // Tokens that reference the base tokens
+    colorButtonPrimary: '{colorPrimary600}',
+    colorButtonSecondary: '{colorPrimary700}',
+    colorTextPrimary: '{colorPrimary600}',
+    colorBorderPrimary: '{colorPrimary800}',
+    colorBackgroundPrimary: '{colorPrimary700}',
+  },
+};
+
+const presetWithReferenceTokens: ThemePreset = {
+  theme: themeWithReferenceTokens,
+  themeable: [
+    'colorPrimary600',
+    'colorPrimary700',
+    'colorPrimary800',
+    'colorButtonPrimary',
+    'colorButtonSecondary',
+    'colorTextPrimary',
+    'colorBorderPrimary',
+    'colorBackgroundPrimary',
+  ],
+  exposed: [
+    'colorPrimary600',
+    'colorPrimary700',
+    'colorPrimary800',
+    'colorButtonPrimary',
+    'colorButtonSecondary',
+    'colorTextPrimary',
+    'colorBorderPrimary',
+    'colorBackgroundPrimary',
+  ],
+  propertiesMap: {
+    ...createStubPropertiesMap(themeWithReferenceTokens),
+  },
+  variablesMap: createStubVariablesMap(themeWithReferenceTokens),
+};
+
+const overrideWithReferenceTokens: Override = {
+  referenceTokens: { color: { primary: { 600: '#ff6600', 700: '#692dc9' } } },
+  tokens: {
+    colorPrimary700: '#ff00bf', // This should be overridden by reference token
+    // Don't override the dependent tokens - let them cascade via CSS variables
+  },
+};
 
 describe('applyTheme', () => {
   afterEach(() => {
@@ -124,6 +195,27 @@ describe('generateThemeStylesheet', () => {
       expect(() =>
         generateThemeStylesheet({ override, preset: presetWithSecondaryTheme, baseThemeId: 'invalid' })
       ).toThrow(`Specified baseThemeId 'invalid' is not available. Available values are 'root', 'secondary'.`);
+    });
+  });
+
+  describe('with reference tokens and useCssVars', () => {
+    test('creates override styles without CSS variables by default', () => {
+      const styles = generateThemeStylesheet({
+        override: overrideWithReferenceTokens,
+        preset: presetWithReferenceTokens,
+      });
+
+      expect(styles).toMatchSnapshot();
+    });
+
+    test('creates override styles with CSS variables when useCssVars is enabled', () => {
+      const styles = generateThemeStylesheet({
+        override: overrideWithReferenceTokens,
+        preset: presetWithReferenceTokens,
+        useCssVars: true,
+      });
+
+      expect(styles).toMatchSnapshot();
     });
   });
 });

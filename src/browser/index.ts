@@ -10,10 +10,11 @@ export interface GenerateThemeStylesheetParams {
   override: Override;
   preset: ThemePreset;
   baseThemeId?: string;
+  useCssVars?: boolean;
 }
 
 export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): string {
-  const { override, preset, baseThemeId } = params;
+  const { override, preset, baseThemeId, useCssVars } = params;
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
   const theme = getThemeFromPreset(preset, baseThemeId);
@@ -22,7 +23,8 @@ export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): 
     theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(preset.theme.selector)
+    createMultiThemeCustomizer(preset.theme.selector),
+    useCssVars
   );
 }
 
@@ -31,6 +33,7 @@ export interface ApplyThemeParams {
   preset: ThemePreset;
   baseThemeId?: string;
   targetDocument?: Document;
+  useCssVars?: boolean;
 }
 
 export interface ApplyThemeResult {
@@ -39,7 +42,7 @@ export interface ApplyThemeResult {
 
 export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
   const { targetDocument } = params;
-  const content = generateThemeStylesheet(params);
+  const content = generateThemeStylesheet({ ...params });
   const nonce = getNonce(targetDocument);
   const styleNode = createStyleNode(content, nonce);
 

@@ -89,12 +89,13 @@ export type PaletteStep =
 /**
  * Color palette definition with explicit color values for palette steps.
  */
-export type ColorPaletteDefinition = Partial<Record<PaletteStep, string>>;
+export type ColorPaletteDefinition = Partial<Record<PaletteStep, Value>>;
 
 type Tokens = Partial<Record<string, GlobalValue | TypedModeValueOverride>>;
 
 export interface Override {
   tokens: Tokens;
+  referenceTokens?: ReferenceTokens;
   contexts?: Record<string, { tokens: Tokens } | undefined>;
 }
 
