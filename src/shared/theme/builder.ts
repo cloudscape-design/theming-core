@@ -1,17 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import {
-  Theme,
-  Context,
-  Mode,
-  ReferenceTokens,
-  ColorReferenceTokens,
-  ColorPaletteInput,
-  PaletteStep,
-  ColorPaletteDefinition,
-} from './interfaces';
+import { Theme, Context, Mode, ReferenceTokens } from './interfaces';
 import { processReferenceTokens } from './process';
-import { generateReferenceTokenName } from './utils';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
 

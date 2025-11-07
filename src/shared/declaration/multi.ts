@@ -11,7 +11,7 @@ import {
   Theme,
   ResolveOptions,
 } from '../theme';
-import { generateReferenceTokenDefaults } from '../theme/utils';
+import { flattenReferenceTokens } from '../theme/utils';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
 import { RuleCreator, SelectorConfig } from './rule';
@@ -77,7 +77,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     // Add CSS variable declarations for reference tokens when useCssVars is enabled
     if (this.options?.useCssVars && this.options?.propertiesMap) {
-      const referenceDefaults = generateReferenceTokenDefaults(secondary, this.options.propertiesMap);
+      const referenceDefaults = flattenReferenceTokens(secondary);
       Object.assign(defaults, referenceDefaults);
     }
 

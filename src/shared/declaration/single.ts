@@ -11,7 +11,6 @@ import {
   Theme,
   ResolveOptions,
 } from '../theme';
-import { generateReferenceTokenDefaults } from '../theme/utils';
 import Stylesheet from './stylesheet';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';

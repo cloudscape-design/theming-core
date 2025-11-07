@@ -117,7 +117,12 @@ function resolveToken(
     const resolvedValue = resolveToken(theme, ref, path, state, baseTheme, options);
 
     // If CSS vars enabled and the referenced token is a reference token, return CSS variable
-    if (options?.useCssVars && options?.propertiesMap && isReferenceToken(theme, ref) && options.propertiesMap[ref]) {
+    if (
+      options?.useCssVars &&
+      options?.propertiesMap &&
+      isReferenceToken('color', theme, ref) &&
+      options.propertiesMap[ref]
+    ) {
       return `var(${options.propertiesMap[ref]})`;
     }
 

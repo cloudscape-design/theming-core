@@ -13,7 +13,7 @@ export function processReferenceTokens(colorTokens: ColorReferenceTokens): Token
 
     // Add generated palette tokens with naming convention: colorPrimary50, colorPrimary600, etc.
     Object.entries(palette).forEach(([step, value]) => {
-      const tokenName = generateReferenceTokenName(colorName, step);
+      const tokenName = generateReferenceTokenName('color', colorName, step);
       generatedTokens[tokenName] = value;
     });
   });

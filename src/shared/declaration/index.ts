@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mergeInPlace, Override, Theme, resolveTheme, difference, ResolveOptions } from '../theme';
-import { generateReferenceTokenName, isModeValue } from '../theme/utils';
+import { flattenReferenceTokens, isModeValue } from '../theme/utils';
 import type { PropertiesMap, SelectorCustomizer } from './interfaces';
 import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
@@ -118,17 +118,9 @@ export function createBuildDeclarations(
   let effectiveUsed = used;
   if (useCssVars) {
     const allThemes = [primary, ...secondary];
-    const referenceTokens: string[] = [];
+    let referenceTokens: string[] = [];
     allThemes.forEach((theme) => {
-      if (theme.referenceTokens?.color) {
-        Object.entries(theme.referenceTokens.color).forEach(([colorName, palette]) => {
-          if (palette) {
-            Object.keys(palette).forEach((step) => {
-              referenceTokens.push(generateReferenceTokenName(colorName, step));
-            });
-          }
-        });
-      }
+      referenceTokens = Object.keys(flattenReferenceTokens(theme));
     });
     effectiveUsed = [...used, ...referenceTokens];
   }

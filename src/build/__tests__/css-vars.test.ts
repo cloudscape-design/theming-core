@@ -3,7 +3,7 @@
 import { test, expect } from 'vitest';
 import { buildThemedComponentsInternal } from '../internal';
 import { Theme, resolveTheme, resolveContext } from '../../shared/theme';
-import { isReferenceToken, generateReferenceTokenDefaults, generateReferenceTokenName } from '../../shared/theme/utils';
+import { isReferenceToken, generateReferenceTokenName, flattenReferenceTokens } from '../../shared/theme/utils';
 import { createBuildDeclarations } from '../../shared/declaration';
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -66,19 +66,19 @@ test('CSS variable optimization works without errors', async () => {
 });
 
 test('isReferenceToken identifies reference tokens correctly', () => {
-  expect(isReferenceToken(testTheme, 'colorPrimary500')).toBe(true);
-  expect(isReferenceToken(testTheme, 'colorNeutral900')).toBe(true);
-  expect(isReferenceToken(testTheme, 'colorPrimary')).toBe(false);
-  expect(isReferenceToken(testTheme, 'colorSuccess500')).toBe(false); // Not in referenceTokens
+  expect(isReferenceToken('color', testTheme, 'colorPrimary500')).toBe(true);
+  expect(isReferenceToken('color', testTheme, 'colorNeutral900')).toBe(true);
+  expect(isReferenceToken('color', testTheme, 'colorPrimary')).toBe(false);
+  expect(isReferenceToken('color', testTheme, 'colorSuccess500')).toBe(false); // Not in referenceTokens
 });
 
 test('generateReferenceTokenName creates correct token names', () => {
-  expect(generateReferenceTokenName('primary', '500')).toBe('colorPrimary500');
-  expect(generateReferenceTokenName('neutral', '900')).toBe('colorNeutral900');
+  expect(generateReferenceTokenName('color', 'primary', '500')).toBe('colorPrimary500');
+  expect(generateReferenceTokenName('color', 'neutral', '900')).toBe('colorNeutral900');
 });
 
 test('generateReferenceTokenDefaults creates CSS variable declarations', () => {
-  const defaults = generateReferenceTokenDefaults(testTheme, propertiesMap);
+  const defaults = flattenReferenceTokens(testTheme);
 
   expect(defaults).toEqual({
     colorPrimary500: '#reference-primary-value',
