@@ -127,10 +127,7 @@ test('resolveContext with CSS variables preserves var() references', () => {
 });
 
 test('createBuildDeclarations includes reference tokens when useCssVars enabled', () => {
-  const css = createBuildDeclarations(testTheme, [], propertiesMap, (selector) => selector, ['colorPrimary'], {
-    useCssVars: true,
-    propertiesMap,
-  });
+  const css = createBuildDeclarations(testTheme, [], propertiesMap, (selector) => selector, ['colorPrimary'], true);
 
   expect(css).toContain('--color-primary-500');
   expect(css).toContain('--color-neutral-900');
@@ -161,10 +158,7 @@ test('createBuildDeclarations with secondary theme generates reference token CSS
     propertiesMap,
     (selector) => selector,
     ['colorPrimary', 'colorError100'],
-    {
-      useCssVars: true,
-      propertiesMap,
-    }
+    true
   );
 
   // Should contain reference tokens from both primary and secondary themes

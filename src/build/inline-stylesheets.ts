@@ -27,7 +27,7 @@ export function getInlineStylesheets(
     propertiesMap,
     (selector) => markGlobal(selector),
     neededTokens,
-    useCssVars ? { useCssVars, propertiesMap } : undefined
+    useCssVars
   );
 
   const declaration = {

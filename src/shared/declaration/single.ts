@@ -39,12 +39,6 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     const defaults = reduce(this.resolution, this.theme, defaultsReducer(), this.baseTheme);
 
-    // Add CSS variable declarations for reference tokens when useCssVars is enabled
-    if (this.options?.useCssVars && this.options?.propertiesMap) {
-      const referenceDefaults = generateReferenceTokenDefaults(this.theme, this.options.propertiesMap);
-      Object.assign(defaults, referenceDefaults);
-    }
-
     const rootRule = this.ruleCreator.create({ global: [this.theme.selector] }, defaults);
     SingleThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, []);
 
