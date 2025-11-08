@@ -14,7 +14,7 @@ export {
   ReferenceTokens,
   ColorReferenceTokens,
   ColorPaletteInput,
-  ColorPaletteDefinition,
+  ColorPalette,
   PaletteStep,
 } from './interfaces';
 export { ThemeBuilder, TokenCategory } from './builder';

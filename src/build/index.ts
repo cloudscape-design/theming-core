@@ -16,6 +16,6 @@ export {
   ReferenceTokens,
   ColorReferenceTokens,
   ColorPaletteInput,
-  ColorPaletteDefinition,
+  ColorPalette,
   PaletteStep,
 } from '../shared/theme';
