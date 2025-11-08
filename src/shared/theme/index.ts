@@ -11,11 +11,8 @@ export {
   GlobalValue,
   ModeValue,
   TypedModeValueOverride,
+  ReferencePaletteDefinition,
   ReferenceTokens,
-  ColorReferenceTokens,
-  ColorPaletteInput,
-  ColorPaletteDefinition,
-  PaletteStep,
 } from './interfaces';
 export { ThemeBuilder, TokenCategory } from './builder';
 export {
@@ -33,3 +30,4 @@ export {
 } from './resolve';
 export { validateOverride } from './validate';
 export { merge, mergeInPlace } from './merge';
+export { processColorPaletteInput } from './process';
