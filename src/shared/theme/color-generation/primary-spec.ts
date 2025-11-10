@@ -1,16 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { PaletteStep, ReferencePaletteDefinition } from '../interfaces';
+import { PaletteStep } from '../interfaces';
 import { PaletteSpecification } from './palette-spec';
 
 const MIN_TONE = 3;
 const MAX_TONE = 99;
-const MIN_CHROMA = 6;
 
 export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteStep> {
   public constructor() {
-    super(MIN_CHROMA, [
+    super([
       {
         position: 50,
         chromaFraction: 0.2, // Very desaturated for light colors

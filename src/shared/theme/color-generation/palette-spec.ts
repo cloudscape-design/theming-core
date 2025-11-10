@@ -1,11 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ColorPalette, ReferencePaletteDefinition } from '../interfaces';
+import { ReferencePaletteDefinition } from '../interfaces';
 import { createHct, Hct, hctToHex, hexToHct } from './hct-utils';
 
 interface ColorSpecification<PaletteKeys> {
   position: PaletteKeys;
-  // 0 - 1
+  // 0 - 1 mulitplier that creates variation across palette positions. It scales relatively based on the chroma of the seed color
   chromaFraction: number;
   // 0 - 100
   minTone: number;
@@ -14,14 +14,12 @@ interface ColorSpecification<PaletteKeys> {
 }
 
 export class PaletteSpecification<PaletteKeys> {
-  minimumChroma: number;
-  maxSaturation: number;
+  maxChroma: number;
   colorSpecifications: ColorSpecification<PaletteKeys>[];
 
-  constructor(minChroma: number, positionRequirements: ColorSpecification<PaletteKeys>[], maxSaturation?: number) {
-    this.minimumChroma = minChroma;
+  constructor(positionRequirements: ColorSpecification<PaletteKeys>[], maxChroma?: number) {
     this.colorSpecifications = positionRequirements;
-    this.maxSaturation = maxSaturation || 1;
+    this.maxChroma = maxChroma ?? 200; // High default for unrestricted palettes
   }
 
   private findColorSpecification(hctColor: Hct): ColorSpecification<PaletteKeys> | undefined {
@@ -79,8 +77,11 @@ export class PaletteSpecification<PaletteKeys> {
   }
 
   public getPalette(hexBaseColor: string, autoAdjust = true): ReferencePaletteDefinition {
+    let seedWasAdjusted = false;
     if (autoAdjust) {
+      const original = hexBaseColor;
       hexBaseColor = this.validateAndAdjustSeed(hexBaseColor);
+      seedWasAdjusted = original !== hexBaseColor;
     }
 
     const hctBaseColor = hexToHct(hexBaseColor);
@@ -93,18 +94,28 @@ export class PaletteSpecification<PaletteKeys> {
     }
     const baseColorToneRangePosition = this.getColorToneProportion(baseColorPalettePosition, hctBaseColor);
 
-    chroma = chroma / baseColorPalettePosition.chromaFraction;
+    // For low saturation palettes, use seed chroma directly to avoid inflation
+    const useDirectChroma = this.maxChroma < 50;
+    if (!useDirectChroma) {
+      chroma = chroma / baseColorPalettePosition.chromaFraction;
+    }
 
     const colors: ReferencePaletteDefinition = {};
 
     for (const color of this.colorSpecifications) {
       const tone = this.getColorToneForProportion(color, baseColorToneRangePosition);
       const isPaletteBase = baseColorPalettePosition?.position == color.position;
-      const adjustedChroma = color.chromaFraction * chroma;
+      let adjustedChroma = color.chromaFraction * chroma;
 
-      const paletteColor = isPaletteBase
-        ? hexBaseColor //use provided hex for base to ensure consistency
-        : hctToHex(createHct(hue, adjustedChroma, tone));
+      // Cap chroma to respect maxChroma
+      if (adjustedChroma > this.maxChroma) {
+        adjustedChroma = this.maxChroma;
+      }
+
+      const paletteColor =
+        isPaletteBase && !seedWasAdjusted
+          ? hexBaseColor // Preserve exact seed color only if not adjusted
+          : hctToHex(createHct(hue, adjustedChroma, tone));
 
       colors[color.position as keyof ReferencePaletteDefinition] = paletteColor;
     }
