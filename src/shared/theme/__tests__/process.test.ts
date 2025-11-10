@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect, vi } from 'vitest';
 import { processReferenceTokens, processColorPaletteInput } from '../process';
-import { ColorReferenceTokens } from '../interfaces';
+import { ReferenceTokens } from '../interfaces';
 
 // Mock the color generation utilities
 vi.mock('../color-generation/hct-utils', () => ({
@@ -15,11 +15,14 @@ vi.mock('../color-generation/hct-utils', () => ({
     },
   })),
   hexFromArgb: vi.fn((argb: number) => `#${(argb & 0xffffff).toString(16).padStart(6, '0')}`),
+  hexToHct: vi.fn((hex: string) => ({ hue: 180, chroma: 50, tone: 50 })),
+  hctToHex: vi.fn(() => '#008080'),
+  createHct: vi.fn((hue: number, chroma: number, tone: number) => ({ hue, chroma, tone })),
 }));
 
 describe('processReferenceTokens', () => {
   test('processes object-based color reference tokens', () => {
-    const colorTokens: ColorReferenceTokens = {
+    const colorTokens: ReferenceTokens['color'] = {
       primary: {
         50: '#e6f3ff',
         500: '#0073bb',
@@ -41,7 +44,7 @@ describe('processReferenceTokens', () => {
   });
 
   test('processes all color categories', () => {
-    const colorTokens: ColorReferenceTokens = {
+    const colorTokens: ReferenceTokens['color'] = {
       primary: { 500: '#0073bb' },
       neutral: { 500: '#888888' },
       error: { 400: '#f44336' },
@@ -65,7 +68,7 @@ describe('processReferenceTokens', () => {
   });
 
   test('processes seed-based color reference tokens', () => {
-    const colorTokens: ColorReferenceTokens = {
+    const colorTokens: ReferenceTokens['color'] = {
       primary: '#0073bb',
       neutral: '#888888',
     };
@@ -82,7 +85,7 @@ describe('processReferenceTokens', () => {
   });
 
   test('processes mixed seed and object-based tokens', () => {
-    const colorTokens: ColorReferenceTokens = {
+    const colorTokens: ReferenceTokens['color'] = {
       primary: '#0073bb', // seed
       neutral: {
         // object
@@ -111,7 +114,7 @@ describe('processColorPaletteInput', () => {
       600: '#0066aa',
     };
 
-    const result = processColorPaletteInput(input);
+    const result = processColorPaletteInput('primary', input);
 
     expect(result).toEqual({
       50: '#e6f3ff',
@@ -127,7 +130,7 @@ describe('processColorPaletteInput', () => {
       600: '#custom600',
     };
 
-    const result = processColorPaletteInput(input);
+    const result = processColorPaletteInput('primary', input);
 
     // Explicit values should take precedence over generated
     expect(result[500]).toBe('#custom500');
@@ -139,14 +142,14 @@ describe('processColorPaletteInput', () => {
   });
 
   test('processes string input as seed', () => {
-    const result = processColorPaletteInput('#0073bb');
+    const result = processColorPaletteInput('primary', '#0073bb');
 
     // Should generate full palette
     expect(result[50]).toBeDefined();
     expect(result[100]).toBeDefined();
     expect(result[500]).toBeDefined();
     expect(result[1000]).toBeDefined();
-    expect(Object.keys(result)).toHaveLength(11);
+    expect(Object.keys(result)).toHaveLength(12);
   });
 
   test('filters invalid palette steps', () => {
@@ -157,7 +160,7 @@ describe('processColorPaletteInput', () => {
       1050: '#invalid', // Invalid step
     };
 
-    const result = processColorPaletteInput(input);
+    const result = processColorPaletteInput('primary', input);
 
     // expect(result[25]).toBeUndefined();
     // expect(result[1050]).toBeUndefined();
@@ -166,7 +169,7 @@ describe('processColorPaletteInput', () => {
   });
 
   test('handles empty object input', () => {
-    const result = processColorPaletteInput({});
+    const result = processColorPaletteInput('primary', {});
 
     expect(result).toEqual({});
   });
