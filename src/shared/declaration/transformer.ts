@@ -36,6 +36,55 @@ export class MinimalTransformer implements Transformer {
         return acc;
       }, {});
       const diff = difference(resolvedParent, ruleValue);
+
+      // When useCssVars is enabled, we need to keep tokens that reference other tokens
+      // that are being overridden in the current rule, even if the reference is the same.
+      // This ensures CSS variable inheritance works correctly in contexts.
+      // Only apply this to context selectors (containing .awsui-context-)
+      const selector = rule.toString().split('{')[0].trim();
+      if (selector.includes('.awsui-context-')) {
+        // Helper to check if a variable or any variable it references is overridden
+        const isVariableOverriddenRecursive = (varName: string, visited = new Set<string>()): boolean => {
+          if (visited.has(varName)) return false; // Prevent infinite loops
+          visited.add(varName);
+
+          // Check if this variable itself is overridden
+          if (varName in ruleValue && varName in resolvedParent && ruleValue[varName] !== resolvedParent[varName]) {
+            return true;
+          }
+
+          // Check if this variable references another variable that's overridden
+          if (varName in ruleValue) {
+            const varValue = ruleValue[varName];
+            const refMatch = varValue.match(/var\((--[^)]+)\)/);
+            if (refMatch) {
+              const referencedVar = refMatch[1];
+              if (isVariableOverriddenRecursive(referencedVar, visited)) {
+                return true;
+              }
+            }
+          }
+
+          return false;
+        };
+
+        Object.keys(ruleValue).forEach((property) => {
+          const value = ruleValue[property];
+          // Check if this is a CSS variable reference
+          const match = value.match(/var\((--[^)]+)\)/);
+          if (match) {
+            const referencedVar = match[1];
+            // If the referenced variable (or any variable it references) is overridden
+            if (isVariableOverriddenRecursive(referencedVar)) {
+              // Keep this property even if its value is the same as parent
+              if (!(property in diff) && property in ruleValue) {
+                diff[property] = ruleValue[property];
+              }
+            }
+          }
+        });
+      }
+
       rule.clear();
       entries(diff).forEach(([property, value]) => rule.appendDeclaration(new Declaration(property, value)));
       if (rule.size() === 0) {

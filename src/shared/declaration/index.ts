@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme, resolveTheme, difference, ResolveOptions } from '../theme';
-import { flattenReferenceTokens, isModeValue } from '../theme/utils';
+import { mergeInPlace, Override, Theme, ResolveOptions } from '../theme';
+import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils';
 import type { PropertiesMap, SelectorCustomizer } from './interfaces';
 import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
@@ -54,7 +54,22 @@ export function createOverrideDeclarations(
 ): string {
   // create theme containing only modified tokens
   const minimalTheme = createMinimalTheme(base, override, { useCssVars, propertiesMap });
-  const usedTokens = Object.keys(minimalTheme.tokens);
+  let usedTokens = Object.keys(minimalTheme.tokens);
+
+  if (useCssVars) {
+    // Collect referenced tokens from the base theme since minimalTheme has tokens removed
+    const allReferencedTokens = collectReferencedTokens(base, usedTokens);
+    usedTokens = [...usedTokens, ...allReferencedTokens];
+
+    // Add referenced tokens to minimalTheme so they get output in root
+    // The transformer will remove them from mode/context selectors since they're unchanged
+    allReferencedTokens.forEach((token) => {
+      if (!(token in minimalTheme.tokens) && token in base.tokens) {
+        minimalTheme.tokens[token] = base.tokens[token];
+      }
+    });
+  }
+
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
     useCssVars ? new UsedPropertyRegistry(propertiesMap, usedTokens) : new AllPropertyRegistry(propertiesMap)
@@ -64,7 +79,9 @@ export function createOverrideDeclarations(
     propertiesMap,
   });
   const stylesheet = stylesheetCreator.create();
-  return stylesheet.toString();
+  const transformer = new MinimalTransformer();
+  const minimal = transformer.transform(stylesheet);
+  return minimal.toString();
 }
 
 export function createBuildDeclarations(
@@ -75,15 +92,22 @@ export function createBuildDeclarations(
   used: string[],
   useCssVars?: boolean
 ): string {
-  // When CSS vars are enabled, include reference tokens from all themes in the used list
   let effectiveUsed = used;
+
   if (useCssVars) {
-    const allThemes = [primary, ...secondary];
-    let referenceTokens: string[] = [];
-    allThemes.forEach((theme) => {
-      referenceTokens = Object.keys(flattenReferenceTokens(theme));
+    const themes = [primary, ...secondary];
+    // Add reference tokens (from referenceTokens object)
+    const allReferenceTokens: string[] = [];
+    themes.forEach((theme: Theme) => {
+      const referenceTokens = flattenReferenceTokens(theme);
+      allReferenceTokens.push(...Object.keys(referenceTokens));
     });
-    effectiveUsed = [...used, ...referenceTokens];
+    // Add regular tokens that are referenced by used tokens
+    const allReferencedTokens: string[] = [];
+    themes.forEach((theme: Theme) => {
+      allReferencedTokens.push(...collectReferencedTokens(theme, [...used, ...allReferenceTokens]));
+    });
+    effectiveUsed = [...used, ...allReferenceTokens, ...allReferencedTokens];
   }
 
   const ruleCreator = new RuleCreator(

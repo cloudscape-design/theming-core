@@ -2,6 +2,9 @@
 
 exports[`applyTheme > with baseThemeId > attaches one style node containing overrides with the correct theme selector 1`] = `
 ".secondary-theme.secondary-theme:not(#\\9){
+	--black-css:purple;
+	--grey-css:grey;
+	--brown-css:black;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
@@ -9,38 +12,29 @@ exports[`applyTheme > with baseThemeId > attaches one style node containing over
 }
 @media not print {.dark.dark.secondary-theme:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
-	--boxShadow-css:black;
-	--lineShadow-css:pink;
+	--boxShadow-css:var(--brown-css);
 }}
 .secondary-theme.secondary-theme .navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
 }
 .navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
-	--shadow-css:grey;
+	--shadow-css:var(--grey-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:black;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
-	--shadow-css:grey;
+	--shadow-css:var(--grey-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:black;
-	--lineShadow-css:pink;
 }}"
 `;
 
 exports[`applyTheme > with secondary theme > attaches one style node containing override 1`] = `
 ":root:root{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
@@ -48,32 +42,27 @@ exports[`applyTheme > with secondary theme > attaches one style node containing 
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
-	--boxShadow-css:brown;
-	--lineShadow-css:pink;
+	--boxShadow-css:var(--brown-css);
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}"
 `;
 
 exports[`applyTheme > with targetDocument > attaches one style node containing override on the target document 1`] = `
 ":root:root{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
@@ -81,32 +70,27 @@ exports[`applyTheme > with targetDocument > attaches one style node containing o
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
-	--boxShadow-css:brown;
-	--lineShadow-css:pink;
+	--boxShadow-css:var(--brown-css);
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}"
 `;
 
 exports[`applyTheme > without secondary theme > attaches one style node containing override 1`] = `
 ":root:root{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
 	--boxShadow-css:green;
@@ -114,27 +98,19 @@ exports[`applyTheme > without secondary theme > attaches one style node containi
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
-	--boxShadow-css:brown;
-	--lineShadow-css:pink;
+	--boxShadow-css:var(--brown-css);
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
-	--shadow-css:brown;
+	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}"
 `;
 
@@ -147,33 +123,21 @@ exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`
 }
 @media not print {.dark.dark.secondary-theme:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
 	--boxShadow-css:black;
-	--lineShadow-css:pink;
 }}
 .secondary-theme.secondary-theme .navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
 }
 .navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
-	--boxShadow-css:green;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
 	--shadow-css:grey;
 	--buttonShadow-css:green;
-	--boxShadow-css:black;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
 	--shadow-css:grey;
 	--buttonShadow-css:green;
-	--boxShadow-css:black;
-	--lineShadow-css:pink;
 }}"
 `;
 
@@ -181,131 +145,11 @@ exports[`generateThemeStylesheet > with reference tokens and useCssVars > create
 ":root:root{
 	--colorPrimary600-css:#ff6600;
 	--colorPrimary700-css:#692dc9;
-}
-.compact.compact:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-@media not print {.dark.dark:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}}
-.disabled-motion.disabled-motion:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-.navigation.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-.compact.compact .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-.compact.compact.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-@media not print {.dark.dark .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}}
-.disabled-motion.disabled-motion .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-}
-.disabled-motion.disabled-motion.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
 }"
 `;
 
 exports[`generateThemeStylesheet > with reference tokens and useCssVars > creates override styles without CSS variables by default 1`] = `
 ":root:root{
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-.compact.compact:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-@media not print {.dark.dark:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}}
-.disabled-motion.disabled-motion:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-.navigation.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-.compact.compact .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-.compact.compact.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-@media not print {.dark.dark .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}}
-.disabled-motion.disabled-motion .navigation:not(#\\9){
-	--colorPrimary600-css:#ff6600;
-	--colorPrimary700-css:#692dc9;
-	--colorButtonPrimary-css:#ff6600;
-	--colorButtonSecondary-css:#692dc9;
-	--colorTextPrimary-css:#ff6600;
-	--colorBackgroundPrimary-css:#692dc9;
-}
-.disabled-motion.disabled-motion.navigation:not(#\\9){
 	--colorPrimary600-css:#ff6600;
 	--colorPrimary700-css:#692dc9;
 	--colorButtonPrimary-css:#ff6600;
@@ -324,27 +168,19 @@ exports[`generateThemeStylesheet > with secondary theme > creates override style
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
 	--boxShadow-css:brown;
-	--lineShadow-css:pink;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
 	--shadow-css:brown;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
 	--shadow-css:brown;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}"
 `;
 
@@ -357,26 +193,18 @@ exports[`generateThemeStylesheet > without secondary theme > creates override st
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--buttonShadow-css:red;
 	--boxShadow-css:brown;
-	--lineShadow-css:pink;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
-	--buttonShadow-css:red;
 	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }
 @media not print {.dark.dark .navigation:not(#\\9){
 	--shadow-css:brown;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}
 @media not print {.dark.dark.navigation:not(#\\9){
 	--shadow-css:brown;
 	--buttonShadow-css:green;
-	--boxShadow-css:purple;
-	--lineShadow-css:pink;
 }}"
 `;

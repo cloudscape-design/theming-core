@@ -86,6 +86,30 @@ export function getReference(reference: Reference): string {
   return reference.slice(1, reference.length - 1);
 }
 
+export function collectReferencedTokens(theme: Theme, tokens: string[]): string[] {
+  const referenced = new Set<string>();
+
+  const addReferences = (value: any) => {
+    if (isReference(value)) {
+      referenced.add(getReference(value));
+    } else if (isModeValue(value)) {
+      Object.values(value).forEach(addReferences);
+    }
+  };
+
+  tokens.forEach((token) => {
+    const value = theme.tokens[token];
+    if (value) addReferences(value);
+
+    Object.values(theme.contexts).forEach((context) => {
+      const contextValue = context.tokens[token];
+      if (contextValue) addReferences(contextValue);
+    });
+  });
+
+  return Array.from(referenced);
+}
+
 export function getMode(theme: Theme, token: string): Mode | null {
   const modeId = theme.tokenModeMap[token];
   return theme.modes[modeId] ?? null;

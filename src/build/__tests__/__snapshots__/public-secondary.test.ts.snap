@@ -3,54 +3,62 @@
 exports[`Build-time theming of main theme with matching baseThemeId generates the correct css files 1`] = `
 ":root {
   --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
+  --color-orange-500-25sm1g:#ec7211;
+  --color-orange-700-2auf4j:#dd6b10;
   --color-background-button-primary-default-cqohzr:#aaaaaa;
-  --color-background-button-primary-active-h8she0:#dd6b10;
-  --space-scaled-xs-26ut8b:8px;
+  --color-background-button-primary-active-h8she0:var(--color-orange-700-2auf4j);
+  --space-xxs-ihlmrd:4px;
+  --space-xs-xhls0c:8px;
+  --space-scaled-xs-26ut8b:var(--space-xs-xhls0c);
 }
 
 .compact-mode:not(#\\9) {
-  --space-scaled-xs-26ut8b:4px;
+  --space-scaled-xs-26ut8b:var(--space-xxs-ihlmrd);
 }
 
 .dark-mode:not(#\\9) {
   --color-background-button-primary-default-cqohzr:#bbbbbb;
-  --color-background-button-primary-active-h8she0:#ec7211;
+  --color-background-button-primary-active-h8she0:var(--color-orange-500-25sm1g);
 }
 
 .secondary:not(#\\9) {
-  --color-background-button-primary-default-cqohzr:#ec72aa;
-  --color-background-button-primary-active-h8she0:#dd6baa;
+  --color-orange-500-25sm1g:#ec72aa;
+  --color-orange-700-2auf4j:#dd6baa;
+  --color-background-button-primary-default-cqohzr:var(--color-orange-500-25sm1g);
 }
 
 .dark-mode.secondary:not(#\\9) {
-  --color-background-button-primary-default-cqohzr:#dd6baa;
-  --color-background-button-primary-active-h8she0:#ec72aa;
+  --color-background-button-primary-default-cqohzr:var(--color-orange-700-2auf4j);
 }"
 `;
 
 exports[`Build-time theming of secondary theme generates the correct css files 1`] = `
 ":root {
   --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
-  --color-background-button-primary-default-l567s3:#ec7211;
-  --color-background-button-primary-active-h8she0:#dd6b10;
-  --space-scaled-xs-26ut8b:8px;
+  --color-orange-500-25sm1g:#ec7211;
+  --color-orange-700-2auf4j:#dd6b10;
+  --color-background-button-primary-default-l567s3:var(--color-orange-500-25sm1g);
+  --color-background-button-primary-active-h8she0:var(--color-orange-700-2auf4j);
+  --space-xxs-ihlmrd:4px;
+  --space-xs-xhls0c:8px;
+  --space-scaled-xs-26ut8b:var(--space-xs-xhls0c);
 }
 
 .compact-mode:not(#\\9) {
-  --space-scaled-xs-26ut8b:4px;
+  --space-scaled-xs-26ut8b:var(--space-xxs-ihlmrd);
 }
 
 .dark-mode:not(#\\9) {
-  --color-background-button-primary-active-h8she0:#ec7211;
+  --color-background-button-primary-active-h8she0:var(--color-orange-500-25sm1g);
 }
 
 .secondary:not(#\\9) {
+  --color-orange-500-25sm1g:#ec72aa;
+  --color-orange-700-2auf4j:#dd6baa;
   --color-background-button-primary-default-l567s3:#aaaaaa;
-  --color-background-button-primary-active-h8she0:#dd6baa;
 }
 
 .dark-mode.secondary:not(#\\9) {
   --color-background-button-primary-default-l567s3:#bbbbbb;
-  --color-background-button-primary-active-h8she0:#ec72aa;
 }"
 `;

@@ -114,19 +114,13 @@ function resolveToken(
 
   if (isReference(assignment)) {
     const ref = getReference(assignment);
-    const resolvedValue = resolveToken(theme, ref, path, state, baseTheme, options);
-
-    // If CSS vars enabled and the referenced token is a reference token, return CSS variable
-    if (
-      options?.useCssVars &&
-      options?.propertiesMap &&
-      isReferenceToken('color', theme, ref) &&
-      options.propertiesMap[ref]
-    ) {
-      return `var(${options.propertiesMap[ref]})`;
+    if (options?.useCssVars && options?.propertiesMap && options.propertiesMap[ref]) {
+      if (theme.tokens[ref] || baseTheme?.tokens[ref]) {
+        return `var(${options.propertiesMap[ref]})`;
+      }
     }
 
-    return resolvedValue;
+    return resolveToken(theme, ref, path, state, baseTheme, options);
   } else {
     return assignment;
   }
@@ -164,6 +158,23 @@ export function resolveContext(
 
       referenceTokensToResolve.forEach((token) => {
         context.tokens[token] = tmp.tokens[token];
+      });
+
+      // Also collect parent tokens whose resolution paths include context-overridden tokens
+      // This handles cases like colorBorderDropdownGroup -> colorBorderDropdownItemDefault -> colorBorderDividerDefault
+      // where colorBorderDividerDefault is overridden in the context
+      const contextTokens = new Set(Object.keys(context.tokens));
+      Object.keys(tmp.tokens).forEach((token) => {
+        if (!contextTokens.has(token)) {
+          const tokenPath = resolutionPaths[token];
+          if (tokenPath) {
+            const pathTokens = flattenResolutionPaths(tokenPath);
+            // If any token in the resolution path is in the context, include this token
+            if (pathTokens.some((pathToken) => contextTokens.has(pathToken))) {
+              context.tokens[token] = tmp.tokens[token];
+            }
+          }
+        }
       });
     }
   }

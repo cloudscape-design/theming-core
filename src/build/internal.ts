@@ -80,7 +80,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     throw new Error('designTokensOutputDir needs to be specified if not skipped');
   }
 
-  const neededTokens = findNeededTokens(scssDir, variablesMap, exposed);
+  const neededTokens = findNeededTokens(scssDir, variablesMap, exposed, [primary, ...secondary], useCssVars);
 
   const resolution = resolveTheme(primary);
   const defaults = reduce(resolution, primary, defaultsReducer());
