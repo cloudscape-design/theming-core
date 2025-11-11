@@ -5,7 +5,7 @@ import { PaletteStep } from '../interfaces';
 import { PaletteSpecification } from './palette-spec';
 
 const MIN_TONE = 3;
-const MAX_TONE = 99;
+const MAX_TONE = 98;
 
 export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteStep> {
   public constructor() {
@@ -13,7 +13,7 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
       {
         position: 50,
         chromaFraction: 0.2, // Very desaturated for light colors
-        minTone: 98,
+        minTone: 97,
         maxTone: MAX_TONE, // >97 tone range
       },
       {
@@ -50,7 +50,7 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
         position: 600,
         chromaFraction: 1.0, // Slightly enhanced for accessibility
         minTone: 44,
-        maxTone: 48, // 46 tone range - accessibility threshold (49 for white)
+        maxTone: 47, // 46 tone range - accessibility threshold (49 for white)
       },
       {
         position: 700,
