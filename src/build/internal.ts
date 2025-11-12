@@ -73,7 +73,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     descriptions = {},
     jsonSchema = false,
     failOnDeprecations,
-    useCssVars = false,
+    useCssVars = true,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
