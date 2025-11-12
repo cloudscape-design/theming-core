@@ -75,7 +75,21 @@ export function createBuildDeclarations(
   used: string[],
   useCssVars?: boolean
 ): string {
-  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new UsedPropertyRegistry(propertiesMap, used));
+  // When CSS vars are enabled, include reference tokens from all themes in the used list
+  let effectiveUsed = used;
+  if (useCssVars) {
+    const allThemes = [primary, ...secondary];
+    let referenceTokens: string[] = [];
+    allThemes.forEach((theme) => {
+      referenceTokens = Object.keys(flattenReferenceTokens(theme));
+    });
+    effectiveUsed = [...used, ...referenceTokens];
+  }
+
+  const ruleCreator = new RuleCreator(
+    new Selector(selectorCustomizer),
+    new UsedPropertyRegistry(propertiesMap, effectiveUsed)
+  );
   const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator, { useCssVars, propertiesMap });
   const stylesheet = stylesheetCreator.create();
   const transformer = new MinimalTransformer();
