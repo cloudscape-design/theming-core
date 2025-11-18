@@ -1,13 +1,19 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { generatePaletteFromSeed } from './color-generation/palette-generator';
-import { ColorReferenceTokens, ColorPaletteInput, PaletteStep, ReferencePaletteDefinition } from './interfaces';
+import {
+  ColorReferenceTokens,
+  ColorPaletteInput,
+  PaletteStep,
+  ReferencePaletteDefinition,
+  Assignment,
+} from './interfaces';
 import { generateReferenceTokenName } from './utils';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
 
-export function processReferenceTokens(colorTokens: ColorReferenceTokens): TokenCategory<string, string> {
-  const generatedTokens: TokenCategory<string, string> = {};
+export function processReferenceTokens(colorTokens: ColorReferenceTokens): TokenCategory<string, Assignment> {
+  const generatedTokens: TokenCategory<string, Assignment> = {};
 
   Object.entries(colorTokens).forEach(([colorName, paletteInput]) => {
     const palette = processColorPaletteInput(colorName as keyof ColorReferenceTokens, paletteInput);

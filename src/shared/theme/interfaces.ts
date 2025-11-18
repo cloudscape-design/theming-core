@@ -26,6 +26,7 @@ export interface Context {
   id: string;
   selector: string;
   tokens: Record<string, Assignment>;
+  defaultMode?: keyof Mode['states'];
 }
 
 export interface Theme {
@@ -59,7 +60,7 @@ export type ColorPaletteInput = string | ReferencePaletteDefinition;
 export interface ReferencePaletteDefinition extends ColorPalette {
   seed?: string;
 }
-export type ColorPalette = Partial<Record<PaletteStep, string>>;
+export type ColorPalette = Partial<Record<PaletteStep, Assignment>>;
 
 /**
  * Palette steps available across all color types. Different color categories

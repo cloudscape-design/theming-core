@@ -13,8 +13,8 @@ export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, 
   });
 }
 
-export function flattenObject(obj: any, prefix: string[] = []): Record<string, string> {
-  const result: Record<string, string> = {};
+export function flattenObject(obj: any, prefix: string[] = []): Record<string, Assignment> {
+  const result: Record<string, Assignment> = {};
 
   if (!obj || typeof obj !== 'object') {
     return result;
@@ -25,11 +25,13 @@ export function flattenObject(obj: any, prefix: string[] = []): Record<string, s
 
     if (typeof value === 'string') {
       result[generateCamelCaseName(...path)] = value;
+    } else if (isModeValue(value)) {
+      // Stop flattening at mode values - preserve them as Assignment
+      result[generateCamelCaseName(...path)] = value;
     } else if (value && typeof value === 'object') {
       Object.assign(result, flattenObject(value, path));
     }
   }
-
   return result;
 }
 
@@ -40,7 +42,7 @@ export function generateCamelCaseName(...segments: string[]): string {
   );
 }
 
-export function flattenReferenceTokens(theme: Theme): Record<string, string> {
+export function flattenReferenceTokens(theme: Theme): Record<string, Assignment> {
   return theme.referenceTokens?.color ? flattenObject(theme.referenceTokens.color, ['color']) : {};
 }
 
@@ -60,6 +62,8 @@ export function isModeValue(val: unknown): val is ModeValue {
   return (
     typeof val === 'object' &&
     val !== null &&
+    // Exclude objects with numeric keys (palette steps like '500', '900')
+    !Object.keys(val).some((key) => !isNaN(Number(key))) &&
     !Object.keys(val).some((state) => !(isValue((val as ModeValue)[state]) || isReference((val as ModeValue)[state])))
   );
 }
