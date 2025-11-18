@@ -75,12 +75,6 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     const secondaryResolution = resolveTheme(secondary, undefined, this.options);
     const defaults = reduce(secondaryResolution, secondary, defaultsReducer());
 
-    // Add CSS variable declarations for reference tokens when useCssVars is enabled
-    if (this.options?.useCssVars && this.options?.propertiesMap) {
-      const referenceDefaults = flattenReferenceTokens(secondary);
-      Object.assign(defaults, referenceDefaults);
-    }
-
     const rootRule = this.ruleCreator.create({ global: [secondary.selector] }, defaults);
     const parentRule = this.findRule(stylesheet, { global: [primary.selector] });
     MultiThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, compact([parentRule]));

@@ -22,6 +22,18 @@ export class ThemeBuilder {
     };
   }
 
+  private addTokensToModeMap(tokens: Record<string, any>, mode: Mode): void {
+    const modeMap = Object.keys(tokens).reduce((acc, token) => {
+      acc[token] = mode.id;
+      return acc;
+    }, {} as Record<string, string>);
+
+    this.theme.tokenModeMap = {
+      ...this.theme.tokenModeMap,
+      ...modeMap,
+    };
+  }
+
   addTokens<T extends string, V>(tokens: TokenCategory<T, V>, mode?: Mode): ThemeBuilder {
     this.theme.tokens = {
       ...this.theme.tokens,
@@ -29,14 +41,7 @@ export class ThemeBuilder {
     };
 
     if (mode) {
-      const modes = Object.keys(tokens).reduce((acc, token) => {
-        acc[token] = mode.id;
-        return acc;
-      }, {} as Record<string, string>);
-      this.theme.tokenModeMap = {
-        ...this.theme.tokenModeMap,
-        ...modes,
-      };
+      this.addTokensToModeMap(tokens, mode);
     }
 
     return this;
@@ -47,15 +52,16 @@ export class ThemeBuilder {
     return this;
   }
 
-  // Adds processed reference tokens to tokens object
-  addReferenceTokens(referenceTokens: ReferenceTokens): ThemeBuilder {
+  addReferenceTokens(referenceTokens: ReferenceTokens, mode?: Mode): ThemeBuilder {
     this.theme.referenceTokens = referenceTokens;
 
-    // Process reference tokens and add generated tokens to theme
     if (referenceTokens.color) {
       const generatedTokens = processReferenceTokens(referenceTokens.color);
-      // Reference tokens should override existing tokens
       this.theme.tokens = { ...generatedTokens, ...this.theme.tokens };
+
+      if (mode) {
+        this.addTokensToModeMap(generatedTokens, mode);
+      }
     }
 
     return this;

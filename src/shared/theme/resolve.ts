@@ -141,6 +141,33 @@ export function resolveContext(
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
+  if (context.defaultMode && theme.modes) {
+    const defaultMode = context.defaultMode;
+    const mode = Object.values(theme.modes).find((m) => m.states[defaultMode]);
+    if (mode) {
+      // Reference tokens must be resolved to their mode-specific values before path analysis
+      // because resolveThemeWithPaths expects concrete values, not mode objects. Without this,
+      // the resolution would fail when encountering reference tokens with mode values.
+      Object.keys(tmp.tokens).forEach((token) => {
+        if (isReferenceToken('color', tmp, token)) {
+          const tokenValue = tmp.tokens[token];
+          if (isModeValue(tokenValue)) {
+            tmp.tokens[token] = tokenValue[defaultMode];
+          }
+        }
+      });
+
+      const contextOnlyTheme = { ...tmp, tokens: { ...tmp.tokens, ...context.tokens } };
+      const { resolutionPaths } = resolveThemeWithPaths(contextOnlyTheme, baseTheme, options);
+
+      const referenceTokensToResolve = collectReferenceTokens(tmp, resolutionPaths);
+
+      referenceTokensToResolve.forEach((token) => {
+        context.tokens[token] = tmp.tokens[token];
+      });
+    }
+  }
+
   if (!baseTheme || !themeResolution) {
     tmp.tokens = {
       ...tmp.tokens,
@@ -163,26 +190,30 @@ export function resolveContext(
    * in the override theme with their respective values from the base theme context
    */
   const baseContext = baseTheme.contexts[context.id];
+
+  // For useCssVars mode, resolve without CSS vars for proper comparison
+  const comparisonOptions = options?.useCssVars ? { ...options, useCssVars: true } : options;
+  const baseResolution = resolveTheme(baseTheme, undefined, comparisonOptions);
+  const overrideResolution = resolveTheme(theme, baseTheme, comparisonOptions);
   tmp.tokens = {
     ...Object.keys(themeResolution).reduce((acc, key) => {
       const shouldSkipReset =
         (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
-        areAssignmentsEqual(
-          baseContext.tokens[key],
-          theme.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
-        );
+        (isReferenceToken('color', baseTheme ?? theme, key) &&
+          areAssignmentsEqual(baseResolution[key], overrideResolution[key])) ||
+        areAssignmentsEqual(baseResolution[key], overrideResolution[key]);
 
       return shouldSkipReset
         ? acc
         : {
             ...acc,
-            [key]: baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key],
+            [key]: baseContext.tokens[key] ?? tmp.tokens[key] ?? baseTheme.tokens[key],
           };
     }, {}),
     ...context.tokens,
   };
 
-  return resolveTheme(tmp, baseTheme);
+  return resolveTheme(tmp, baseTheme, options);
 }
 
 type Reducer = (
@@ -272,3 +303,24 @@ export function isSpecificTokenResolution(
 }
 
 const isEmpty = (obj: Record<string, unknown>) => Object.keys(obj).length === 0;
+
+function flattenResolutionPaths(pathOrPaths: ModeTokenResolutionPath | SpecificTokenResolutionPath): string[] {
+  return typeof pathOrPaths === 'object' && !Array.isArray(pathOrPaths)
+    ? ([] as string[]).concat(...Object.values(pathOrPaths))
+    : pathOrPaths;
+}
+
+function collectReferenceTokens(theme: Theme, resolutionPaths: FullResolutionPaths): Set<string> {
+  const referenceTokens = new Set<string>();
+
+  Object.values(resolutionPaths).forEach((pathOrPaths) => {
+    const allPaths = flattenResolutionPaths(pathOrPaths);
+    allPaths.forEach((token: string) => {
+      if (isReferenceToken('color', theme, token)) {
+        referenceTokens.add(token);
+      }
+    });
+  });
+
+  return referenceTokens;
+}
