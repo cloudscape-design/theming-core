@@ -58,7 +58,7 @@ export interface ColorReferenceTokens {
 // String allows for shorthand seed definition
 export type ColorPaletteInput = string | ReferencePaletteDefinition;
 export interface ReferencePaletteDefinition extends ColorPalette {
-  seed?: string;
+  seed?: Assignment;
 }
 export type ColorPalette = Partial<Record<PaletteStep, Assignment>>;
 

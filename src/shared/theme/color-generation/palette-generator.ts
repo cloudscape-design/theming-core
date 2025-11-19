@@ -9,13 +9,14 @@ import { WarningPaletteSpecification } from './warning-spec';
 export function generatePaletteFromSeed(
   category: keyof ColorReferenceTokens,
   seed: string,
-  autoAdjust = true
+  autoAdjust = true,
+  mode?: string
 ): ReferencePaletteDefinition {
   const primaryPaletteSpec = new PrimaryPaletteSpecification();
   const neutralPaletteSpec = new NeutralPaletteSpecification();
   const warningPaletteSpec = new WarningPaletteSpecification();
 
-  let paletteSpec: PrimaryPaletteSpecification | NeutralPaletteSpecification;
+  let paletteSpec: PrimaryPaletteSpecification | NeutralPaletteSpecification | WarningPaletteSpecification;
 
   switch (category) {
     case 'neutral':
@@ -31,7 +32,7 @@ export function generatePaletteFromSeed(
     default:
       paletteSpec = primaryPaletteSpec;
   }
-  const generated = paletteSpec.getPalette(seed, autoAdjust);
+  const generated = paletteSpec.getPalette(seed, autoAdjust, mode);
 
   return generated;
 }

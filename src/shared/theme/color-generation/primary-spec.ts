@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { PaletteStep } from '../interfaces';
+import { Hct } from './hct-utils';
 import { PaletteSpecification } from './palette-spec';
 
 const MIN_TONE = 3;
@@ -36,7 +37,7 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
       },
       {
         position: 400,
-        chromaFraction: 0.85, // Nearly full saturation
+        chromaFraction: 1.0,
         minTone: 65,
         maxTone: 75, // 70 tone range
       },
@@ -48,7 +49,7 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
       },
       {
         position: 600,
-        chromaFraction: 1.0, // Slightly enhanced for accessibility
+        chromaFraction: 1.0,
         minTone: 44,
         maxTone: 47, // 46 tone range - accessibility threshold (49 for white)
       },
@@ -67,7 +68,7 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
       {
         position: 900,
         chromaFraction: 1.2, // Maximum saturation
-        minTone: 13,
+        minTone: 11,
         maxTone: 25, // 20 tone range
       },
       {
@@ -77,5 +78,33 @@ export class PrimaryPaletteSpecification extends PaletteSpecification<PaletteSte
         maxTone: 5, // <5 tone range - darkest
       },
     ]);
+  }
+
+  protected adjustSeedColor(hct: Hct, mode?: string): Hct {
+    const tone = hct.tone;
+    const position600 = this.colorSpecifications.find((s) => s.position === 600);
+    const position400 = this.colorSpecifications.find((s) => s.position === 400);
+
+    if (mode === 'light' && position600 && tone > position600.maxTone) {
+      return Hct.from(hct.hue, hct.chroma, (position600.minTone + position600.maxTone) / 2);
+    }
+    if (mode === 'dark' && position400 && tone < position400.minTone) {
+      return Hct.from(hct.hue, hct.chroma, (position400.minTone + position400.maxTone) / 2);
+    }
+    return hct;
+  }
+
+  protected getExactSeedPosition(hct: Hct, mode?: string): PaletteStep | undefined {
+    const tone = hct.tone;
+    const position600 = this.colorSpecifications.find((s) => s.position === 600);
+    const position400 = this.colorSpecifications.find((s) => s.position === 400);
+
+    if (mode === 'light' && position600 && tone <= position600.maxTone) {
+      return 600;
+    }
+    if (mode === 'dark' && position400 && tone >= position400.minTone) {
+      return 400;
+    }
+    return undefined;
   }
 }

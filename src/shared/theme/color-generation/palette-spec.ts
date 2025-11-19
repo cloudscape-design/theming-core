@@ -59,28 +59,33 @@ export class PaletteSpecification<PaletteKeys> {
   }
 
   private getColorToneProportion(position: ColorSpecification<PaletteKeys>, hctColor: Hct): number {
-    return (hctColor.tone - position.minTone) / (position.maxTone - position.minTone);
+    const proportion = (hctColor.tone - position.minTone) / (position.maxTone - position.minTone);
+    return Math.max(0, Math.min(1, proportion));
   }
 
   private getColorToneForProportion(position: ColorSpecification<PaletteKeys>, proportion: number): number {
     return position.minTone + (position.maxTone - position.minTone) * proportion;
   }
 
-  protected adjustSeedColor(hct: Hct): Hct {
+  protected adjustSeedColor(hct: Hct, mode?: string): Hct {
     return hct;
   }
 
-  private validateAndAdjustSeed(hexColor: string): string {
+  protected getExactSeedPosition(hct: Hct, mode?: string): PaletteKeys | undefined {
+    return undefined;
+  }
+
+  private validateAndAdjustSeed(hexColor: string, mode?: string): string {
     let hct = hexToHct(hexColor);
-    hct = this.adjustSeedColor(hct);
+    hct = this.adjustSeedColor(hct, mode);
     return hctToHex(hct);
   }
 
-  public getPalette(hexBaseColor: string, autoAdjust = true): ReferencePaletteDefinition {
+  public getPalette(hexBaseColor: string, autoAdjust = true, mode?: string): ReferencePaletteDefinition {
     let seedWasAdjusted = false;
     if (autoAdjust) {
       const original = hexBaseColor;
-      hexBaseColor = this.validateAndAdjustSeed(hexBaseColor);
+      hexBaseColor = this.validateAndAdjustSeed(hexBaseColor, mode);
       seedWasAdjusted = original !== hexBaseColor;
     }
 
@@ -88,11 +93,16 @@ export class PaletteSpecification<PaletteKeys> {
     const hue = hctBaseColor.hue;
     let chroma = hctBaseColor.chroma;
 
-    const baseColorPalettePosition = this.findColorSpecification(hctBaseColor);
+    const exactSeedPosition = this.getExactSeedPosition(hctBaseColor, mode);
+    const baseColorPalettePosition = exactSeedPosition
+      ? this.colorSpecifications.find((s) => s.position === exactSeedPosition)
+      : this.findColorSpecification(hctBaseColor);
     if (!baseColorPalettePosition) {
       throw new Error(`Seed color ${hexBaseColor} does not match any palette position specification`);
     }
-    const baseColorToneRangePosition = this.getColorToneProportion(baseColorPalettePosition, hctBaseColor);
+    const baseColorToneRangePosition = exactSeedPosition
+      ? 0.5
+      : this.getColorToneProportion(baseColorPalettePosition, hctBaseColor);
 
     // For low saturation palettes, use seed chroma directly to avoid inflation
     const useDirectChroma = this.maxChroma < 50;
@@ -107,14 +117,14 @@ export class PaletteSpecification<PaletteKeys> {
       const isPaletteBase = baseColorPalettePosition?.position == color.position;
       let adjustedChroma = color.chromaFraction * chroma;
 
-      // Cap chroma to respect maxChroma
       if (adjustedChroma > this.maxChroma) {
         adjustedChroma = this.maxChroma;
       }
 
+      const isExactSeedPosition = exactSeedPosition === color.position;
       const paletteColor =
-        isPaletteBase && !seedWasAdjusted
-          ? hexBaseColor // Preserve exact seed color only if not adjusted
+        (isPaletteBase && !seedWasAdjusted) || isExactSeedPosition
+          ? hexBaseColor
           : hctToHex(createHct(hue, adjustedChroma, tone));
 
       colors[color.position as keyof ReferencePaletteDefinition] = paletteColor;
