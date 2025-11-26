@@ -40,7 +40,7 @@
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unicorn": "^41.0.1",
-    "glob": "^7.2.3",
+    "glob": "^10.5.0",
     "husky": "^7.0.4",
     "jsdom": "^26.0.0",
     "jsonschema": "^1.4.1",
