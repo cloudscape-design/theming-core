@@ -1,11 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import * as sass from 'sass';
-import glob from 'glob';
+import { glob } from 'glob';
 import { postCSSForEach, postCSSAfterAll, scopedFileExt } from './postcss';
 import path from 'path';
 import fs from 'fs';
-import { promisify } from 'util';
 import { pathToFileURL } from 'url';
 
 export interface InlineStylesheet {
@@ -23,7 +22,7 @@ export async function buildStyles(
   inlines: InlineStylesheet[] = [],
   options: BuildStylesOptions = {}
 ) {
-  const files = await promisify(glob)('**/styles.scss', { cwd: sassDir });
+  const files = await glob('**/styles.scss', { cwd: sassDir });
   const compiler = createCompiler(inlines, outputDir, sassDir, options);
 
   const promises = files.map((file) => compiler(file));
