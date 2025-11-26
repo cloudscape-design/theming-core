@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import fs from 'fs';
-import glob from 'glob';
+import { globSync } from 'glob';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 
@@ -11,7 +11,7 @@ const findUsedSassVariablesInFile = (filePath: string, sassVariablesList: string
 };
 
 const findusedUsedSassVariablesInDir = (scssDir: string, sassVariablesList: string[]): string[] => {
-  const filePaths = glob.sync(`${scssDir}/**/*.scss`);
+  const filePaths = globSync(`${scssDir}/**/*.scss`);
   const usedSassVariables = uniq(
     flatten(filePaths.map((filePath) => findUsedSassVariablesInFile(filePath, sassVariablesList)))
   ).sort();
