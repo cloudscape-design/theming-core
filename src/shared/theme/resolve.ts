@@ -3,7 +3,20 @@
 import { Context, Mode } from '.';
 import { cloneDeep, values } from '../utils';
 import { Theme, Value } from './interfaces';
-import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
+import {
+  areAssignmentsEqual,
+  getDefaultState,
+  getMode,
+  getReference,
+  isModeValue,
+  isReference,
+  isReferenceToken,
+} from './utils';
+
+export interface ResolveOptions {
+  useCssVars?: boolean;
+  propertiesMap?: Record<string, string>;
+}
 
 export type ModeTokenResolution = Record<string, Value>;
 export type SpecificTokenResolution = Value;
@@ -27,10 +40,14 @@ interface FullResolutionWithPaths {
  * If a base theme is provided, only keep tokens that are in the override theme or those that
  * have an overridden token in their resolution path
  */
-export function resolveTheme(theme: Theme, baseTheme?: Theme): FullResolution {
-  return resolveThemeWithPaths(theme, baseTheme).resolvedTheme;
+export function resolveTheme(theme: Theme, baseTheme?: Theme, options?: ResolveOptions): FullResolution {
+  return resolveThemeWithPaths(theme, baseTheme, options).resolvedTheme;
 }
-export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullResolutionWithPaths {
+export function resolveThemeWithPaths(
+  theme: Theme,
+  baseTheme?: Theme,
+  options?: ResolveOptions
+): FullResolutionWithPaths {
   const resolvedTheme: FullResolution = {};
   const resolutionPaths: FullResolutionPaths = {};
 
@@ -40,7 +57,7 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
       const modeTokenResolutionPaths: ModeTokenResolutionPath = {};
       const resolvedToken = Object.keys(mode.states).reduce<Record<string, string>>((acc, state: string) => {
         modeTokenResolutionPaths[state] = [];
-        acc[state] = resolveToken(theme, token, modeTokenResolutionPaths[state], state, baseTheme);
+        acc[state] = resolveToken(theme, token, modeTokenResolutionPaths[state], state, baseTheme, options);
         return acc;
       }, {});
 
@@ -53,7 +70,7 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
       }
     } else {
       const tokenResolutionPath: SpecificTokenResolutionPath = [];
-      const resolvedToken = resolveToken(theme, token, tokenResolutionPath, undefined, baseTheme);
+      const resolvedToken = resolveToken(theme, token, tokenResolutionPath, undefined, baseTheme, options);
 
       if (!baseTheme || tokenResolutionPath.some((pathToken) => pathToken in theme.tokens)) {
         resolutionPaths[token] = tokenResolutionPath;
@@ -65,7 +82,14 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
   return { resolvedTheme, resolutionPaths };
 }
 
-function resolveToken(theme: Theme, token: string, path: Array<string>, state?: string, baseTheme?: Theme): string {
+function resolveToken(
+  theme: Theme,
+  token: string,
+  path: Array<string>,
+  state?: string,
+  baseTheme?: Theme,
+  options?: ResolveOptions
+): string {
   if (!theme.tokens[token] && !baseTheme?.tokens[token]) {
     throw new Error(`Token ${token} does not exist in the theme.`);
   }
@@ -90,7 +114,19 @@ function resolveToken(theme: Theme, token: string, path: Array<string>, state?: 
 
   if (isReference(assignment)) {
     const ref = getReference(assignment);
-    return resolveToken(theme, ref, path, state, baseTheme);
+    const resolvedValue = resolveToken(theme, ref, path, state, baseTheme, options);
+
+    // If CSS vars enabled and the referenced token is a reference token, return CSS variable
+    if (
+      options?.useCssVars &&
+      options?.propertiesMap &&
+      isReferenceToken('color', theme, ref) &&
+      options.propertiesMap[ref]
+    ) {
+      return `var(${options.propertiesMap[ref]})`;
+    }
+
+    return resolvedValue;
   } else {
     return assignment;
   }
@@ -100,7 +136,8 @@ export function resolveContext(
   theme: Theme,
   context: Context,
   baseTheme?: Theme,
-  themeResolution?: FullResolution
+  themeResolution?: FullResolution,
+  options?: ResolveOptions
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
@@ -109,7 +146,7 @@ export function resolveContext(
       ...tmp.tokens,
       ...context.tokens,
     };
-    return resolveTheme(tmp, baseTheme);
+    return resolveTheme(tmp, baseTheme, options);
   }
 
   /**

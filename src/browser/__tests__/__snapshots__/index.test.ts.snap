@@ -177,6 +177,144 @@ exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`
 }}"
 `;
 
+exports[`generateThemeStylesheet > with reference tokens and useCssVars > creates override styles with CSS variables when useCssVars is enabled 1`] = `
+":root:root{
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+.compact.compact:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+@media not print {.dark.dark:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}}
+.disabled-motion.disabled-motion:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+.navigation.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+.compact.compact .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+.compact.compact.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+@media not print {.dark.dark .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}}
+@media not print {.dark.dark.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}}
+.disabled-motion.disabled-motion .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}
+.disabled-motion.disabled-motion.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+}"
+`;
+
+exports[`generateThemeStylesheet > with reference tokens and useCssVars > creates override styles without CSS variables by default 1`] = `
+":root:root{
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+.compact.compact:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+@media not print {.dark.dark:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}}
+.disabled-motion.disabled-motion:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+.navigation.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+.compact.compact .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+.compact.compact.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+@media not print {.dark.dark .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}}
+@media not print {.dark.dark.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}}
+.disabled-motion.disabled-motion .navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}
+.disabled-motion.disabled-motion.navigation:not(#\\9){
+	--colorPrimary600-css:#ff6600;
+	--colorPrimary700-css:#692dc9;
+	--colorButtonPrimary-css:#ff6600;
+	--colorButtonSecondary-css:#692dc9;
+	--colorTextPrimary-css:#ff6600;
+	--colorBackgroundPrimary-css:#692dc9;
+}"
+`;
+
 exports[`generateThemeStylesheet > with secondary theme > creates override styles 1`] = `
 ":root:root{
 	--shadow-css:yellow;
