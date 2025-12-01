@@ -13,7 +13,7 @@ export class WarningPaletteSpecification extends PaletteSpecification<PaletteSte
       {
         position: 50,
         chromaFraction: 0.5,
-        minTone: 96,
+        minTone: 97,
         maxTone: MAX_TONE, // >97
       },
       {
@@ -68,13 +68,13 @@ export class WarningPaletteSpecification extends PaletteSpecification<PaletteSte
         position: 900,
         chromaFraction: 1.2,
         minTone: 41,
-        maxTone: 47, // 40s - accessibility threshold (49 for white)
+        maxTone: 47, // 40s
       },
       {
         position: 1000,
         chromaFraction: 1.25,
         minTone: MIN_TONE,
-        maxTone: 15, // <5 - darkest
+        maxTone: 15, // <10
       },
     ]);
   }

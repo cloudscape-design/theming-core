@@ -64,7 +64,21 @@ export class PaletteSpecification<PaletteKeys> {
   }
 
   private getColorToneForProportion(position: ColorSpecification<PaletteKeys>, proportion: number): number {
-    return position.minTone + (position.maxTone - position.minTone) * proportion;
+    const baseTone = position.minTone + (position.maxTone - position.minTone) * proportion;
+
+    // Bias toward range edges to maximize contrast
+    // Lower position numbers (50, 100, etc.) are light - bias toward maxTone (lighter)
+    // Higher position numbers (700, 800, etc.) are dark - bias toward minTone (darker)
+    const BIAS_STRENGTH = 0.5;
+    const positionNum = Number(position.position);
+
+    if (positionNum <= 500) {
+      // Light half of palette - push toward maxTone (lighter)
+      return baseTone + (position.maxTone - baseTone) * BIAS_STRENGTH;
+    } else {
+      // Dark half of palette - push toward minTone (darker)
+      return baseTone - (baseTone - position.minTone) * BIAS_STRENGTH;
+    }
   }
 
   protected adjustSeedColor(hct: Hct, mode?: string): Hct {
@@ -82,68 +96,86 @@ export class PaletteSpecification<PaletteKeys> {
   }
 
   public getPalette(hexBaseColor: string, autoAdjust = true, mode?: string): ReferencePaletteDefinition {
+    const adjustedSeed = this.prepareBaseSeed(hexBaseColor, autoAdjust, mode);
+    const baseColorInfo = this.extractBaseColorInfo(adjustedSeed, mode);
+    const colors = this.generatePaletteColors(baseColorInfo);
+
+    return {
+      seed: adjustedSeed.hex,
+      ...colors,
+    };
+  }
+
+  private prepareBaseSeed(hexColor: string, autoAdjust: boolean, mode?: string) {
     let seedWasAdjusted = false;
     if (autoAdjust) {
-      const original = hexBaseColor;
-      hexBaseColor = this.validateAndAdjustSeed(hexBaseColor, mode);
-      seedWasAdjusted = original !== hexBaseColor;
+      const original = hexColor;
+      hexColor = this.validateAndAdjustSeed(hexColor, mode);
+      seedWasAdjusted = original !== hexColor;
     }
+    return { hex: hexColor, wasAdjusted: seedWasAdjusted };
+  }
 
-    const hctBaseColor = hexToHct(hexBaseColor);
-    const hue = hctBaseColor.hue;
-    let chroma = hctBaseColor.chroma;
-
+  private extractBaseColorInfo(seed: { hex: string; wasAdjusted: boolean }, mode?: string) {
+    const hctBaseColor = hexToHct(seed.hex);
     const exactSeedPosition = this.getExactSeedPosition(hctBaseColor, mode);
     const baseColorPalettePosition = exactSeedPosition
       ? this.colorSpecifications.find((s) => s.position === exactSeedPosition)
       : this.findColorSpecification(hctBaseColor);
+
     if (!baseColorPalettePosition) {
-      throw new Error(`Seed color ${hexBaseColor} does not match any palette position specification`);
+      throw new Error(`Seed color ${seed.hex} does not match any palette position specification`);
     }
+
     const baseColorToneRangePosition = exactSeedPosition
       ? 0.5
       : this.getColorToneProportion(baseColorPalettePosition, hctBaseColor);
 
-    // For low saturation palettes, use seed chroma directly to avoid inflation
-    const useDirectChroma = this.maxChroma < 50;
-    if (!useDirectChroma) {
-      chroma = chroma / baseColorPalettePosition.chromaFraction;
-    }
+    return {
+      hue: hctBaseColor.hue,
+      chroma: this.calculateBaseChroma(hctBaseColor.chroma, baseColorPalettePosition),
+      basePosition: baseColorPalettePosition,
+      toneRangePosition: baseColorToneRangePosition,
+      seedHex: seed.hex,
+      seedWasAdjusted: seed.wasAdjusted,
+      exactSeedPosition,
+    };
+  }
 
+  private calculateBaseChroma(seedChroma: number, position: ColorSpecification<PaletteKeys>): number {
+    const useDirectChroma = this.maxChroma < 50;
+    return useDirectChroma ? seedChroma : seedChroma / position.chromaFraction;
+  }
+
+  private generatePaletteColors(baseInfo: {
+    hue: number;
+    chroma: number;
+    basePosition: ColorSpecification<PaletteKeys>;
+    toneRangePosition: number;
+    seedHex: string;
+    seedWasAdjusted: boolean;
+    exactSeedPosition: PaletteKeys | undefined;
+  }): ReferencePaletteDefinition {
     const colors: ReferencePaletteDefinition = {};
 
     for (const color of this.colorSpecifications) {
-      const tone = this.getColorToneForProportion(color, baseColorToneRangePosition);
-      const isPaletteBase = baseColorPalettePosition?.position == color.position;
-      let adjustedChroma = color.chromaFraction * chroma;
+      const tone = this.getColorToneForProportion(color, baseInfo.toneRangePosition);
+      const isPaletteBase = baseInfo.basePosition.position === color.position;
+      const isExactSeedPosition = baseInfo.exactSeedPosition === color.position;
 
+      let adjustedChroma = color.chromaFraction * baseInfo.chroma;
       if (adjustedChroma > this.maxChroma) {
         adjustedChroma = this.maxChroma;
       }
 
-      const isExactSeedPosition = exactSeedPosition === color.position;
       const paletteColor =
-        (isPaletteBase && !seedWasAdjusted) || isExactSeedPosition
-          ? hexBaseColor
-          : hctToHex(createHct(hue, adjustedChroma, tone));
+        (isPaletteBase && !baseInfo.seedWasAdjusted) || isExactSeedPosition
+          ? baseInfo.seedHex
+          : hctToHex(createHct(baseInfo.hue, adjustedChroma, tone));
 
       colors[color.position as keyof ReferencePaletteDefinition] = paletteColor;
     }
 
-    // Log palette details
-    console.log(
-      `Generated palette from ${hexBaseColor}:`,
-      Object.entries(colors).map(([key, value]) => ({
-        position: key,
-        hex: value,
-        chroma: hexToHct(value).chroma.toFixed(1),
-        tone: hexToHct(value).tone.toFixed(1),
-      }))
-    );
-
-    return {
-      seed: hexBaseColor,
-      ...colors,
-    };
+    return colors;
   }
 }

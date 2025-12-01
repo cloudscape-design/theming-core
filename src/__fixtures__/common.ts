@@ -435,3 +435,59 @@ export const descriptionsForValidTheme = {
   colorButton: 'color',
   shadowContainer: 'shadow',
 };
+
+// Themes for performance testing: seed vs explicit palette
+export const themeWithSeedColor: Theme = {
+  ...rootTheme,
+  referenceTokens: {
+    color: {
+      primary: '#0073bb',
+    },
+  },
+};
+
+export const themeWithExplicitPalette: Theme = {
+  ...rootTheme,
+  referenceTokens: {
+    color: {
+      primary: {
+        50: '#f7f9ff',
+        100: '#ecf3ff',
+        200: '#d2e6ff',
+        300: '#aed3ff',
+        400: '#7abbff',
+        500: '#4e9fea',
+        600: '#0073bb',
+        700: '#006aad',
+        800: '#005187',
+        900: '#003b64',
+        1000: '#001123',
+      },
+    },
+  },
+};
+
+export const presetWithSeedColor: ThemePreset = {
+  theme: themeWithSeedColor,
+  themeable: [],
+  exposed: [],
+  propertiesMap: createStubPropertiesMap(themeWithSeedColor),
+  variablesMap: createStubVariablesMap(themeWithSeedColor),
+};
+
+export const presetWithExplicitPalette: ThemePreset = {
+  theme: themeWithExplicitPalette,
+  themeable: [],
+  exposed: [],
+  propertiesMap: createStubPropertiesMap(themeWithExplicitPalette),
+  variablesMap: createStubVariablesMap(themeWithExplicitPalette),
+};
+
+export const overrideWithSeedColor: Override = {
+  tokens: { ...override.tokens },
+  referenceTokens: {
+    color: {
+      primary: '#0073bb',
+    },
+  },
+};

@@ -8,6 +8,9 @@ import {
   rootTheme,
   createStubPropertiesMap,
   createStubVariablesMap,
+  presetWithSeedColor,
+  presetWithExplicitPalette,
+  overrideWithSeedColor,
 } from '../../__fixtures__/common';
 import { applyTheme, generateThemeStylesheet } from '../index';
 import { Theme, ThemePreset, Override } from '../../shared/theme';
@@ -216,6 +219,38 @@ describe('generateThemeStylesheet', () => {
       });
 
       expect(styles).toMatchSnapshot();
+    });
+  });
+
+  describe('performance: seed vs explicit palette', () => {
+    test('applyTheme with seed in preset', () => {
+      const start = performance.now();
+      applyTheme({ preset: presetWithSeedColor, override });
+      const duration = performance.now() - start;
+
+      console.log(`applyTheme with seed in preset: ${duration.toFixed(2)}ms`);
+      // Baseline: ~1.4ms, allow 10x headroom
+      expect(duration).toBeLessThan(15);
+    });
+
+    test('applyTheme with seed in override', () => {
+      const start = performance.now();
+      applyTheme({ preset, override: overrideWithSeedColor });
+      const duration = performance.now() - start;
+
+      console.log(`applyTheme with seed in override: ${duration.toFixed(2)}ms`);
+      // Baseline: ~6.3ms, allow 5x headroom (primary optimization target)
+      expect(duration).toBeLessThan(30);
+    });
+
+    test('applyTheme with explicit palette', () => {
+      const start = performance.now();
+      applyTheme({ preset: presetWithExplicitPalette, override });
+      const duration = performance.now() - start;
+
+      console.log(`applyTheme with explicit palette: ${duration.toFixed(2)}ms`);
+      // Baseline: ~1.0ms, allow 10x headroom
+      expect(duration).toBeLessThan(10);
     });
   });
 });

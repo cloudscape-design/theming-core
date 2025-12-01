@@ -62,6 +62,7 @@ export function isModeValue(val: unknown): val is ModeValue {
   return (
     typeof val === 'object' &&
     val !== null &&
+    !Array.isArray(val) &&
     // Exclude objects with numeric keys (palette steps like '500', '900')
     !Object.keys(val).some((key) => !isNaN(Number(key))) &&
     !Object.keys(val).some((state) => !(isValue((val as ModeValue)[state]) || isReference((val as ModeValue)[state])))
@@ -125,4 +126,8 @@ export function getDefaultState(mode: Mode): string {
     }
   }
   throw new Error(`Mode ${JSON.stringify(mode)} does not have a default state`);
+}
+
+export function isValidPaletteStep(step: number): boolean {
+  return step >= 50 && step <= 1000 && step % 50 === 0;
 }

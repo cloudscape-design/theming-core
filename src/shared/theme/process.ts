@@ -8,7 +8,7 @@ import {
   ReferencePaletteDefinition,
   Assignment,
 } from './interfaces';
-import { generateReferenceTokenName } from './utils';
+import { generateReferenceTokenName, isValidPaletteStep } from './utils';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
 
@@ -36,11 +36,6 @@ export function processColorPaletteInput(
   if (typeof input === 'string') {
     return generatePaletteFromSeed(category, input);
   } else {
-    const validSteps: number[] = [];
-    for (let i = 50; i <= 1000; i += 50) {
-      validSteps.push(i);
-    }
-
     let generated: ReferencePaletteDefinition = {};
 
     if (input.seed) {
@@ -53,7 +48,7 @@ export function processColorPaletteInput(
             const modePalette = generatePaletteFromSeed(category, seedColor, true, mode);
             Object.entries(modePalette).forEach(([step, value]) => {
               const numStep = Number(step);
-              if (validSteps.includes(numStep)) {
+              if (isValidPaletteStep(numStep)) {
                 const existingValue = generated[numStep as PaletteStep];
                 generated[numStep as PaletteStep] =
                   typeof existingValue === 'object' ? { ...existingValue, [mode]: value } : { [mode]: value };
@@ -72,7 +67,7 @@ export function processColorPaletteInput(
         result.seed = value;
       } else {
         const numStep = Number(step);
-        if (value && validSteps.includes(numStep)) {
+        if (value && isValidPaletteStep(numStep)) {
           const generatedValue = generated[numStep as PaletteStep];
           result[numStep as PaletteStep] =
             typeof generatedValue === 'object' && typeof value === 'object' ? { ...generatedValue, ...value } : value;
