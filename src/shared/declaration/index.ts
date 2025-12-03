@@ -7,31 +7,21 @@ import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
 import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
-import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
+import { UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
 import { cloneDeep, values } from '../utils';
 
-function createMinimalTheme(base: Theme, override: Override, options?: ResolveOptions): Theme {
+function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);
   const contextTokens: Set<string> = new Set();
 
   values(minimalTheme.contexts).forEach((context) => {
     Object.keys(context.tokens).forEach((key) => {
       const isInOverrideContext = key in (override?.contexts?.[context.id]?.tokens ?? {});
-      if (options?.useCssVars) {
-        // useCssVars: only keep explicitly overridden tokens
-        if (!(key in override.tokens) && !isInOverrideContext) {
-          delete context.tokens[key];
-        } else {
-          contextTokens.add(key);
-        }
+      if (!(key in override.tokens) && !isInOverrideContext) {
+        delete context.tokens[key];
       } else {
-        // non-useCssVars: keep tokens in override or in override contexts
-        if (!isInOverrideContext) {
-          delete context.tokens[key];
-        } else {
-          contextTokens.add(key);
-        }
+        contextTokens.add(key);
       }
     });
   });
@@ -49,35 +39,27 @@ export function createOverrideDeclarations(
   base: Theme,
   override: Override,
   propertiesMap: PropertiesMap,
-  selectorCustomizer: SelectorCustomizer,
-  useCssVars?: boolean
+  selectorCustomizer: SelectorCustomizer
 ): string {
-  // create theme containing only modified tokens
-  const minimalTheme = createMinimalTheme(base, override, { useCssVars, propertiesMap });
+  const minimalTheme = createMinimalTheme(base, override);
   let usedTokens = Object.keys(minimalTheme.tokens);
 
-  if (useCssVars) {
-    // Collect referenced tokens from the base theme since minimalTheme has tokens removed
-    const allReferencedTokens = collectReferencedTokens(base, usedTokens);
-    usedTokens = [...usedTokens, ...allReferencedTokens];
+  const allReferencedTokens = collectReferencedTokens(base, usedTokens);
+  usedTokens = [...usedTokens, ...allReferencedTokens];
 
-    // Add referenced tokens to minimalTheme so they get output in root
-    // The transformer will remove them from mode/context selectors since they're unchanged
-    allReferencedTokens.forEach((token) => {
-      if (!(token in minimalTheme.tokens) && token in base.tokens) {
-        minimalTheme.tokens[token] = base.tokens[token];
-      }
-    });
-  }
+  // Add referenced tokens to minimalTheme so they get output in root
+  // The transformer will remove them from mode/context selectors since they're unchanged
+  allReferencedTokens.forEach((token) => {
+    if (!(token in minimalTheme.tokens) && token in base.tokens) {
+      minimalTheme.tokens[token] = base.tokens[token];
+    }
+  });
 
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
-    useCssVars ? new UsedPropertyRegistry(propertiesMap, usedTokens) : new AllPropertyRegistry(propertiesMap)
+    new UsedPropertyRegistry(propertiesMap, usedTokens)
   );
-  const stylesheetCreator = new SingleThemeCreator(minimalTheme, ruleCreator, base, {
-    useCssVars,
-    propertiesMap,
-  });
+  const stylesheetCreator = new SingleThemeCreator(minimalTheme, ruleCreator, base, { propertiesMap });
   const stylesheet = stylesheetCreator.create();
   const transformer = new MinimalTransformer();
   const minimal = transformer.transform(stylesheet);
@@ -89,32 +71,39 @@ export function createBuildDeclarations(
   secondary: Theme[],
   propertiesMap: PropertiesMap,
   selectorCustomizer: SelectorCustomizer,
-  used: string[],
-  useCssVars?: boolean
+  used: string[]
 ): string {
-  let effectiveUsed = used;
+  const themes = [primary, ...secondary];
+  // Add reference tokens (from referenceTokens object)
+  const allReferenceTokens: string[] = [];
+  themes.forEach((theme: Theme) => {
+    const referenceTokens = flattenReferenceTokens(theme);
+    allReferenceTokens.push(...Object.keys(referenceTokens));
+  });
 
-  if (useCssVars) {
-    const themes = [primary, ...secondary];
-    // Add reference tokens (from referenceTokens object)
-    const allReferenceTokens: string[] = [];
-    themes.forEach((theme: Theme) => {
-      const referenceTokens = flattenReferenceTokens(theme);
-      allReferenceTokens.push(...Object.keys(referenceTokens));
+  // Collect referenced leaf tokens (like colorWhite, colorGreyOpaque70)
+  const allReferencedTokens: string[] = [];
+  const alreadyIncluded = new Set([...used, ...allReferenceTokens]);
+
+  themes.forEach((theme: Theme) => {
+    const referenced = collectReferencedTokens(theme, [...used, ...allReferenceTokens]);
+    referenced.forEach((token) => {
+      if (!alreadyIncluded.has(token)) {
+        allReferencedTokens.push(token);
+        alreadyIncluded.add(token);
+      }
     });
-    // Add regular tokens that are referenced by used tokens
-    const allReferencedTokens: string[] = [];
-    themes.forEach((theme: Theme) => {
-      allReferencedTokens.push(...collectReferencedTokens(theme, [...used, ...allReferenceTokens]));
-    });
-    effectiveUsed = [...used, ...allReferenceTokens, ...allReferencedTokens];
-  }
+  });
+
+  // Add allReferencedTokens to effectiveUsed so they get created in primary rule
+  // The transformer will remove them from mode rules since they're unchanged
+  const effectiveUsed = [...used, ...allReferenceTokens, ...allReferencedTokens];
 
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
     new UsedPropertyRegistry(propertiesMap, effectiveUsed)
   );
-  const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator, { useCssVars, propertiesMap });
+  const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator, { propertiesMap });
   const stylesheet = stylesheetCreator.create();
   const transformer = new MinimalTransformer();
   const minimal = transformer.transform(stylesheet);

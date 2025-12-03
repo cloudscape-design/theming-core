@@ -40,8 +40,6 @@ export interface BuildThemedComponentsInternalParams {
   jsonSchema?: boolean;
   /** Fail the build when SASS deprecation warning occurs **/
   failOnDeprecations?: boolean;
-  /** Use CSS variables instead of resolved values for better runtime theme swapping */
-  useCssVars?: boolean;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -73,14 +71,13 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     descriptions = {},
     jsonSchema = false,
     failOnDeprecations,
-    useCssVars = true,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
     throw new Error('designTokensOutputDir needs to be specified if not skipped');
   }
 
-  const neededTokens = findNeededTokens(scssDir, variablesMap, exposed, [primary, ...secondary], useCssVars);
+  const neededTokens = findNeededTokens(scssDir, variablesMap, exposed);
 
   const resolution = resolveTheme(primary);
   const defaults = reduce(resolution, primary, defaultsReducer());
@@ -89,7 +86,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const styleTask = buildStyles(
     scssDir,
     componentsOutputDir,
-    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens, useCssVars),
+    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
     { failOnDeprecations }
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);

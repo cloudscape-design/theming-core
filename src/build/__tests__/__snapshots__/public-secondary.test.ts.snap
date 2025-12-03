@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Build-time theming of main theme with matching baseThemeId generates the correct css files 1`] = `
-":root {
+"body {
   --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --color-orange-500-25sm1g:#ec7211;
   --color-orange-700-2auf4j:#dd6b10;
@@ -25,15 +25,17 @@ exports[`Build-time theming of main theme with matching baseThemeId generates th
   --color-orange-500-25sm1g:#ec72aa;
   --color-orange-700-2auf4j:#dd6baa;
   --color-background-button-primary-default-cqohzr:var(--color-orange-500-25sm1g);
+  --color-background-button-primary-active-h8she0:var(--color-orange-700-2auf4j);
 }
 
 .dark-mode.secondary:not(#\\9) {
   --color-background-button-primary-default-cqohzr:var(--color-orange-700-2auf4j);
+  --color-background-button-primary-active-h8she0:var(--color-orange-500-25sm1g);
 }"
 `;
 
 exports[`Build-time theming of secondary theme generates the correct css files 1`] = `
-":root {
+"body {
   --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --color-orange-500-25sm1g:#ec7211;
   --color-orange-700-2auf4j:#dd6b10;
@@ -56,9 +58,11 @@ exports[`Build-time theming of secondary theme generates the correct css files 1
   --color-orange-500-25sm1g:#ec72aa;
   --color-orange-700-2auf4j:#dd6baa;
   --color-background-button-primary-default-l567s3:#aaaaaa;
+  --color-background-button-primary-active-h8she0:var(--color-orange-700-2auf4j);
 }
 
 .dark-mode.secondary:not(#\\9) {
   --color-background-button-primary-default-l567s3:#bbbbbb;
+  --color-background-button-primary-active-h8she0:var(--color-orange-500-25sm1g);
 }"
 `;

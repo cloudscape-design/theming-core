@@ -59,7 +59,7 @@ exports[`merge > merges theme with override and matches previous snapshot 1`] = 
       },
     },
   },
-  "selector": ":root",
+  "selector": "body",
   "tokenModeMap": {
     "appear": "motion",
     "boxShadow": "color",

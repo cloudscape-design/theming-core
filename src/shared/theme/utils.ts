@@ -89,6 +89,7 @@ export function getReference(reference: Reference): string {
 
 export function collectReferencedTokens(theme: Theme, tokens: string[]): string[] {
   const referenced = new Set<string>();
+  const visited = new Set<string>();
 
   const addReferences = (value: any) => {
     if (isReference(value)) {
@@ -98,7 +99,10 @@ export function collectReferencedTokens(theme: Theme, tokens: string[]): string[
     }
   };
 
-  tokens.forEach((token) => {
+  const processToken = (token: string) => {
+    if (visited.has(token)) return;
+    visited.add(token);
+
     const value = theme.tokens[token];
     if (value) addReferences(value);
 
@@ -106,7 +110,19 @@ export function collectReferencedTokens(theme: Theme, tokens: string[]): string[
       const contextValue = context.tokens[token];
       if (contextValue) addReferences(contextValue);
     });
-  });
+  };
+
+  // Initial pass
+  tokens.forEach(processToken);
+  // Recursive passes until no new tokens found
+  let previousSize = 0;
+  let iterations = 0;
+  while (referenced.size > previousSize && iterations < 10) {
+    previousSize = referenced.size;
+    const newTokens = Array.from(referenced).filter((t) => !visited.has(t));
+    newTokens.forEach(processToken);
+    iterations++;
+  }
 
   return Array.from(referenced);
 }

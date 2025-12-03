@@ -14,7 +14,6 @@ import {
 } from './utils';
 
 export interface ResolveOptions {
-  useCssVars?: boolean;
   propertiesMap?: Record<string, string>;
 }
 
@@ -114,7 +113,7 @@ function resolveToken(
 
   if (isReference(assignment)) {
     const ref = getReference(assignment);
-    if (options?.useCssVars && options?.propertiesMap && options.propertiesMap[ref]) {
+    if (options?.propertiesMap && options.propertiesMap[ref]) {
       if (theme.tokens[ref] || baseTheme?.tokens[ref]) {
         return `var(${options.propertiesMap[ref]})`;
       }
@@ -152,7 +151,7 @@ export function resolveContext(
       });
 
       const contextOnlyTheme = { ...tmp, tokens: { ...tmp.tokens, ...context.tokens } };
-      const { resolutionPaths } = resolveThemeWithPaths(contextOnlyTheme, baseTheme, options);
+      const { resolutionPaths } = resolveThemeWithPaths(contextOnlyTheme, baseTheme);
 
       const referenceTokensToResolve = collectReferenceTokens(tmp, resolutionPaths);
 
@@ -202,10 +201,8 @@ export function resolveContext(
    */
   const baseContext = baseTheme.contexts[context.id];
 
-  // For useCssVars mode, resolve without CSS vars for proper comparison
-  const comparisonOptions = options?.useCssVars ? { ...options, useCssVars: true } : options;
-  const baseResolution = resolveTheme(baseTheme, undefined, comparisonOptions);
-  const overrideResolution = resolveTheme(theme, baseTheme, comparisonOptions);
+  const baseResolution = resolveTheme(baseTheme, undefined, options);
+  const overrideResolution = resolveTheme(theme, baseTheme, options);
   tmp.tokens = {
     ...Object.keys(themeResolution).reduce((acc, key) => {
       const shouldSkipReset =

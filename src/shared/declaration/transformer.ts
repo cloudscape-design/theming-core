@@ -3,6 +3,7 @@
 import { entries } from '../utils';
 import type Stylesheet from './stylesheet';
 import { Declaration } from './stylesheet';
+import { isGlobalSelector } from '../styles/selector';
 
 export interface Transformer {
   transform(stylesheet: Stylesheet): Stylesheet;
@@ -37,15 +38,21 @@ export class MinimalTransformer implements Transformer {
       }, {});
       const diff = difference(resolvedParent, ruleValue);
 
-      // When useCssVars is enabled, we need to keep tokens that reference other tokens
-      // that are being overridden in the current rule, even if the reference is the same.
-      // This ensures CSS variable inheritance works correctly in contexts.
-      // Only apply this to context selectors (containing .awsui-context-)
+      // CSS variables with nested var() references need special handling for non-global selectors.
+      // Even if the selector doesn't explicitly show a descendant combinator (like `.navigation`),
+      // it will be a descendant of `body` in the DOM. When a descendant overrides a token,
+      // tokens that reference it must be re-output, otherwise they resolve in the parent context.
+      //
+      // However, for mode rules (which have media queries), we should skip tokens that have
+      // identical values to their parent, even if referenced variables are overridden. These can inherit
+      // properly via natural css variable cascade rules.
       const selector = rule.toString().split('{')[0].trim();
-      if (selector.includes('.awsui-context-')) {
+      const firstSelector = selector.split(/[\s.:[\]]/)[0];
+      const isModeRule = !!rule.media;
+      if (!isGlobalSelector(firstSelector)) {
         // Helper to check if a variable or any variable it references is overridden
         const isVariableOverriddenRecursive = (varName: string, visited = new Set<string>()): boolean => {
-          if (visited.has(varName)) return false; // Prevent infinite loops
+          if (visited.has(varName)) return false;
           visited.add(varName);
 
           // Check if this variable itself is overridden
@@ -76,7 +83,11 @@ export class MinimalTransformer implements Transformer {
             const referencedVar = match[1];
             // If the referenced variable (or any variable it references) is overridden
             if (isVariableOverriddenRecursive(referencedVar)) {
-              // Keep this property even if its value is the same as parent
+              // For mode rules, only output if value actually differs from resolved parent
+              // For context rules, always output to ensure correct resolution
+              if (isModeRule && property in resolvedParent && ruleValue[property] === resolvedParent[property]) {
+                return;
+              }
               if (!(property in diff) && property in ruleValue) {
                 diff[property] = ruleValue[property];
               }

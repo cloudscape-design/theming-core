@@ -4,8 +4,6 @@ import fs from 'fs';
 import { globSync } from 'glob';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
-import { Theme } from '../../shared/theme/interfaces';
-import { collectReferencedTokens } from '../../shared/theme/utils';
 
 const findUsedSassVariablesInFile = (filePath: string, sassVariablesList: string[]): string[] => {
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -20,26 +18,13 @@ const findusedUsedSassVariablesInDir = (scssDir: string, sassVariablesList: stri
   return usedSassVariables;
 };
 
-const findNeededTokens = (
-  scssDir: string,
-  variablesMap: Record<string, string>,
-  exposed: string[],
-  themes?: Theme[],
-  useCssVars?: boolean
-): string[] => {
+const findNeededTokens = (scssDir: string, variablesMap: Record<string, string>, exposed: string[]): string[] => {
   const usedSassVariables = findusedUsedSassVariablesInDir(scssDir, Object.values(variablesMap));
   const usedTokens = Object.keys(variablesMap).filter(
     (token: string) => usedSassVariables.indexOf(variablesMap[token]) !== -1
   );
 
-  let allTokens = [...usedTokens, ...exposed];
-
-  if (themes && useCssVars) {
-    const allReferencedTokens = themes.flatMap((theme) => collectReferencedTokens(theme, allTokens));
-    allTokens = [...allTokens, ...allReferencedTokens];
-  }
-
-  return uniq(allTokens);
+  return uniq([...usedTokens, ...exposed]);
 };
 
 export default findNeededTokens;

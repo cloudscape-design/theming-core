@@ -17,7 +17,7 @@ import { Theme, ThemePreset, Override } from '../../shared/theme';
 
 const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');
 
-// Create a theme with reference tokens to test useCssVars
+// Create a theme with reference tokens to test CSS variable generation
 const themeWithReferenceTokens: Theme = {
   ...rootTheme,
   referenceTokens: {
@@ -201,21 +201,11 @@ describe('generateThemeStylesheet', () => {
     });
   });
 
-  describe('with reference tokens and useCssVars', () => {
-    test('creates override styles without CSS variables by default', () => {
+  describe('with reference tokens', () => {
+    test('creates override styles with CSS variables', () => {
       const styles = generateThemeStylesheet({
         override: overrideWithReferenceTokens,
         preset: presetWithReferenceTokens,
-      });
-
-      expect(styles).toMatchSnapshot();
-    });
-
-    test('creates override styles with CSS variables when useCssVars is enabled', () => {
-      const styles = generateThemeStylesheet({
-        override: overrideWithReferenceTokens,
-        preset: presetWithReferenceTokens,
-        useCssVars: true,
       });
 
       expect(styles).toMatchSnapshot();

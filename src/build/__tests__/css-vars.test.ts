@@ -11,7 +11,7 @@ import { join } from 'path';
 
 const testTheme: Theme = {
   id: 'test',
-  selector: ':root',
+  selector: 'body',
   tokens: {
     colorPrimary: '#0073bb',
     colorBackground: '{colorPrimary}',
@@ -55,7 +55,6 @@ test('CSS variable optimization works without errors', async () => {
       },
       componentsOutputDir: tempDir,
       scssDir: tempDir,
-      useCssVars: true,
       skip: ['preset', 'design-tokens'],
     });
 
@@ -89,7 +88,6 @@ test('generateReferenceTokenDefaults creates CSS variable declarations', () => {
 
 test('resolveTheme with CSS variables returns CSS var() for reference tokens', () => {
   const resolved = resolveTheme(testTheme, undefined, {
-    useCssVars: true,
     propertiesMap,
   });
 
@@ -118,7 +116,6 @@ test('resolveContext with CSS variables preserves var() references', () => {
   };
 
   const resolved = resolveContext(testTheme, context, undefined, undefined, {
-    useCssVars: true,
     propertiesMap,
   });
 
@@ -127,7 +124,7 @@ test('resolveContext with CSS variables preserves var() references', () => {
 });
 
 test('createBuildDeclarations includes reference tokens when useCssVars enabled', () => {
-  const css = createBuildDeclarations(testTheme, [], propertiesMap, (selector) => selector, ['colorPrimary'], true);
+  const css = createBuildDeclarations(testTheme, [], propertiesMap, (selector) => selector, ['colorPrimary']);
 
   expect(css).toContain('--color-primary-500');
   expect(css).toContain('--color-neutral-900');
@@ -152,14 +149,10 @@ test('createBuildDeclarations with secondary theme generates reference token CSS
     },
   };
 
-  const css = createBuildDeclarations(
-    testTheme,
-    [secondaryTheme],
-    propertiesMap,
-    (selector) => selector,
-    ['colorPrimary', 'colorError100'],
-    true
-  );
+  const css = createBuildDeclarations(testTheme, [secondaryTheme], propertiesMap, (selector) => selector, [
+    'colorPrimary',
+    'colorError100',
+  ]);
 
   // Should contain reference tokens from both primary and secondary themes
   expect(css).toContain('--color-primary-500');

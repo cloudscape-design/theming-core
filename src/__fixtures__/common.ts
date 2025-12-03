@@ -90,7 +90,7 @@ const emptyTheme: Theme = {
 
 export const rootTheme: Theme = {
   id: 'root',
-  selector: ':root',
+  selector: 'body',
   tokens: {
     fontFamilyBase: '"Helvetica Neue", Arial, sans-serif',
     fontFamilyBody: '{fontFamilyBase}',
