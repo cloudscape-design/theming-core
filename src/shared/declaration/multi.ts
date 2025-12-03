@@ -1,17 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isGlobalSelector } from '../styles/selector';
-import {
-  defaultsReducer,
-  modeReducer,
-  OptionalState,
-  reduce,
-  resolveContext,
-  resolveTheme,
-  Theme,
-  ResolveOptions,
-} from '../theme';
-import { flattenReferenceTokens } from '../theme/utils';
+import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../theme';
+import type { PropertiesMap } from './interfaces';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
 import { RuleCreator, SelectorConfig } from './rule';
@@ -26,13 +17,13 @@ import { compact } from './utils';
 export class MultiThemeCreator extends AbstractCreator implements StylesheetCreator {
   themes: Theme[];
   ruleCreator: RuleCreator;
-  options?: ResolveOptions;
+  propertiesMap?: PropertiesMap;
 
-  constructor(themes: Theme[], ruleCreator: RuleCreator, options?: ResolveOptions) {
+  constructor(themes: Theme[], ruleCreator: RuleCreator, propertiesMap?: PropertiesMap) {
     super();
     this.themes = themes;
     this.ruleCreator = ruleCreator;
-    this.options = options;
+    this.propertiesMap = propertiesMap;
   }
 
   create(): Stylesheet {
@@ -51,7 +42,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     if (!globalThemes.length) {
       // If there is no root theme, all themes are scoped by their root selector. No interference.
       const stylesheets = this.themes.map((theme) =>
-        new SingleThemeCreator(theme, this.ruleCreator, undefined, this.options).create()
+        new SingleThemeCreator(theme, this.ruleCreator, undefined, this.propertiesMap).create()
       );
       const result = new Stylesheet();
       stylesheets.forEach((stylesheet) => {
@@ -62,7 +53,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     const [globalTheme] = globalThemes;
 
-    const stylesheet = new SingleThemeCreator(globalTheme, this.ruleCreator, undefined, this.options).create();
+    const stylesheet = new SingleThemeCreator(globalTheme, this.ruleCreator, undefined, this.propertiesMap).create();
     const secondaries = this.getThemesWithout(globalTheme);
     secondaries.forEach((secondary) => {
       this.appendRulesForSecondary(stylesheet, globalTheme, secondary);
@@ -72,7 +63,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
   }
 
   appendRulesForSecondary(stylesheet: Stylesheet, primary: Theme, secondary: Theme) {
-    const secondaryResolution = resolveTheme(secondary, undefined, this.options);
+    const secondaryResolution = resolveTheme(secondary, undefined, this.propertiesMap);
     const defaults = reduce(secondaryResolution, secondary, defaultsReducer());
 
     const rootRule = this.ruleCreator.create({ global: [secondary.selector] }, defaults);
@@ -96,7 +87,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     MultiThemeCreator.forEachContext(secondary, (context) => {
       const contextResolution = reduce(
-        resolveContext(secondary, context, undefined, undefined, this.options),
+        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
         defaultsReducer()
       );
@@ -130,7 +121,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
       const optionalState = mode.states[state] as OptionalState;
       const contextResolution = reduce(
-        resolveContext(secondary, context, undefined, undefined, this.options),
+        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
         modeReducer(mode, state)
       );

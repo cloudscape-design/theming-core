@@ -87,9 +87,7 @@ test('generateReferenceTokenDefaults creates CSS variable declarations', () => {
 });
 
 test('resolveTheme with CSS variables returns CSS var() for reference tokens', () => {
-  const resolved = resolveTheme(testTheme, undefined, {
-    propertiesMap,
-  });
+  const resolved = resolveTheme(testTheme, undefined, propertiesMap);
 
   // Direct token takes precedence over reference token
   expect(resolved.colorPrimary500).toBe('#direct-primary-500');
@@ -115,9 +113,7 @@ test('resolveContext with CSS variables preserves var() references', () => {
     },
   };
 
-  const resolved = resolveContext(testTheme, context, undefined, undefined, {
-    propertiesMap,
-  });
+  const resolved = resolveContext(testTheme, context, undefined, undefined, propertiesMap);
 
   // Should resolve to CSS var since colorNeutral900 is a reference token
   expect(resolved.colorSecondary).toBe('var(--color-neutral-900)');
@@ -157,6 +153,4 @@ test('createBuildDeclarations with secondary theme generates reference token CSS
   // Should contain reference tokens from both primary and secondary themes
   expect(css).toContain('--color-primary-500');
   expect(css).toContain('[data-theme="dark"]');
-  // TODO: Reference tokens from secondary themes are not yet included in CSS generation
-  // expect(css).toContain('--color-error-100');
 });

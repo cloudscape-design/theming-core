@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme, ResolveOptions } from '../theme';
+import { mergeInPlace, Override, Theme } from '../theme';
 import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils';
 import type { PropertiesMap, SelectorCustomizer } from './interfaces';
 import { RuleCreator } from './rule';
@@ -35,6 +35,37 @@ function createMinimalTheme(base: Theme, override: Override): Theme {
   return mergeInPlace(minimalTheme, override);
 }
 
+function collectAllRequiredTokens(
+  themes: Theme[],
+  initialTokens: string[]
+): { referenceTokens: string[]; referencedTokens: string[] } {
+  const referenceTokens: string[] = [];
+  themes.forEach((theme) => referenceTokens.push(...Object.keys(flattenReferenceTokens(theme))));
+
+  const alreadyIncluded = new Set([...initialTokens, ...referenceTokens]);
+  const referencedTokens: string[] = [];
+
+  themes.forEach((theme) => {
+    const referenced = collectReferencedTokens(theme, [...initialTokens, ...referenceTokens]);
+    referenced.forEach((token) => {
+      if (!alreadyIncluded.has(token)) {
+        referencedTokens.push(token);
+        alreadyIncluded.add(token);
+      }
+    });
+  });
+
+  return { referenceTokens, referencedTokens };
+}
+
+function addMissingTokensToTheme(theme: Theme, tokens: string[], sourceTheme: Theme): void {
+  tokens.forEach((token) => {
+    if (!(token in theme.tokens) && token in sourceTheme.tokens) {
+      theme.tokens[token] = sourceTheme.tokens[token];
+    }
+  });
+}
+
 export function createOverrideDeclarations(
   base: Theme,
   override: Override,
@@ -42,28 +73,20 @@ export function createOverrideDeclarations(
   selectorCustomizer: SelectorCustomizer
 ): string {
   const minimalTheme = createMinimalTheme(base, override);
-  let usedTokens = Object.keys(minimalTheme.tokens);
+  const initialTokens = Object.keys(minimalTheme.tokens);
 
-  const allReferencedTokens = collectReferencedTokens(base, usedTokens);
-  usedTokens = [...usedTokens, ...allReferencedTokens];
-
+  const { referencedTokens } = collectAllRequiredTokens([base], initialTokens);
   // Add referenced tokens to minimalTheme so they get output in root
   // The transformer will remove them from mode/context selectors since they're unchanged
-  allReferencedTokens.forEach((token) => {
-    if (!(token in minimalTheme.tokens) && token in base.tokens) {
-      minimalTheme.tokens[token] = base.tokens[token];
-    }
-  });
+  addMissingTokensToTheme(minimalTheme, referencedTokens, base);
 
+  const usedTokens = [...initialTokens, ...referencedTokens];
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
     new UsedPropertyRegistry(propertiesMap, usedTokens)
   );
-  const stylesheetCreator = new SingleThemeCreator(minimalTheme, ruleCreator, base, { propertiesMap });
-  const stylesheet = stylesheetCreator.create();
-  const transformer = new MinimalTransformer();
-  const minimal = transformer.transform(stylesheet);
-  return minimal.toString();
+  const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
 }
 
 export function createBuildDeclarations(
@@ -74,38 +97,13 @@ export function createBuildDeclarations(
   used: string[]
 ): string {
   const themes = [primary, ...secondary];
-  // Add reference tokens (from referenceTokens object)
-  const allReferenceTokens: string[] = [];
-  themes.forEach((theme: Theme) => {
-    const referenceTokens = flattenReferenceTokens(theme);
-    allReferenceTokens.push(...Object.keys(referenceTokens));
-  });
-
-  // Collect referenced leaf tokens (like colorWhite, colorGreyOpaque70)
-  const allReferencedTokens: string[] = [];
-  const alreadyIncluded = new Set([...used, ...allReferenceTokens]);
-
-  themes.forEach((theme: Theme) => {
-    const referenced = collectReferencedTokens(theme, [...used, ...allReferenceTokens]);
-    referenced.forEach((token) => {
-      if (!alreadyIncluded.has(token)) {
-        allReferencedTokens.push(token);
-        alreadyIncluded.add(token);
-      }
-    });
-  });
-
-  // Add allReferencedTokens to effectiveUsed so they get created in primary rule
-  // The transformer will remove them from mode rules since they're unchanged
-  const effectiveUsed = [...used, ...allReferenceTokens, ...allReferencedTokens];
+  const { referenceTokens, referencedTokens } = collectAllRequiredTokens(themes, used);
+  const usedTokens = [...used, ...referenceTokens, ...referencedTokens];
 
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, effectiveUsed)
+    new UsedPropertyRegistry(propertiesMap, usedTokens)
   );
-  const stylesheetCreator = new MultiThemeCreator([primary, ...secondary], ruleCreator, { propertiesMap });
-  const stylesheet = stylesheetCreator.create();
-  const transformer = new MinimalTransformer();
-  const minimal = transformer.transform(stylesheet);
-  return minimal.toString();
+  const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
 }

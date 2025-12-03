@@ -89,6 +89,10 @@ export class Rule {
     }
     return rule;
   }
+
+  isModeRule(): boolean {
+    return !!this.media;
+  }
 }
 
 export class Declaration {

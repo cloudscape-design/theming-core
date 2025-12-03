@@ -9,8 +9,8 @@ import {
   resolveContext,
   resolveTheme,
   Theme,
-  ResolveOptions,
 } from '../theme';
+import type { PropertiesMap } from './interfaces';
 import Stylesheet from './stylesheet';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
@@ -22,15 +22,15 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
   baseTheme?: Theme;
   resolution: FullResolution;
   ruleCreator: RuleCreator;
-  options?: ResolveOptions;
+  propertiesMap?: PropertiesMap;
 
-  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme, options?: ResolveOptions) {
+  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme, propertiesMap?: PropertiesMap) {
     super();
     this.theme = theme;
     this.baseTheme = baseTheme;
-    this.resolution = resolveTheme(theme, this.baseTheme, options);
+    this.propertiesMap = propertiesMap;
+    this.resolution = resolveTheme(theme, this.baseTheme, propertiesMap);
     this.ruleCreator = ruleCreator;
-    this.options = options;
   }
 
   create(): Stylesheet {
@@ -53,7 +53,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContext(this.theme, (context) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.options),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         defaultsReducer(),
         this.baseTheme
@@ -73,7 +73,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContextWithinOptionalModeState(this.theme, (context, mode, state) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.options),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         modeReducer(mode, state),
         this.baseTheme

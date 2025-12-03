@@ -7,13 +7,6 @@ import { ReferenceTokens } from '../interfaces';
 // Mock the color generation utilities
 vi.mock('../color-generation/hct-utils', () => ({
   argbFromHex: vi.fn((hex: string) => parseInt(hex.replace('#', ''), 16)),
-  themeFromSourceColor: vi.fn(() => ({
-    palettes: {
-      primary: {
-        tone: vi.fn((tone: number) => 0xff000000 + tone * 0x010101),
-      },
-    },
-  })),
   hexFromArgb: vi.fn((argb: number) => `#${(argb & 0xffffff).toString(16).padStart(6, '0')}`),
   hexToHct: vi.fn((hex: string) => ({ hue: 180, chroma: 50, tone: 50 })),
   hctToHex: vi.fn(() => '#008080'),

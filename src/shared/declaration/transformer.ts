@@ -3,7 +3,8 @@
 import { entries } from '../utils';
 import type Stylesheet from './stylesheet';
 import { Declaration } from './stylesheet';
-import { isGlobalSelector } from '../styles/selector';
+import { getFirstSelector, isGlobalSelector } from '../styles/selector';
+import { getReferencedVar } from './utils';
 
 export interface Transformer {
   transform(stylesheet: Stylesheet): Stylesheet;
@@ -46,55 +47,44 @@ export class MinimalTransformer implements Transformer {
       // However, for mode rules (which have media queries), we should skip tokens that have
       // identical values to their parent, even if referenced variables are overridden. These can inherit
       // properly via natural css variable cascade rules.
-      const selector = rule.toString().split('{')[0].trim();
-      const firstSelector = selector.split(/[\s.:[\]]/)[0];
-      const isModeRule = !!rule.media;
-      if (!isGlobalSelector(firstSelector)) {
-        // Helper to check if a variable or any variable it references is overridden
-        const isVariableOverriddenRecursive = (varName: string, visited = new Set<string>()): boolean => {
-          if (visited.has(varName)) return false;
-          visited.add(varName);
 
-          // Check if this variable itself is overridden
-          if (varName in ruleValue && varName in resolvedParent && ruleValue[varName] !== resolvedParent[varName]) {
-            return true;
-          }
+      const firstSelector = getFirstSelector(rule.selector);
+      const isModeRule = rule.isModeRule();
 
-          // Check if this variable references another variable that's overridden
-          if (varName in ruleValue) {
-            const varValue = ruleValue[varName];
-            const refMatch = varValue.match(/var\((--[^)]+)\)/);
-            if (refMatch) {
-              const referencedVar = refMatch[1];
-              if (isVariableOverriddenRecursive(referencedVar, visited)) {
-                return true;
-              }
-            }
-          }
-
-          return false;
-        };
-
-        Object.keys(ruleValue).forEach((property) => {
-          const value = ruleValue[property];
-          // Check if this is a CSS variable reference
-          const match = value.match(/var\((--[^)]+)\)/);
-          if (match) {
-            const referencedVar = match[1];
-            // If the referenced variable (or any variable it references) is overridden
-            if (isVariableOverriddenRecursive(referencedVar)) {
-              // For mode rules, only output if value actually differs from resolved parent
-              // For context rules, always output to ensure correct resolution
-              if (isModeRule && property in resolvedParent && ruleValue[property] === resolvedParent[property]) {
-                return;
-              }
-              if (!(property in diff) && property in ruleValue) {
-                diff[property] = ruleValue[property];
-              }
-            }
-          }
-        });
+      if (isGlobalSelector(firstSelector)) {
+        rule.clear();
+        entries(diff).forEach(([property, value]) => rule.appendDeclaration(new Declaration(property, value)));
+        if (rule.size() === 0) {
+          stylesheet.removeRule(rule);
+        }
+        return;
       }
+
+      const isOverridden = (varName: string, visited = new Set<string>()): boolean => {
+        if (visited.has(varName)) return false;
+        visited.add(varName);
+
+        const isDirectlyOverridden =
+          varName in ruleValue && varName in resolvedParent && ruleValue[varName] !== resolvedParent[varName];
+
+        if (isDirectlyOverridden) return true;
+
+        const referencedVar = varName in ruleValue ? getReferencedVar(ruleValue[varName]) : null;
+        return referencedVar ? isOverridden(referencedVar, visited) : false;
+      };
+
+      Object.keys(ruleValue).forEach((property) => {
+        const referencedVar = getReferencedVar(ruleValue[property]);
+        if (!referencedVar || !isOverridden(referencedVar)) return;
+        // For mode rules, only output if value actually differs from resolved parent
+        // For context rules, always output to ensure correct resolution
+        const canInherit = isModeRule && ruleValue[property] === resolvedParent[property];
+        if (canInherit) return;
+
+        if (!(property in diff)) {
+          diff[property] = ruleValue[property];
+        }
+      });
 
       rule.clear();
       entries(diff).forEach(([property, value]) => rule.appendDeclaration(new Declaration(property, value)));

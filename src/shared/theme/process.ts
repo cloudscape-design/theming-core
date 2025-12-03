@@ -17,16 +17,68 @@ export function processReferenceTokens(colorTokens: ColorReferenceTokens): Token
 
   Object.entries(colorTokens).forEach(([colorName, paletteInput]) => {
     const palette = processColorPaletteInput(colorName as keyof ColorReferenceTokens, paletteInput);
-    // Add generated palette tokens with naming convention: colorPrimary50, colorPrimary600, etc.
+
     Object.entries(palette).forEach(([step, value]) => {
-      if (step === 'seed') {
-        return;
+      if (step !== 'seed') {
+        const tokenName = generateReferenceTokenName('color', colorName, step);
+        generatedTokens[tokenName] = value;
       }
-      const tokenName = generateReferenceTokenName('color', colorName, step);
-      generatedTokens[tokenName] = value;
     });
   });
+
   return generatedTokens;
+}
+
+function processSeedInput(
+  category: keyof ColorReferenceTokens,
+  seed: ReferencePaletteDefinition['seed']
+): ReferencePaletteDefinition {
+  if (!seed) return {};
+  if (typeof seed === 'string') {
+    return generatePaletteFromSeed(category, seed);
+  }
+
+  const palette: ReferencePaletteDefinition = {};
+
+  Object.entries(seed).forEach(([mode, seedColor]) => {
+    if (typeof seedColor !== 'string') return;
+
+    const modePalette = generatePaletteFromSeed(category, seedColor, true, mode);
+
+    Object.entries(modePalette).forEach(([step, value]) => {
+      const paletteStep = Number(step) as PaletteStep;
+      if (!isValidPaletteStep(paletteStep)) return;
+
+      const existing = palette[paletteStep];
+      palette[paletteStep] = typeof existing === 'object' ? { ...existing, [mode]: value } : { [mode]: value };
+    });
+  });
+
+  return palette;
+}
+
+function mergeExplicitSteps(
+  generated: ReferencePaletteDefinition,
+  input: Exclude<ColorPaletteInput, string>
+): ReferencePaletteDefinition {
+  const result = { ...generated };
+
+  Object.entries(input).forEach(([step, value]) => {
+    if (step === 'seed') {
+      result.seed = value;
+      return;
+    }
+
+    const paletteStep = Number(step) as PaletteStep;
+    if (!value || !isValidPaletteStep(paletteStep)) return;
+
+    const generatedValue = generated[paletteStep];
+    // Merge mode objects, otherwise use explicit value
+    result[paletteStep] =
+      typeof generatedValue === 'object' && typeof value === 'object' ? { ...generatedValue, ...value } : value;
+  });
+
+  return result;
 }
 
 export function processColorPaletteInput(
@@ -35,46 +87,8 @@ export function processColorPaletteInput(
 ): ReferencePaletteDefinition {
   if (typeof input === 'string') {
     return generatePaletteFromSeed(category, input);
-  } else {
-    let generated: ReferencePaletteDefinition = {};
-
-    if (input.seed) {
-      if (typeof input.seed === 'string') {
-        generated = generatePaletteFromSeed(category, input.seed);
-      } else {
-        // Mode-aware seed: generate palette for each mode
-        Object.entries(input.seed).forEach(([mode, seedColor]) => {
-          if (typeof seedColor === 'string') {
-            const modePalette = generatePaletteFromSeed(category, seedColor, true, mode);
-            Object.entries(modePalette).forEach(([step, value]) => {
-              const numStep = Number(step);
-              if (isValidPaletteStep(numStep)) {
-                const existingValue = generated[numStep as PaletteStep];
-                generated[numStep as PaletteStep] =
-                  typeof existingValue === 'object' ? { ...existingValue, [mode]: value } : { [mode]: value };
-              }
-            });
-          }
-        });
-      }
-    }
-
-    const result: ReferencePaletteDefinition = { ...generated };
-
-    // Merge explicit step values, taking precedence over generated
-    Object.entries(input).forEach(([step, value]) => {
-      if (step === 'seed') {
-        result.seed = value;
-      } else {
-        const numStep = Number(step);
-        if (value && isValidPaletteStep(numStep)) {
-          const generatedValue = generated[numStep as PaletteStep];
-          result[numStep as PaletteStep] =
-            typeof generatedValue === 'object' && typeof value === 'object' ? { ...generatedValue, ...value } : value;
-        }
-      }
-    });
-
-    return result;
   }
+
+  const generated = processSeedInput(category, input.seed);
+  return mergeExplicitSteps(generated, input);
 }

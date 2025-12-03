@@ -12,7 +12,6 @@ describe('theme utils', () => {
     });
 
     test('returns false for palette objects with numeric keys', () => {
-      // BREAKING CHANGE: Objects with numeric keys are now excluded
       expect(isModeValue({ 50: '#e6f3ff', 500: '#0073bb' })).toBe(false);
       expect(isModeValue({ 100: '#ffffff', 900: '#000000' })).toBe(false);
       expect(isModeValue({ '50': '#e6f3ff', '500': '#0073bb' })).toBe(false);
