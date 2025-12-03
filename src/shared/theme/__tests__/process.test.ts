@@ -11,6 +11,12 @@ vi.mock('../color-generation/hct-utils', () => ({
   hexToHct: vi.fn((hex: string) => ({ hue: 180, chroma: 50, tone: 50 })),
   hctToHex: vi.fn(() => '#008080'),
   createHct: vi.fn((hue: number, chroma: number, tone: number) => ({ hue, chroma, tone })),
+  Hct: class Hct {
+    constructor(public hue: number, public chroma: number, public tone: number) {}
+    static from(hue: number, chroma: number, tone: number) {
+      return new Hct(hue, chroma, tone);
+    }
+  },
 }));
 
 describe('processReferenceTokens', () => {
@@ -165,5 +171,33 @@ describe('processColorPaletteInput', () => {
     const result = processColorPaletteInput('primary', {});
 
     expect(result).toEqual({});
+  });
+
+  test('processes mode-based seed input', () => {
+    const input = {
+      seed: {
+        light: '#0073bb',
+        dark: '#66b3ff',
+      },
+    };
+
+    const result = processColorPaletteInput('primary', input);
+
+    // Should generate palette with mode values
+    expect(result[500]).toEqual({ light: '#008080', dark: '#008080' });
+  });
+
+  test('skips non-string seed values in mode objects', () => {
+    const input = {
+      seed: {
+        light: '#0073bb',
+        dark: null as any,
+      },
+    };
+
+    const result = processColorPaletteInput('primary', input);
+
+    // Should only process light mode
+    expect(result[500]).toEqual({ light: '#008080' });
   });
 });
