@@ -1,190 +1,169 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
-":global :root{
+":global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 }"
 `;
 
 exports[`renderDeclarations > includes secondary theme 1`] = `
-":root{
+"body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
 	--grey-css:grey;
 	--brown-css:brown;
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:grey;
-	--lineShadow-css:grey;
+	--shadow-css:var(--grey-css);
+	--buttonShadow-css:var(--shadow-css);
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 	--small-css:1px;
 	--medium-css:3px;
-	--scaledSize-css:3px;
+	--scaledSize-css:var(--medium-css);
 	--appear-css:20ms;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:var(--containerShadowBase-css);
 }
 .compact{
-	--scaledSize-css:1px;
+	--scaledSize-css:var(--small-css);
 }
 @media not print {.dark{
-	--shadow-css:black;
-	--buttonShadow-css:black;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--shadow-css:var(--black-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 .disabled-motion{
 	--appear-css:0;
 }
 .navigation{
-	--shadow-css:black;
-	--buttonShadow-css:black;
+	--shadow-css:var(--black-css);
 	--boxShadow-css:purple;
-	--lineShadow-css:black;
+	--buttonShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 }
 @media not print {.dark .navigation{
-	--shadow-css:brown;
-	--buttonShadow-css:brown;
-	--lineShadow-css:purple;
+	--shadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 @media not print {.dark.navigation{
-	--shadow-css:brown;
-	--buttonShadow-css:brown;
-	--lineShadow-css:purple;
+	--shadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 .secondary-theme{
 	--black-css:purple;
 	--brown-css:black;
 }
-@media not print {.dark.secondary-theme{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--boxShadow-css:black;
-	--lineShadow-css:black;
-}}
 .secondary-theme .navigation{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--lineShadow-css:purple;
+	--boxShadow-css:var(--shadow-css);
 }
 .navigation.secondary-theme{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--lineShadow-css:purple;
+	--boxShadow-css:var(--shadow-css);
 }
 @media not print {.dark.secondary-theme .navigation{
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--shadow-css:var(--grey-css);
+	--boxShadow-css:var(--brown-css);
 }}
 @media not print {.dark.navigation.secondary-theme{
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--lineShadow-css:black;
+	--shadow-css:var(--grey-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with :root selector and context 1`] = `
-":global :root{
+":global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
 	--grey-css:grey;
 	--brown-css:brown;
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:grey;
-	--lineShadow-css:grey;
+	--shadow-css:var(--grey-css);
+	--buttonShadow-css:var(--shadow-css);
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 	--small-css:1px;
 	--medium-css:3px;
-	--scaledSize-css:3px;
+	--scaledSize-css:var(--medium-css);
 	--appear-css:20ms;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:var(--containerShadowBase-css);
 }
 :global .compact{
-	--scaledSize-css:1px;
+	--scaledSize-css:var(--small-css);
 }
 @media not print {:global .dark{
-	--shadow-css:black;
-	--buttonShadow-css:black;
-	--boxShadow-css:brown;
-	--lineShadow-css:brown;
+	--shadow-css:var(--black-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 :global .disabled-motion{
 	--appear-css:0;
 }
 :global .navigation{
-	--shadow-css:black;
-	--buttonShadow-css:black;
+	--shadow-css:var(--black-css);
 	--boxShadow-css:purple;
-	--lineShadow-css:black;
+	--buttonShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 }
 @media not print {:global .dark .navigation{
-	--shadow-css:brown;
-	--buttonShadow-css:brown;
-	--lineShadow-css:purple;
+	--shadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 @media not print {:global .dark.navigation{
-	--shadow-css:brown;
-	--buttonShadow-css:brown;
-	--lineShadow-css:purple;
+	--shadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with non :root selector 1`] = `
 ".secondary-theme{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:purple;
 	--grey-css:grey;
 	--brown-css:black;
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:grey;
-	--lineShadow-css:grey;
+	--shadow-css:var(--grey-css);
+	--buttonShadow-css:var(--shadow-css);
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 	--small-css:1px;
 	--medium-css:3px;
-	--scaledSize-css:3px;
+	--scaledSize-css:var(--medium-css);
 	--appear-css:20ms;
 	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
-	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:var(--containerShadowBase-css);
 }
 .compact.secondary-theme{
-	--scaledSize-css:1px;
+	--scaledSize-css:var(--small-css);
 }
 @media not print {.dark.secondary-theme{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--shadow-css:var(--black-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 .disabled-motion.secondary-theme{
 	--appear-css:0;
 }
 .secondary-theme .navigation{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--shadow-css:var(--black-css);
+	--buttonShadow-css:var(--shadow-css);
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 }
 .navigation.secondary-theme{
-	--shadow-css:purple;
-	--buttonShadow-css:purple;
-	--boxShadow-css:purple;
-	--lineShadow-css:purple;
+	--shadow-css:var(--black-css);
+	--buttonShadow-css:var(--shadow-css);
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
 }
 @media not print {.dark.secondary-theme .navigation{
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--shadow-css:var(--grey-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
 @media not print {.dark.navigation.secondary-theme{
-	--shadow-css:grey;
-	--buttonShadow-css:grey;
-	--boxShadow-css:black;
-	--lineShadow-css:black;
+	--shadow-css:var(--grey-css);
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}"
 `;

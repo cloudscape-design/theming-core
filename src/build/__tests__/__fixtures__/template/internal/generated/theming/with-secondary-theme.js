@@ -3,7 +3,7 @@
 export var preset = {
   theme: {
     id: 'theme',
-    selector: ':root',
+    selector: 'body',
     tokens: {
       fontFamilyBase: "'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif",
       colorOrange500: '#ec7211',

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { entries, fromEntries, includes } from '../utils';
 import { Override, Theme, ThemePreset, Token } from './interfaces';
+import { processReferenceTokens } from './process';
 
 /**
  * This function compares the theme override against the list of tokens that are allowed
@@ -40,7 +41,7 @@ export function validateOverride(override: Override, themeable: Token[], availab
     return isValid;
   }
 
-  const tokensEntries = entries(override.tokens).filter(([token]) => isThemeable(token));
+  const tokensEntries: [string, any][] = entries(override.tokens).filter(([token]) => isThemeable(token));
 
   type Context = NonNullable<NonNullable<Override['contexts']>[string]>;
 
@@ -62,9 +63,19 @@ export function validateOverride(override: Override, themeable: Token[], availab
       return [contextId, newContext] as [string, Context];
     });
 
+  let completeTokens = {};
+  if (override.referenceTokens?.color) {
+    const generatedTokens = processReferenceTokens(override.referenceTokens.color);
+    // Reference tokens should override existing tokens
+    completeTokens = { ...fromEntries(tokensEntries), ...generatedTokens };
+  } else {
+    completeTokens = fromEntries(tokensEntries);
+  }
+
   return {
     contexts: fromEntries(contextEntries),
-    tokens: fromEntries(tokensEntries),
+    tokens: completeTokens,
+    referenceTokens: override.referenceTokens,
   };
 }
 

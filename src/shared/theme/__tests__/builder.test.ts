@@ -78,3 +78,19 @@ test('theme adds reference tokens', () => {
     colorWarning400: '#ff9900',
   });
 });
+
+test('theme adds reference tokens with mode', () => {
+  builder.addReferenceTokens(
+    {
+      color: {
+        primary: { 500: { default: '#0073bb', optional: '#66b3ff' } },
+      },
+    },
+    mode
+  );
+
+  const theme = builder.build();
+
+  expect(theme.tokens.colorPrimary500).toEqual({ default: '#0073bb', optional: '#66b3ff' });
+  expect(theme.tokenModeMap.colorPrimary500).toBe('mode');
+});

@@ -10,6 +10,7 @@ import {
   resolveTheme,
   Theme,
 } from '../theme';
+import type { PropertiesMap } from './interfaces';
 import Stylesheet from './stylesheet';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
@@ -21,12 +22,14 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
   baseTheme?: Theme;
   resolution: FullResolution;
   ruleCreator: RuleCreator;
+  propertiesMap?: PropertiesMap;
 
-  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme) {
+  constructor(theme: Theme, ruleCreator: RuleCreator, baseTheme?: Theme, propertiesMap?: PropertiesMap) {
     super();
     this.theme = theme;
     this.baseTheme = baseTheme;
-    this.resolution = resolveTheme(theme, this.baseTheme);
+    this.propertiesMap = propertiesMap;
+    this.resolution = resolveTheme(theme, this.baseTheme, propertiesMap);
     this.ruleCreator = ruleCreator;
   }
 
@@ -34,6 +37,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
     const stylesheet = new Stylesheet();
 
     const defaults = reduce(this.resolution, this.theme, defaultsReducer(), this.baseTheme);
+
     const rootRule = this.ruleCreator.create({ global: [this.theme.selector] }, defaults);
     SingleThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, []);
 
@@ -49,7 +53,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContext(this.theme, (context) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         defaultsReducer(),
         this.baseTheme
@@ -69,7 +73,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
 
     SingleThemeCreator.forEachContextWithinOptionalModeState(this.theme, (context, mode, state) => {
       const contextResolution = reduce(
-        resolveContext(this.theme, context, this.baseTheme, this.resolution),
+        resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         modeReducer(mode, state),
         this.baseTheme

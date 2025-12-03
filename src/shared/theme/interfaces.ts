@@ -26,6 +26,7 @@ export interface Context {
   id: string;
   selector: string;
   tokens: Record<string, Assignment>;
+  defaultMode?: keyof Mode['states'];
 }
 
 export interface Theme {
@@ -54,11 +55,12 @@ export interface ColorReferenceTokens {
   info?: ColorPaletteInput;
 }
 
-/**
- * Color reference tokens organized by semantic color categories.
- * Each category is defined as a palette definition with explicit color values.
- */
-export type ColorPaletteInput = ColorPaletteDefinition;
+// String allows for shorthand seed definition
+export type ColorPaletteInput = string | ReferencePaletteDefinition;
+export interface ReferencePaletteDefinition extends ColorPalette {
+  seed?: Assignment;
+}
+export type ColorPalette = Partial<Record<PaletteStep, Assignment>>;
 
 /**
  * Palette steps available across all color types. Different color categories
@@ -86,15 +88,11 @@ export type PaletteStep =
   | 950
   | 1000;
 
-/**
- * Color palette definition with explicit color values for palette steps.
- */
-export type ColorPaletteDefinition = Partial<Record<PaletteStep, string>>;
-
 type Tokens = Partial<Record<string, GlobalValue | TypedModeValueOverride>>;
 
 export interface Override {
   tokens: Tokens;
+  referenceTokens?: ReferenceTokens;
   contexts?: Record<string, { tokens: Tokens } | undefined>;
 }
 

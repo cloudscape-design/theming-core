@@ -62,7 +62,7 @@ exports[`renderCJSPreset matches previous snapshot 1`] = `
 "module.exports.preset = {
   "theme": {
     "id": "root",
-    "selector": ":root",
+    "selector": "body",
     "tokens": {
       "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
       "fontFamilyBody": "{fontFamilyBase}",
@@ -268,7 +268,7 @@ exports[`renderPreset matches previous snapshot 1`] = `
 "export var preset = {
   "theme": {
     "id": "root",
-    "selector": ":root",
+    "selector": "body",
     "tokens": {
       "fontFamilyBase": "\\"Helvetica Neue\\", Arial, sans-serif",
       "fontFamilyBody": "{fontFamilyBase}",

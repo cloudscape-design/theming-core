@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { isGlobalSelector } from '../styles/selector';
 import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../theme';
+import type { PropertiesMap } from './interfaces';
 import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
 import { RuleCreator, SelectorConfig } from './rule';
@@ -16,11 +17,13 @@ import { compact } from './utils';
 export class MultiThemeCreator extends AbstractCreator implements StylesheetCreator {
   themes: Theme[];
   ruleCreator: RuleCreator;
+  propertiesMap?: PropertiesMap;
 
-  constructor(themes: Theme[], ruleCreator: RuleCreator) {
+  constructor(themes: Theme[], ruleCreator: RuleCreator, propertiesMap?: PropertiesMap) {
     super();
     this.themes = themes;
     this.ruleCreator = ruleCreator;
+    this.propertiesMap = propertiesMap;
   }
 
   create(): Stylesheet {
@@ -38,7 +41,9 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     if (!globalThemes.length) {
       // If there is no root theme, all themes are scoped by their root selector. No interference.
-      const stylesheets = this.themes.map((theme) => new SingleThemeCreator(theme, this.ruleCreator).create());
+      const stylesheets = this.themes.map((theme) =>
+        new SingleThemeCreator(theme, this.ruleCreator, undefined, this.propertiesMap).create()
+      );
       const result = new Stylesheet();
       stylesheets.forEach((stylesheet) => {
         stylesheet.getAllRules().map((rule) => result.appendRuleWithPath(rule, stylesheet.getPath(rule) ?? []));
@@ -48,7 +53,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     const [globalTheme] = globalThemes;
 
-    const stylesheet = new SingleThemeCreator(globalTheme, this.ruleCreator).create();
+    const stylesheet = new SingleThemeCreator(globalTheme, this.ruleCreator, undefined, this.propertiesMap).create();
     const secondaries = this.getThemesWithout(globalTheme);
     secondaries.forEach((secondary) => {
       this.appendRulesForSecondary(stylesheet, globalTheme, secondary);
@@ -58,8 +63,9 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
   }
 
   appendRulesForSecondary(stylesheet: Stylesheet, primary: Theme, secondary: Theme) {
-    const secondaryResolution = resolveTheme(secondary);
+    const secondaryResolution = resolveTheme(secondary, undefined, this.propertiesMap);
     const defaults = reduce(secondaryResolution, secondary, defaultsReducer());
+
     const rootRule = this.ruleCreator.create({ global: [secondary.selector] }, defaults);
     const parentRule = this.findRule(stylesheet, { global: [primary.selector] });
     MultiThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, compact([parentRule]));
@@ -80,7 +86,11 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     });
 
     MultiThemeCreator.forEachContext(secondary, (context) => {
-      const contextResolution = reduce(resolveContext(secondary, context), secondary, defaultsReducer());
+      const contextResolution = reduce(
+        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
+        secondary,
+        defaultsReducer()
+      );
       const contextRule = this.ruleCreator.create(
         { global: [secondary.selector], local: [context.selector] },
         contextResolution
@@ -110,7 +120,11 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
       const optionalState = mode.states[state] as OptionalState;
-      const contextResolution = reduce(resolveContext(secondary, context), secondary, modeReducer(mode, state));
+      const contextResolution = reduce(
+        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
+        secondary,
+        modeReducer(mode, state)
+      );
       const contextRule = this.findRule(stylesheet, { global: [secondary.selector], local: [context.selector] });
       const modeRule = this.findRule(stylesheet, {
         global: [secondary.selector, optionalState.selector],

@@ -3,7 +3,16 @@
 import { Context, Mode } from '.';
 import { cloneDeep, values } from '../utils';
 import { Theme, Value } from './interfaces';
-import { areAssignmentsEqual, getDefaultState, getMode, getReference, isModeValue, isReference } from './utils';
+import type { PropertiesMap } from '../declaration/interfaces';
+import {
+  areAssignmentsEqual,
+  getDefaultState,
+  getMode,
+  getReference,
+  isModeValue,
+  isReference,
+  isReferenceToken,
+} from './utils';
 
 export type ModeTokenResolution = Record<string, Value>;
 export type SpecificTokenResolution = Value;
@@ -27,10 +36,14 @@ interface FullResolutionWithPaths {
  * If a base theme is provided, only keep tokens that are in the override theme or those that
  * have an overridden token in their resolution path
  */
-export function resolveTheme(theme: Theme, baseTheme?: Theme): FullResolution {
-  return resolveThemeWithPaths(theme, baseTheme).resolvedTheme;
+export function resolveTheme(theme: Theme, baseTheme?: Theme, propertiesMap?: PropertiesMap): FullResolution {
+  return resolveThemeWithPaths(theme, baseTheme, propertiesMap).resolvedTheme;
 }
-export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullResolutionWithPaths {
+export function resolveThemeWithPaths(
+  theme: Theme,
+  baseTheme?: Theme,
+  propertiesMap?: PropertiesMap
+): FullResolutionWithPaths {
   const resolvedTheme: FullResolution = {};
   const resolutionPaths: FullResolutionPaths = {};
 
@@ -40,7 +53,7 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
       const modeTokenResolutionPaths: ModeTokenResolutionPath = {};
       const resolvedToken = Object.keys(mode.states).reduce<Record<string, string>>((acc, state: string) => {
         modeTokenResolutionPaths[state] = [];
-        acc[state] = resolveToken(theme, token, modeTokenResolutionPaths[state], state, baseTheme);
+        acc[state] = resolveToken(theme, token, modeTokenResolutionPaths[state], state, baseTheme, propertiesMap);
         return acc;
       }, {});
 
@@ -53,7 +66,7 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
       }
     } else {
       const tokenResolutionPath: SpecificTokenResolutionPath = [];
-      const resolvedToken = resolveToken(theme, token, tokenResolutionPath, undefined, baseTheme);
+      const resolvedToken = resolveToken(theme, token, tokenResolutionPath, undefined, baseTheme, propertiesMap);
 
       if (!baseTheme || tokenResolutionPath.some((pathToken) => pathToken in theme.tokens)) {
         resolutionPaths[token] = tokenResolutionPath;
@@ -65,14 +78,36 @@ export function resolveThemeWithPaths(theme: Theme, baseTheme?: Theme): FullReso
   return { resolvedTheme, resolutionPaths };
 }
 
-function resolveToken(theme: Theme, token: string, path: Array<string>, state?: string, baseTheme?: Theme): string {
+function resolveToken(
+  theme: Theme,
+  token: string,
+  path: Array<string>,
+  state?: string,
+  baseTheme?: Theme,
+  propertiesMap?: PropertiesMap
+): string {
   if (!theme.tokens[token] && !baseTheme?.tokens[token]) {
     throw new Error(`Token ${token} does not exist in the theme.`);
   }
-  if (path.indexOf(token) !== -1) {
+  if (path.includes(token)) {
     throw new Error(`Token ${token} has a circular dependency.`);
   }
   path.push(token);
+
+  const assignment = getAssignment(theme, token, state, baseTheme);
+
+  if (isReference(assignment)) {
+    const ref = getReference(assignment);
+    if (propertiesMap?.[ref] && (theme.tokens[ref] || baseTheme?.tokens[ref])) {
+      return `var(${propertiesMap[ref]})`;
+    }
+    return resolveToken(theme, ref, path, state, baseTheme, propertiesMap);
+  }
+
+  return assignment;
+}
+
+function getAssignment(theme: Theme, token: string, state: string | undefined, baseTheme?: Theme): string {
   let assignment = theme.tokens[token] || baseTheme?.tokens[token];
 
   if (!assignment) {
@@ -88,33 +123,81 @@ function resolveToken(theme: Theme, token: string, path: Array<string>, state?: 
     assignment = assignment[state];
   }
 
-  if (isReference(assignment)) {
-    const ref = getReference(assignment);
-    return resolveToken(theme, ref, path, state, baseTheme);
-  } else {
-    return assignment;
-  }
+  return assignment;
 }
 
 export function resolveContext(
   theme: Theme,
   context: Context,
   baseTheme?: Theme,
-  themeResolution?: FullResolution
+  themeResolution?: FullResolution,
+  propertiesMap?: PropertiesMap
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
-  if (!baseTheme || !themeResolution) {
-    tmp.tokens = {
-      ...tmp.tokens,
-      ...context.tokens,
-    };
-    return resolveTheme(tmp, baseTheme);
+  if (context.defaultMode && theme.modes) {
+    resolveModeReferenceTokens(tmp, context, baseTheme);
   }
 
+  if (!baseTheme || !themeResolution) {
+    tmp.tokens = { ...tmp.tokens, ...context.tokens };
+    return resolveTheme(tmp, baseTheme, propertiesMap);
+  }
+
+  tmp.tokens = applyContextPrecedenceRules(theme, context, baseTheme, themeResolution, propertiesMap);
+  return resolveTheme(tmp, baseTheme, propertiesMap);
+}
+
+function resolveModeReferenceTokens(theme: Theme, context: Context, baseTheme?: Theme): void {
+  if (!context.defaultMode || !theme.modes) return;
+
+  const defaultMode = context.defaultMode;
+  const mode = Object.values(theme.modes).find((m) => m.states[defaultMode]);
+  if (!mode) return;
+
+  // Reference tokens must be resolved to their mode-specific values before path analysis
+  // because resolveThemeWithPaths expects concrete values, not mode objects. Without this,
+  // the resolution would fail when encountering reference tokens with mode values.
+  Object.keys(theme.tokens).forEach((token) => {
+    if (isReferenceToken('color', theme, token)) {
+      const tokenValue = theme.tokens[token];
+      if (isModeValue(tokenValue)) {
+        theme.tokens[token] = tokenValue[defaultMode];
+      }
+    }
+  });
+
+  // Merge theme tokens with context overrides to analyze full resolution paths
+  const mergedTheme = { ...theme, tokens: { ...theme.tokens, ...context.tokens } };
+  const { resolutionPaths } = resolveThemeWithPaths(mergedTheme, baseTheme);
+
+  // Add reference tokens to context
+  collectReferenceTokens(theme, resolutionPaths).forEach((token) => {
+    context.tokens[token] = theme.tokens[token];
+  });
+
+  // Add parent tokens that depend on context-overridden tokens
+  const contextTokens = new Set(Object.keys(context.tokens));
+  Object.keys(theme.tokens).forEach((token) => {
+    if (!contextTokens.has(token) && resolutionPaths[token]) {
+      const pathTokens = flattenResolutionPaths(resolutionPaths[token]);
+      if (pathTokens.some((pathToken) => contextTokens.has(pathToken))) {
+        context.tokens[token] = theme.tokens[token];
+      }
+    }
+  });
+}
+
+function applyContextPrecedenceRules(
+  theme: Theme,
+  context: Context,
+  baseTheme: Theme,
+  themeResolution: FullResolution,
+  propertiesMap?: PropertiesMap
+): Record<string, any> {
   /**
    * The precedence of context tokens as specified by the API from highest to lowest is:
-   * [override theme context] > [base theme context] > [override theme] [base theme].
+   * [override theme context] > [base theme context] > [override theme] > [base theme].
    *
    * The precedence of tokens as defined in the generated CSS follows this order.
    * However, tokens that are declared in both the base theme and base theme
@@ -126,26 +209,22 @@ export function resolveContext(
    * in the override theme with their respective values from the base theme context
    */
   const baseContext = baseTheme.contexts[context.id];
-  tmp.tokens = {
-    ...Object.keys(themeResolution).reduce((acc, key) => {
-      const shouldSkipReset =
-        (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
-        areAssignmentsEqual(
-          baseContext.tokens[key],
-          theme.tokens[key] ?? baseTheme.tokens[key] // resolved key may not be in override theme
-        );
 
-      return shouldSkipReset
-        ? acc
-        : {
-            ...acc,
-            [key]: baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key],
-          };
-    }, {}),
-    ...context.tokens,
-  };
+  const baseResolution = resolveTheme(baseTheme, undefined, propertiesMap);
+  const overrideResolution = resolveTheme(theme, baseTheme, propertiesMap);
 
-  return resolveTheme(tmp, baseTheme);
+  const rebaselined = Object.keys(themeResolution).reduce((acc, key) => {
+    const shouldSkipReset =
+      (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
+      areAssignmentsEqual(baseResolution[key], overrideResolution[key]);
+
+    if (!shouldSkipReset) {
+      acc[key] = baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key];
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
+  return { ...rebaselined, ...context.tokens };
 }
 
 type Reducer = (
@@ -235,3 +314,24 @@ export function isSpecificTokenResolution(
 }
 
 const isEmpty = (obj: Record<string, unknown>) => Object.keys(obj).length === 0;
+
+function flattenResolutionPaths(pathOrPaths: ModeTokenResolutionPath | SpecificTokenResolutionPath): string[] {
+  return typeof pathOrPaths === 'object' && !Array.isArray(pathOrPaths)
+    ? ([] as string[]).concat(...Object.values(pathOrPaths))
+    : pathOrPaths;
+}
+
+function collectReferenceTokens(theme: Theme, resolutionPaths: FullResolutionPaths): Set<string> {
+  const referenceTokens = new Set<string>();
+
+  Object.values(resolutionPaths).forEach((pathOrPaths) => {
+    const allPaths = flattenResolutionPaths(pathOrPaths);
+    allPaths.forEach((token: string) => {
+      if (isReferenceToken('color', theme, token)) {
+        referenceTokens.add(token);
+      }
+    });
+  });
+
+  return referenceTokens;
+}

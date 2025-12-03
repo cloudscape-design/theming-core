@@ -18,6 +18,10 @@ export const globalSelectors = [':root', 'body', 'html'];
 export const isGlobalSelector: (selector: string) => boolean = (selector: string) =>
   globalSelectors.indexOf(selector) > -1;
 
+export function getFirstSelector(selector: string): string {
+  return selector.split(/[\s.:[\]]/)[0];
+}
+
 /**
  * Detects and repeats class names to increase specificity, otherwise
  * fall back to increase by id

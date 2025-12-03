@@ -110,7 +110,7 @@ test(
 );
 
 test(
-  'override styles only include overridden properties',
+  'override styles include overridden tokens',
   setupTest(async (page) => {
     const override: Override = {
       tokens: {
@@ -124,32 +124,22 @@ test(
     await injectOverride(page, override);
 
     const resolution = await page.getCSSPropertyResolution();
-    const resolutionContext = await page.getCSSPropertyResolution(contextClass);
     await page.addClassToRoot(modeClass);
     const resolutionMode = await page.getCSSPropertyResolution();
 
+    // Without base theme, only explicitly overridden tokens are present
     expect(resolution).toEqual({
-      boxShadow: 'black',
-      buttonShadow: 'black',
-      lineShadow: 'black',
+      black: 'black',
+      brown: 'brown',
+      grey: 'grey',
       medium: '2px',
-      scaledSize: '2px',
-      shadow: 'black',
-    });
-    expect(resolutionContext).toEqual({
-      boxShadow: 'purple',
-      buttonShadow: 'black',
-      lineShadow: 'black',
-      medium: '2px',
-      scaledSize: '2px',
       shadow: 'black',
     });
     expect(resolutionMode).toEqual({
-      boxShadow: 'brown',
-      buttonShadow: 'grey',
-      lineShadow: 'brown',
+      black: 'black',
+      brown: 'brown',
+      grey: 'grey',
       medium: '2px',
-      scaledSize: '2px',
       shadow: 'grey',
     });
   })
@@ -183,14 +173,22 @@ class DeclarationPage extends BasePageObject {
           elem.className = className;
           document.body.appendChild(elem);
         }
+
+        const computedStyle = getComputedStyle(elem);
         const result: Record<string, string> = {};
+
         // Chrome-only experimental feature
         // https://caniuse.com/mdn-api_element_computedstylemap
         for (const [prop, value] of (elem as any).computedStyleMap()) {
           if (prop.startsWith('--')) {
-            result[prop.substring(2, prop.length - 4)] = value[0][0].trim();
+            const propName = prop.substring(2, prop.length - 4);
+            // Use a dummy property to force browser to resolve the CSS variable
+            elem.style.setProperty('--temp-resolve', `var(${prop})`);
+            const resolvedValue = computedStyle.getPropertyValue('--temp-resolve').trim();
+            result[propName] = resolvedValue;
           }
         }
+        elem.style.removeProperty('--temp-resolve');
         done(result);
       },
       className
@@ -198,14 +196,14 @@ class DeclarationPage extends BasePageObject {
   }
   async addClassToRoot(className: string): Promise<void> {
     await this.browser.executeAsync((className: string, done: () => void) => {
-      document.documentElement.classList.add(className);
+      document.body.classList.add(className);
       done();
     }, className);
   }
 
   async removeClassFromRoot(className: string): Promise<void> {
     await this.browser.executeAsync((className: string, done: () => void) => {
-      document.documentElement.classList.remove(className);
+      document.body.classList.remove(className);
       done();
     }, className);
   }
