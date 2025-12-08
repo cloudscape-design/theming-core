@@ -23,6 +23,7 @@ const packages = [
     },
     packageRoot: path.join(root, './lib/node'),
     dependencies: [
+      '@material/material-color-utilities',
       'autoprefixer',
       'glob',
       'jsonschema',
@@ -44,7 +45,7 @@ const packages = [
       files: ['shared', 'browser'],
     },
     packageRoot: path.join(root, './lib/browser'),
-    dependencies: ['tslib'],
+    dependencies: ['@material/material-color-utilities', 'tslib'],
   },
 ];
 

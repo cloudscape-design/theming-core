@@ -23,6 +23,8 @@ const findNeededTokens = (scssDir: string, variablesMap: Record<string, string>,
   const usedTokens = Object.keys(variablesMap).filter(
     (token: string) => usedSassVariables.indexOf(variablesMap[token]) !== -1
   );
+
   return uniq([...usedTokens, ...exposed]);
 };
+
 export default findNeededTokens;

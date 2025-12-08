@@ -52,4 +52,15 @@ export function applyTheme(params: ApplyThemeParams): ApplyThemeResult {
   };
 }
 
-export { Theme, Override, ThemePreset, Value, GlobalValue, TypedModeValueOverride } from '../shared/theme';
+export {
+  Theme,
+  Override,
+  ThemePreset,
+  Value,
+  GlobalValue,
+  TypedModeValueOverride,
+  ReferenceTokens,
+  ColorReferenceTokens,
+  ReferencePaletteDefinition,
+  processColorPaletteInput,
+} from '../shared/theme';

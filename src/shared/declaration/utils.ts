@@ -9,3 +9,13 @@ export function compact<T>(arr: (T | undefined)[]): T[] {
   }
   return result;
 }
+
+/**
+ * Extracts the CSS variable name from a var() reference.
+ * @param value - Token value that may contain a var() reference
+ * @returns The variable name (e.g., '--color-primary') or null if not a var() reference
+ */
+export function getReferencedVar(value: string): string | null {
+  const match = value.match(/var\((--[^)]+)\)/);
+  return match ? match[1] : null;
+}
