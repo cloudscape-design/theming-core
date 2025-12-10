@@ -27,7 +27,7 @@ export function renderCJSPreset(preset: ThemePreset): string {
 }
 
 export function renderPresetDeclaration(preset: ThemePreset): string {
-  return `import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-runtime';
+  return `import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-runtime';
 
 export declare ${renderTypedOverrideInterface(preset)}
 export declare const preset: ThemePreset;
@@ -35,7 +35,7 @@ export declare const preset: ThemePreset;
 }
 
 export function renderCJSPresetDeclaration(preset: ThemePreset): string {
-  return `import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
+  return `import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-build';
 
 export declare ${renderTypedOverrideInterface(preset)}
 export declare const preset: ThemePreset;
@@ -62,6 +62,7 @@ function renderTypedOverrideInterface(preset: ThemePreset): string {
   });
 
   return `interface TypedOverride {
+  referenceTokens?: ReferenceTokens,
   tokens: {
     ${tokens.join(';\n    ')};
   },
