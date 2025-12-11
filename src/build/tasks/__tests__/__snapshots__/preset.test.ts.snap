@@ -1,9 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderCJSDeclaration matches previous snapshot 1`] = `
-"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
+"import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-build';
 
 export declare interface TypedOverride {
+  referenceTokens?: ReferenceTokens,
   tokens: {
     shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
     boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
@@ -26,9 +27,10 @@ export declare const preset: ThemePreset;
 `;
 
 exports[`renderCJSDeclaration with secondary theme matches previous snapshot 1`] = `
-"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-build';
+"import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-build';
 
 export declare interface TypedOverride {
+  referenceTokens?: ReferenceTokens,
   tokens: {
     shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
     boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
@@ -207,9 +209,10 @@ exports[`renderCJSPreset matches previous snapshot 1`] = `
 `;
 
 exports[`renderDeclaration matches previous snapshot 1`] = `
-"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-runtime';
+"import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-runtime';
 
 export declare interface TypedOverride {
+  referenceTokens?: ReferenceTokens,
   tokens: {
     shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
     boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
@@ -232,9 +235,10 @@ export declare const preset: ThemePreset;
 `;
 
 exports[`renderDeclaration with secondary theme matches previous snapshot 1`] = `
-"import { ThemePreset, GlobalValue, TypedModeValueOverride } from '@cloudscape-design/theming-runtime';
+"import { ThemePreset, GlobalValue, TypedModeValueOverride, ReferenceTokens } from '@cloudscape-design/theming-runtime';
 
 export declare interface TypedOverride {
+  referenceTokens?: ReferenceTokens,
   tokens: {
     shadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
     boxShadow?: GlobalValue | TypedModeValueOverride<'light' | 'dark'>;
