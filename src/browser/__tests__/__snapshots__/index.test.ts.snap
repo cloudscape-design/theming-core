@@ -12,7 +12,7 @@ exports[`applyTheme > with baseThemeId > attaches one style node containing over
 }
 @media not print {.dark.dark.secondary-theme:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:black;
 }}
 .secondary-theme.secondary-theme .navigation:not(#\\9),.navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
@@ -35,7 +35,7 @@ exports[`applyTheme > with secondary theme > attaches one style node containing 
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:brown;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
@@ -59,7 +59,7 @@ exports[`applyTheme > with targetDocument > attaches one style node containing o
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:brown;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
@@ -83,7 +83,7 @@ exports[`applyTheme > without secondary theme > attaches one style node containi
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:brown;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
@@ -107,7 +107,7 @@ exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`
 }
 @media not print {.dark.dark.secondary-theme:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:black;
 }}
 .secondary-theme.secondary-theme .navigation:not(#\\9),.navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
@@ -137,7 +137,7 @@ exports[`generateThemeStylesheet > with secondary theme > creates override style
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:brown;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
@@ -161,7 +161,7 @@ exports[`generateThemeStylesheet > without secondary theme > creates override st
 }
 @media not print {.dark.dark:not(#\\9){
 	--shadow-css:orange;
-	--boxShadow-css:var(--brown-css);
+	--boxShadow-css:brown;
 }}
 .navigation.navigation:not(#\\9){
 	--shadow-css:pink;
