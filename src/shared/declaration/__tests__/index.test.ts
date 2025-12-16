@@ -140,8 +140,9 @@ describe('renderDeclarations', () => {
     // The merged comma-selector proves both rules have identical content — if the
     // same-element rule were diffed against a different parent, it would contain
     // extra tokens and the rules would not merge.
-    // boxShadow is set in the primary's navigationContext but not in the secondary's,
-    // so it must be present in both the descendant and same-element secondary context rules.
+    // boxShadow resolves to the same literal value in both the primary and secondary
+    // navigationContext, so it correctly inherits via the cascade and is omitted here;
+    // shadow differs between them and so must still be present.
     const output = createBuildDeclarations(
       rootTheme,
       [secondaryTheme],
@@ -152,7 +153,8 @@ describe('renderDeclarations', () => {
 
     const mergedRule = output.match(/\.secondary-theme \.navigation,\.navigation\.secondary-theme\s*\{([^}]*)\}/);
     expect(mergedRule).not.toBeNull();
-    expect(mergedRule![1]).toContain('--boxShadow-css');
+    expect(mergedRule![1]).toContain('--shadow-css');
+    expect(mergedRule![1]).not.toContain('--boxShadow-css');
   });
 
   test('mode+context descendant and same-element rules have identical declarations and are merged', () => {
