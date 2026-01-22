@@ -46,7 +46,7 @@
     "jsonschema": "^1.4.1",
     "lint-staged": "^12.5.0",
     "loader-utils": "^3.2.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "merge": "^2.1.1",
     "postcss": "^8.4.31",
     "postcss-discard-empty": "^6.0.0",
