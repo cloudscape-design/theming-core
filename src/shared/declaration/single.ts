@@ -46,7 +46,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       const stateDetails = mode.states[state] as OptionalState;
       const modeRule = this.ruleCreator.create(
         { global: [this.theme.selector, stateDetails.selector], media: stateDetails.media },
-        modeResolution
+        modeResolution,
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, [rootRule]);
     });
@@ -56,17 +56,17 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
         resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         defaultsReducer(),
-        this.baseTheme
+        this.baseTheme,
       );
       const contextRule = this.ruleCreator.create(
         { global: [this.theme.selector], local: [context.selector] },
-        contextResolution
+        contextResolution,
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule, [rootRule]);
 
       const contextRule2 = this.ruleCreator.create(
         { global: [this.theme.selector, context.selector] },
-        contextResolution
+        contextResolution,
       );
       SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule2, [rootRule]);
     });
@@ -76,39 +76,39 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
         resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
         modeReducer(mode, state),
-        this.baseTheme
+        this.baseTheme,
       );
       const stateDetails = mode.states[state] as OptionalState;
       const contextAndModeRule = this.ruleCreator.create(
         { global: [this.theme.selector, stateDetails.selector], local: [context.selector], media: stateDetails.media },
-        contextResolution
+        contextResolution,
       );
       const contextRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [this.theme.selector], local: [context.selector] })
+        this.ruleCreator.selectorFor({ global: [this.theme.selector], local: [context.selector] }),
       );
       const modeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [this.theme.selector, (mode.states[state] as OptionalState).selector],
-        })
+        }),
       );
 
       const contextRuleGlobal = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [this.theme.selector, context.selector] })
+        this.ruleCreator.selectorFor({ global: [this.theme.selector, context.selector] }),
       );
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextAndModeRule,
-        compact([contextRule, modeRule, rootRule])
+        compact([contextRule, modeRule, rootRule]),
       );
 
       const contextRuleAndModeRuleGlobal = this.ruleCreator.create(
         { global: [this.theme.selector, stateDetails.selector, context.selector], media: stateDetails.media },
-        contextResolution
+        contextResolution,
       );
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleAndModeRuleGlobal,
-        compact([contextRuleGlobal, modeRule, rootRule])
+        compact([contextRuleGlobal, modeRule, rootRule]),
       );
     });
 

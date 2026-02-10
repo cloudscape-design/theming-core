@@ -27,19 +27,19 @@ const params: BuildThemedComponentsParams = {
 
 test('Build-time theming with secondary theme throws error for invalid baseThemeId', async () => {
   await expect(async () => buildThemedComponents({ ...params, baseThemeId: 'invalid' })).rejects.toThrow(
-    `Specified baseThemeId 'invalid' is not available. Available values are 'theme', 'secondary'.`
+    `Specified baseThemeId 'invalid' is not available. Available values are 'theme', 'secondary'.`,
   );
 });
 
 test('Build-time theming of secondary theme generates the correct css files', async () => {
   await buildThemedComponents({ ...params, baseThemeId: 'secondary' });
   expect(
-    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8')
+    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8'),
   ).toMatchSnapshot();
 });
 test('Build-time theming of main theme with matching baseThemeId generates the correct css files', async () => {
   await buildThemedComponents({ ...params, baseThemeId: 'theme' });
   expect(
-    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8')
+    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8'),
   ).toMatchSnapshot();
 });

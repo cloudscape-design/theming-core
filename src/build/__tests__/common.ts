@@ -21,12 +21,12 @@ export const internalTokensPath: (componentsOutputDir: string) => string = (comp
 
 export const designTokensPath: (designTokensOutputDir: string, tokensFileName?: string) => string = (
   designTokensOutputDir: string,
-  designTokensFileName = 'index'
+  designTokensFileName = 'index',
 ) => `${designTokensOutputDir}/${designTokensFileName}.js`;
 
 export const designTokensStylesPath: (designTokensOutputDir: string, tokensFileName?: string) => string = (
   designTokensOutputDir: string,
-  designTokensFileName = 'index'
+  designTokensFileName = 'index',
 ) => `${designTokensOutputDir}/${designTokensFileName}.scss`;
 
 export const rootStylesPath: (componentsOutputDir: string) => string = (componentsOutputDir: string) =>
@@ -50,7 +50,7 @@ export function loadPreset(componentsOutputDir: string): Promise<{ preset: Theme
 
 export function loadDesignTokens(
   designTokensOutputDir: string,
-  tokensFileName?: string
+  tokensFileName?: string,
 ): Promise<Record<string, string>> {
   const path = designTokensPath(designTokensOutputDir, tokensFileName);
   return import(path);

@@ -38,7 +38,7 @@ export function flattenObject(obj: any, prefix: string[] = []): Record<string, A
 export function generateCamelCaseName(...segments: string[]): string {
   return segments.reduce(
     (acc, segment, index) => acc + (index === 0 ? segment : segment.charAt(0).toUpperCase() + segment.slice(1)),
-    ''
+    '',
   );
 }
 

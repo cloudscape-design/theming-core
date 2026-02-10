@@ -30,7 +30,7 @@ export abstract class AbstractCreator {
 
   static forEachContextWithinOptionalModeState(
     theme: Theme,
-    func: (context: Context, mode: Mode, stateName: string) => void
+    func: (context: Context, mode: Mode, stateName: string) => void,
   ) {
     AbstractCreator.forEachOptionalModeState(theme, (mode, stateKey) => {
       AbstractCreator.forEachContext(theme, (context) => {

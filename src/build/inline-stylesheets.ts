@@ -18,14 +18,14 @@ export function getInlineStylesheets(
   resolution: SpecificResolution,
   variablesMap: Record<string, string>,
   propertiesMap: Record<string, string>,
-  neededTokens: string[]
+  neededTokens: string[],
 ): InlineStylesheet[] {
   const declarations = createBuildDeclarations(
     primary,
     secondary,
     propertiesMap,
     (selector) => markGlobal(selector),
-    neededTokens
+    neededTokens,
   );
 
   const declaration = {

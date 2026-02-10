@@ -9,7 +9,7 @@ interface TokensValuesMap {
 
 export function calculatePropertiesMap(
   themes: Array<Theme>,
-  variablesMap: ThemePreset['variablesMap']
+  variablesMap: ThemePreset['variablesMap'],
 ): Record<string, string> {
   const resolutions: Array<FullResolution> = [];
   themes.forEach((theme) => {

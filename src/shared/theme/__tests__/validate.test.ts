@@ -43,7 +43,7 @@ describe('validateOverride', () => {
 
     expect(spy).toBeCalled();
     expect(Object.keys(validated.tokens)).toHaveLength(0);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     expect(Object.keys(validated.contexts!.navigation!.tokens!)).toHaveLength(0);
   });
 
@@ -51,16 +51,16 @@ describe('validateOverride', () => {
     const validated = validateOverride(override, Object.keys(override.tokens), ['a different context ID']);
 
     expect(spy).toBeCalled();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     expect(Object.keys(validated.contexts!)).toHaveLength(0);
   });
 
   test('throws error for missing or wrong tokens field', () => {
     expect(() => validateOverride({} as unknown as Override, [], [])).toThrow(
-      'Missing required "tokens" object field in {}'
+      'Missing required "tokens" object field in {}',
     );
     expect(() => validateOverride({ tokens: [] } as unknown as Override, [], [])).toThrow(
-      'Missing required "tokens" object field in {"tokens":[]}'
+      'Missing required "tokens" object field in {"tokens":[]}',
     );
   });
 });
@@ -78,13 +78,13 @@ describe('getThemeFromPreset', () => {
 
   test('returns secondary theme if themeId matches a secondary theme', () => {
     const theme = getThemeFromPreset(presetWithSecondaryTheme, 'secondary');
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     expect(theme).toEqual(presetWithSecondaryTheme.secondary![0]);
   });
 
   test('throws error if themeId is not available', () => {
     expect(() => getThemeFromPreset(presetWithSecondaryTheme, 'non-existent')).toThrow(
-      `Specified baseThemeId 'non-existent' is not available. Available values are 'root', 'secondary'.`
+      `Specified baseThemeId 'non-existent' is not available. Available values are 'root', 'secondary'.`,
     );
   });
 });

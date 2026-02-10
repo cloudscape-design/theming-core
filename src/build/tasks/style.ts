@@ -20,7 +20,7 @@ export async function buildStyles(
   sassDir: string,
   outputDir: string,
   inlines: InlineStylesheet[] = [],
-  options: BuildStylesOptions = {}
+  options: BuildStylesOptions = {},
 ) {
   const files = await glob('**/styles.scss', { cwd: sassDir });
   const compiler = createCompiler(inlines, outputDir, sassDir, options);

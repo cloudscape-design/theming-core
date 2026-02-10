@@ -29,7 +29,7 @@ describe('validateJson', () => {
         },
       });
     }).toThrowError(
-      'Tokens validation error: instance.tokens is not allowed to have the additional property "invalid-token"'
+      'Tokens validation error: instance.tokens is not allowed to have the additional property "invalid-token"',
     );
   });
 
@@ -43,7 +43,7 @@ describe('validateJson', () => {
           },
           $description: 'token description',
         },
-      })
+      }),
     ).toBe(true);
   });
 
@@ -53,7 +53,7 @@ describe('validateJson', () => {
         'font-family-main': {
           $value: 'any string',
         },
-      })
+      }),
     ).toBe(true);
   });
 
@@ -72,16 +72,16 @@ describe('validateJson', () => {
         'border-radius-four': {
           $value: '20%',
         },
-      })
+      }),
     ).toBe(true);
     expect(() =>
       validateTokens({
         'border-radius-one': {
           $value: '100ps',
         },
-      })
+      }),
     ).toThrowError(
-      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "\\\\d+(px|rem|%)"'
+      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "\\\\d+(px|rem|%)"',
     );
   });
 
@@ -111,7 +111,7 @@ describe('validateJson', () => {
               dark: 'transparent',
             },
           },
-        })
+        }),
       ).toBe(true);
 
       ['#fff', 'magenta', 'hsl(0, 100%, 50%)'].forEach((invalidValue) => {
@@ -123,9 +123,9 @@ describe('validateJson', () => {
                 dark: invalidValue,
               },
             },
-          })
+          }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.color-button.$value.light does not match pattern "#[0-9a-f]{6}|rgba\\\\(\\\\d{1,3}%?(,\\\\s?\\\\d{1,3}%?){2},\\\\s?(1|0|0?\\\\.\\\\d+)\\\\)|transparent"'
+          'Tokens validation error: instance.tokens.color-button.$value.light does not match pattern "#[0-9a-f]{6}|rgba\\\\(\\\\d{1,3}%?(,\\\\s?\\\\d{1,3}%?){2},\\\\s?(1|0|0?\\\\.\\\\d+)\\\\)|transparent"',
         );
       });
     });
@@ -156,7 +156,7 @@ describe('validateJson', () => {
               compact: '50%',
             },
           },
-        })
+        }),
       ).toBe(true);
       ['100 px', '20ps', '100 %'].forEach((invalidValue) => {
         expect(() =>
@@ -167,9 +167,9 @@ describe('validateJson', () => {
                 compact: invalidValue,
               },
             },
-          })
+          }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "\\\\d+(px|rem|%)"'
+          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "\\\\d+(px|rem|%)"',
         );
       });
     });
@@ -195,7 +195,7 @@ describe('validateJson', () => {
               dark: 'any string',
             },
           },
-        })
+        }),
       ).toBe(true);
     });
   });
@@ -209,7 +209,7 @@ describe('validateJson', () => {
           },
         });
       }).toThrowError(
-        'Tokens validation error: instance.tokens.motion-duration-button.$value is not of a type(s) object'
+        'Tokens validation error: instance.tokens.motion-duration-button.$value is not of a type(s) object',
       );
     });
 
@@ -222,7 +222,7 @@ describe('validateJson', () => {
               disabled: '0s',
             },
           },
-        })
+        }),
       ).toBe(true);
       ['100 ms', '20ps'].forEach((invalidValue) => {
         expect(() =>
@@ -233,9 +233,9 @@ describe('validateJson', () => {
                 disabled: invalidValue,
               },
             },
-          })
+          }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.motion-duration-button.$value.default does not match pattern "\\\\d+m?s"'
+          'Tokens validation error: instance.tokens.motion-duration-button.$value.default does not match pattern "\\\\d+m?s"',
         );
       });
     });
@@ -250,7 +250,7 @@ describe('validateJson', () => {
             },
           });
         }).toThrowError(
-          `Tokens validation error: instance.tokens.${tokenType}-button.$value is not of a type(s) object`
+          `Tokens validation error: instance.tokens.${tokenType}-button.$value is not of a type(s) object`,
         );
       });
 
@@ -263,7 +263,7 @@ describe('validateJson', () => {
                 disabled: 'any string',
               },
             },
-          })
+          }),
         ).toBe(true);
       });
     });

@@ -10,7 +10,7 @@ const outputRoot = join(__dirname, 'out', 'scss-only');
 
 async function buildWithFixtures(
   suiteName: string,
-  { inlines, options }: { inlines?: InlineStylesheet[]; options?: BuildStylesOptions } = {}
+  { inlines, options }: { inlines?: InlineStylesheet[]; options?: BuildStylesOptions } = {},
 ) {
   const outDir = join(outputRoot, suiteName);
   await buildStyles(join(fixturesRoot, suiteName), join(outputRoot, suiteName), inlines, options);
@@ -62,7 +62,7 @@ test('ignores deprecation warnings by default', async () => {
 
 test('throws an error if errors on deprecation warnings are enabled', async () => {
   await expect(() =>
-    buildWithFixtures('mixed-declarations', { options: { failOnDeprecations: true } })
+    buildWithFixtures('mixed-declarations', { options: { failOnDeprecations: true } }),
   ).rejects.toThrowError(/Unexpected deprecation warnings during sass build/);
 });
 

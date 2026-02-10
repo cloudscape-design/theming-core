@@ -103,13 +103,13 @@ export function getThemeFromPreset(preset: ThemePreset, baseThemeId?: string) {
       accThemesMap[currentTheme.id] = currentTheme;
       return accThemesMap;
     },
-    {}
+    {},
   );
   if (!themesMap[baseThemeId]) {
     throw new Error(
       `Specified baseThemeId '${baseThemeId}' is not available. Available values are ${Object.keys(themesMap)
         .map((value) => `'${value}'`)
-        .join(', ')}.`
+        .join(', ')}.`,
     );
   }
   return themesMap[baseThemeId];

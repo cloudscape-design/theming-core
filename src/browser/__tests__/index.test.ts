@@ -141,7 +141,7 @@ describe('applyTheme', () => {
 
     test('throws error if baseThemeId is not available', () => {
       expect(() => applyTheme({ override, preset: presetWithSecondaryTheme, baseThemeId: 'invalid' })).toThrow(
-        `Specified baseThemeId 'invalid' is not available. Available values are 'root', 'secondary'.`
+        `Specified baseThemeId 'invalid' is not available. Available values are 'root', 'secondary'.`,
       );
     });
   });
@@ -196,7 +196,7 @@ describe('generateThemeStylesheet', () => {
 
     test('throws error if baseThemeId is not available', () => {
       expect(() =>
-        generateThemeStylesheet({ override, preset: presetWithSecondaryTheme, baseThemeId: 'invalid' })
+        generateThemeStylesheet({ override, preset: presetWithSecondaryTheme, baseThemeId: 'invalid' }),
       ).toThrow(`Specified baseThemeId 'invalid' is not available. Available values are 'root', 'secondary'.`);
     });
   });

@@ -31,7 +31,7 @@ export function processReferenceTokens(colorTokens: ColorReferenceTokens): Token
 
 function processSeedInput(
   category: keyof ColorReferenceTokens,
-  seed: ReferencePaletteDefinition['seed']
+  seed: ReferencePaletteDefinition['seed'],
 ): ReferencePaletteDefinition {
   if (!seed) return {};
   if (typeof seed === 'string') {
@@ -59,7 +59,7 @@ function processSeedInput(
 
 function mergeExplicitSteps(
   generated: ReferencePaletteDefinition,
-  input: Exclude<ColorPaletteInput, string>
+  input: Exclude<ColorPaletteInput, string>,
 ): ReferencePaletteDefinition {
   const result = { ...generated };
 
@@ -83,7 +83,7 @@ function mergeExplicitSteps(
 
 export function processColorPaletteInput(
   category: keyof ColorReferenceTokens,
-  input: ColorPaletteInput
+  input: ColorPaletteInput,
 ): ReferencePaletteDefinition {
   if (typeof input === 'string') {
     return generatePaletteFromSeed(category, input);

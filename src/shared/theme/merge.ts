@@ -12,16 +12,19 @@ export function mergeInPlace(theme: Theme, override: Override): Theme {
   function withTokenApplied(
     originalValue: Assignment,
     token: string,
-    update: (typeof override.tokens)[string]
+    update: (typeof override.tokens)[string],
   ): Assignment | undefined {
     const isGlobal = isValue(update) || isReference(update);
     const mode = getMode(theme, token);
 
     if (mode && isGlobal) {
-      return Object.keys(mode.states).reduce((acc, state) => {
-        acc[state] = update;
-        return acc;
-      }, {} as Record<string, string>);
+      return Object.keys(mode.states).reduce(
+        (acc, state) => {
+          acc[state] = update;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
     } else if ((isModeValue(originalValue) || originalValue === undefined) && isModeValue(update)) {
       return {
         ...originalValue,

@@ -25,7 +25,7 @@ test('theme adds tokens', () => {
     {
       color: { default: 'some', optional: 'other' },
     },
-    mode
+    mode,
   );
 
   const theme = builder.build();
@@ -86,7 +86,7 @@ test('theme adds reference tokens with mode', () => {
         primary: { 500: { default: '#0073bb', optional: '#66b3ff' } },
       },
     },
-    mode
+    mode,
   );
 
   const theme = builder.build();

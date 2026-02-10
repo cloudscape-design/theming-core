@@ -38,7 +38,7 @@ export class NeutralPaletteSpecification extends PaletteSpecification<PaletteSte
         { position: 950, chromaFraction: 0.75, minTone: 2, maxTone: 3 }, // 6
         { position: 1000, chromaFraction: 0.75, minTone: MIN_TONE, maxTone: 2 }, // 2
       ],
-      MAX_CHROMA
+      MAX_CHROMA,
     );
   }
 

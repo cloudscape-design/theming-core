@@ -22,7 +22,7 @@ export function generatePaletteFromSeed(
   category: keyof ColorReferenceTokens,
   seed: string,
   autoAdjust = true,
-  mode?: string
+  mode?: string,
 ): ReferencePaletteDefinition {
   const cacheKey = getCacheKey(category, seed, autoAdjust, mode);
 

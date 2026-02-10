@@ -42,7 +42,7 @@ export function resolveTheme(theme: Theme, baseTheme?: Theme, propertiesMap?: Pr
 export function resolveThemeWithPaths(
   theme: Theme,
   baseTheme?: Theme,
-  propertiesMap?: PropertiesMap
+  propertiesMap?: PropertiesMap,
 ): FullResolutionWithPaths {
   const resolvedTheme: FullResolution = {};
   const resolutionPaths: FullResolutionPaths = {};
@@ -58,7 +58,7 @@ export function resolveThemeWithPaths(
       }, {});
 
       const tokenResolutionPathContainsOverriddenTokens = values(modeTokenResolutionPaths).some((tokenResolutionPath) =>
-        tokenResolutionPath.some((pathToken) => pathToken in theme.tokens)
+        tokenResolutionPath.some((pathToken) => pathToken in theme.tokens),
       );
       if (!baseTheme || tokenResolutionPathContainsOverriddenTokens) {
         resolutionPaths[token] = modeTokenResolutionPaths;
@@ -84,7 +84,7 @@ function resolveToken(
   path: Array<string>,
   state?: string,
   baseTheme?: Theme,
-  propertiesMap?: PropertiesMap
+  propertiesMap?: PropertiesMap,
 ): string {
   if (!theme.tokens[token] && !baseTheme?.tokens[token]) {
     throw new Error(`Token ${token} does not exist in the theme.`);
@@ -117,7 +117,7 @@ function getAssignment(theme: Theme, token: string, state: string | undefined, b
   if (isModeValue(assignment)) {
     if (!state) {
       throw new Error(
-        `Mode resolution for token ${token} does not have any mode value. modes: ${JSON.stringify(assignment)}`
+        `Mode resolution for token ${token} does not have any mode value. modes: ${JSON.stringify(assignment)}`,
       );
     }
     assignment = assignment[state];
@@ -131,7 +131,7 @@ export function resolveContext(
   context: Context,
   baseTheme?: Theme,
   themeResolution?: FullResolution,
-  propertiesMap?: PropertiesMap
+  propertiesMap?: PropertiesMap,
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
@@ -193,7 +193,7 @@ function applyContextPrecedenceRules(
   context: Context,
   baseTheme: Theme,
   themeResolution: FullResolution,
-  propertiesMap?: PropertiesMap
+  propertiesMap?: PropertiesMap,
 ): Record<string, any> {
   /**
    * The precedence of context tokens as specified by the API from highest to lowest is:
@@ -213,16 +213,19 @@ function applyContextPrecedenceRules(
   const baseResolution = resolveTheme(baseTheme, undefined, propertiesMap);
   const overrideResolution = resolveTheme(theme, baseTheme, propertiesMap);
 
-  const rebaselined = Object.keys(themeResolution).reduce((acc, key) => {
-    const shouldSkipReset =
-      (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
-      areAssignmentsEqual(baseResolution[key], overrideResolution[key]);
+  const rebaselined = Object.keys(themeResolution).reduce(
+    (acc, key) => {
+      const shouldSkipReset =
+        (!(key in baseContext.tokens) && !(key in theme.tokens)) ||
+        areAssignmentsEqual(baseResolution[key], overrideResolution[key]);
 
-    if (!shouldSkipReset) {
-      acc[key] = baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key];
-    }
-    return acc;
-  }, {} as Record<string, any>);
+      if (!shouldSkipReset) {
+        acc[key] = baseContext.tokens[key] ?? theme.tokens[key] ?? baseTheme.tokens[key];
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   return { ...rebaselined, ...context.tokens };
 }
@@ -231,14 +234,14 @@ type Reducer = (
   tokenResolution: ModeTokenResolution | SpecificTokenResolution,
   token: string,
   theme: Theme,
-  baseTheme?: Theme
+  baseTheme?: Theme,
 ) => SpecificTokenResolution | undefined;
 
 export function reduce(
   resolution: FullResolution | SpecificResolution,
   theme: Theme,
   reducer: Reducer,
-  baseTheme?: Theme
+  baseTheme?: Theme,
 ): SpecificResolution {
   return Object.keys(resolution).reduce((acc, token) => {
     const reduced = reducer(resolution[token], token, theme, baseTheme);
@@ -278,7 +281,7 @@ export function difference(base: SpecificResolution, other: SpecificResolution):
 export function difference(base: FullResolution, other: FullResolution): FullResolution;
 export function difference(
   base: FullResolution | SpecificResolution,
-  other: FullResolution | SpecificResolution
+  other: FullResolution | SpecificResolution,
 ): FullResolution {
   const result: FullResolution = {};
 
@@ -308,7 +311,7 @@ export function isModeTokenResolution(val: SpecificTokenResolution | ModeTokenRe
 }
 
 export function isSpecificTokenResolution(
-  val: SpecificTokenResolution | ModeTokenResolution
+  val: SpecificTokenResolution | ModeTokenResolution,
 ): val is SpecificTokenResolution {
   return typeof val === 'string';
 }

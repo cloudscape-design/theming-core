@@ -12,17 +12,23 @@ import {
 } from '../shared/theme';
 
 export function createStubPropertiesMap(theme: Theme): Record<string, string> {
-  return Object.keys(theme.tokens).reduce((acc, curr) => {
-    acc[curr] = `--${curr}-css`;
-    return acc;
-  }, {} as Record<string, string>);
+  return Object.keys(theme.tokens).reduce(
+    (acc, curr) => {
+      acc[curr] = `--${curr}-css`;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 }
 
 export function createStubVariablesMap(theme: Theme): Record<string, string> {
-  return Object.keys(theme.tokens).reduce((acc, curr) => {
-    acc[curr] = `${curr}-var`;
-    return acc;
-  }, {} as Record<string, string>);
+  return Object.keys(theme.tokens).reduce(
+    (acc, curr) => {
+      acc[curr] = `${curr}-var`;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 }
 
 export const colorMode: Mode = {
