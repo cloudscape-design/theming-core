@@ -38,6 +38,10 @@ const textWeightValueSchema: GenericSchema = {
   type: 'string',
   pattern: '300|400|700|900|normal|bold|light|heavy',
 };
+const letterSpacingValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '-?\\d+(\\.\\d+)?(px|rem|em)',
+};
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
 const visualModes = ['light', 'dark'];
@@ -79,7 +83,7 @@ const tokensSchema: GenericSchema = {
     '^font-size-': getTokenSchema(textSizeValueSchema),
     '^line-height-': getTokenSchema(textSizeValueSchema),
     '^font-weight-': getTokenSchema(textWeightValueSchema),
-    '^letter-spacing-': getTokenSchema(textSizeValueSchema),
+    '^letter-spacing-': getTokenSchema(letterSpacingValueSchema),
   },
   additionalProperties: false,
 };

@@ -268,4 +268,32 @@ describe('validateJson', () => {
       });
     });
   });
+
+  describe('letter spacing', () => {
+    test('accepts positive, negative, and zero values with valid units', () => {
+      ['1px', '-0.5rem', '0em', '0.25px', '-1.5em'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'letter-spacing-button': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid formats', () => {
+      ['100', '-1', '1.5', '100 px', '20ps'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'letter-spacing-button': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError(
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "-?\\\\d+(\\\\.\\\\d+)?(px|rem|em)"',
+        );
+      });
+    });
+  });
 });
