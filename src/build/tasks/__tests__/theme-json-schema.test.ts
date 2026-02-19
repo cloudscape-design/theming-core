@@ -282,6 +282,18 @@ describe('validateJson', () => {
       });
     });
 
+    test('accepts keyword values', () => {
+      ['normal', 'inherit', 'initial', 'revert', 'revert-layer', 'unset'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'letter-spacing-button': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
     test('rejects invalid formats', () => {
       ['100', '-1', '1.5', '100 px', '20ps', '.px', '-.rem'].forEach((invalidValue) => {
         expect(() =>
@@ -291,7 +303,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "-?\\\\d*\\\\.?\\\\d+(px|rem|em)"',
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em)"',
         );
       });
     });

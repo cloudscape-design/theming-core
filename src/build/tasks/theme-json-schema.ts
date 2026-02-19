@@ -40,7 +40,7 @@ const textWeightValueSchema: GenericSchema = {
 };
 const letterSpacingValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '-?\\d*\\.?\\d+(px|rem|em)',
+  pattern: 'normal|inherit|initial|revert|revert-layer|unset|-?\\d*\\.?\\d+(px|rem|em)',
 };
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
