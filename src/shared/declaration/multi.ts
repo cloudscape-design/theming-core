@@ -34,15 +34,15 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         `Themes ${globalThemes
           .map(({ id }) => id)
           .join(
-            ', '
-          )} have a global selector. It is not supported to have more than one global theme. It produces unpredictable styling results.`
+            ', ',
+          )} have a global selector. It is not supported to have more than one global theme. It produces unpredictable styling results.`,
       );
     }
 
     if (!globalThemes.length) {
       // If there is no root theme, all themes are scoped by their root selector. No interference.
       const stylesheets = this.themes.map((theme) =>
-        new SingleThemeCreator(theme, this.ruleCreator, undefined, this.propertiesMap).create()
+        new SingleThemeCreator(theme, this.ruleCreator, undefined, this.propertiesMap).create(),
       );
       const result = new Stylesheet();
       stylesheets.forEach((stylesheet) => {
@@ -75,12 +75,12 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       const modeResolution = reduce(secondaryResolution, secondary, modeReducer(mode, state));
       const modeRule = this.ruleCreator.create(
         { global: [secondary.selector, optionalState.selector], media: optionalState.media },
-        modeResolution
+        modeResolution,
       );
       const parentModeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [primary.selector, optionalState.selector],
-        })
+        }),
       );
       MultiThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, compact([rootRule, parentModeRule, parentRule]));
     });
@@ -89,32 +89,32 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
-        defaultsReducer()
+        defaultsReducer(),
       );
       const contextRule = this.ruleCreator.create(
         { global: [secondary.selector], local: [context.selector] },
-        contextResolution
+        contextResolution,
       );
       const parentContextRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [primary.selector],
           local: [context.selector],
-        })
+        }),
       );
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRule,
-        compact([parentContextRule, rootRule, parentRule])
+        compact([parentContextRule, rootRule, parentRule]),
       );
 
       const contextRuleGlobal = this.ruleCreator.create(
         { global: [secondary.selector, context.selector] },
-        contextResolution
+        contextResolution,
       );
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([rootRule, parentContextRule, parentRule])
+        compact([rootRule, parentContextRule, parentRule]),
       );
     });
 
@@ -123,7 +123,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
-        modeReducer(mode, state)
+        modeReducer(mode, state),
       );
       const contextRule = this.findRule(stylesheet, { global: [secondary.selector], local: [context.selector] });
       const modeRule = this.findRule(stylesheet, {
@@ -135,22 +135,22 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           local: [context.selector],
           media: optionalState.media,
         },
-        contextResolution
+        contextResolution,
       );
       const parentContextRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [primary.selector], local: [context.selector] })
+        this.ruleCreator.selectorFor({ global: [primary.selector], local: [context.selector] }),
       );
 
       const parentModeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [primary.selector, optionalState.selector],
-        })
+        }),
       );
       const parentContextAndModeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [primary.selector, optionalState.selector],
           local: [context.selector],
-        })
+        }),
       );
 
       MultiThemeCreator.appendRuleToStylesheet(
@@ -164,11 +164,11 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           rootRule,
           parentModeRule,
           parentRule,
-        ])
+        ]),
       );
 
       const parentContextAndModeRuleGlobal = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [secondary.selector, context.selector] })
+        this.ruleCreator.selectorFor({ global: [secondary.selector, context.selector] }),
       );
 
       const contextAndModeRuleGlobal = this.ruleCreator.create(
@@ -176,7 +176,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           global: [secondary.selector, optionalState.selector, context.selector],
           media: optionalState.media,
         },
-        contextResolution
+        contextResolution,
       );
 
       MultiThemeCreator.appendRuleToStylesheet(
@@ -190,7 +190,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           parentContextRule,
           parentModeRule,
           parentRule,
-        ])
+        ]),
       );
     });
 

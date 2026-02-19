@@ -17,10 +17,13 @@ export function entries<T>(obj: Record<string, T>): [string, T][] {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
  */
 export function fromEntries<K extends string, V>(entries: [K, V][]): Record<K, V> {
-  return entries.reduce((acc, [key, value]) => {
-    acc[key] = value;
-    return acc;
-  }, {} as Record<K, V>);
+  return entries.reduce(
+    (acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    },
+    {} as Record<K, V>,
+  );
 }
 
 /**
@@ -52,7 +55,7 @@ export function jsonToSass(json: Record<string, string | Record<string, string |
         (key) =>
           `'${key}': ${
             typeof json[key] === 'string' ? `"${json[key]}"` : jsonToSass(json[key] as Record<string, string>)
-          }`
+          }`,
       )
       .join(',\n')}
   )`;

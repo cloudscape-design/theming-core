@@ -13,11 +13,11 @@ test('generates map from theme and variables', () => {
 test('generates same hash for same input', () => {
   const firstMap = calculatePropertiesMap(
     [{ ...rootTheme, tokens: { shadow: { light: 'green', dark: 'blue' } }, contexts: {} }],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [{ ...rootTheme, tokens: { shadow: { light: 'green', dark: 'blue' } }, contexts: {} }],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).toEqual(secondMap.shadow);
 });
@@ -25,11 +25,11 @@ test('generates same hash for same input', () => {
 test('generates different hash if light and dark are swapped', () => {
   const firstMap = calculatePropertiesMap(
     [{ ...rootTheme, tokens: { shadow: { light: 'green', dark: 'blue' } }, contexts: {} }],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [{ ...rootTheme, tokens: { shadow: { light: 'blue', dark: 'green' } }, contexts: {} }],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).not.toEqual(secondMap.shadow);
 });
@@ -43,7 +43,7 @@ test('generates different hash if context defines the same token', () => {
         contexts: { navigation: { ...navigationContext, tokens: {} } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [
@@ -53,7 +53,7 @@ test('generates different hash if context defines the same token', () => {
         contexts: { navigation: { ...navigationContext, tokens: { shadow: 'black' } } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).not.toEqual(secondMap.shadow);
 });
@@ -67,7 +67,7 @@ test('generates same hash if context defines another token', () => {
         contexts: { navigation: { ...navigationContext, tokens: {} } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [
@@ -77,7 +77,7 @@ test('generates same hash if context defines another token', () => {
         contexts: { navigation: { ...navigationContext, tokens: { boxShadow: 'black' } } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).toEqual(secondMap.shadow);
 });
@@ -91,7 +91,7 @@ test('generates different hash if secondary theme defines the same token', () =>
         contexts: {},
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [
@@ -106,7 +106,7 @@ test('generates different hash if secondary theme defines the same token', () =>
         contexts: {},
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).not.toEqual(secondMap.shadow);
 });
@@ -120,7 +120,7 @@ test('generates same hash if secondary theme defines a different token', () => {
         contexts: {},
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [
@@ -135,7 +135,7 @@ test('generates same hash if secondary theme defines a different token', () => {
         contexts: {},
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).toEqual(secondMap.shadow);
   expect(secondMap.shadowBox).toBeDefined();
@@ -150,7 +150,7 @@ test('generates different hash if secondary theme defines the same token in a co
         contexts: { navigation: { ...navigationContext, tokens: {} } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   const secondMap = calculatePropertiesMap(
     [
@@ -165,7 +165,7 @@ test('generates different hash if secondary theme defines the same token in a co
         contexts: { navigation: { ...navigationContext, tokens: { shadow: 'black' } } },
       },
     ],
-    preset.variablesMap
+    preset.variablesMap,
   );
   expect(firstMap.shadow).not.toEqual(secondMap.shadow);
 });

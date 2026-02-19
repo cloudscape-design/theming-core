@@ -7,18 +7,18 @@ import { SpecificResolution, ThemePreset } from '../../shared/theme';
 export async function createInternalTokenFiles(
   resolution: SpecificResolution,
   propertiesMap: ThemePreset['propertiesMap'],
-  outputDir: string
+  outputDir: string,
 ) {
   await writeFile(
     join(outputDir, 'internal/generated/styles/tokens.js'),
-    generateTokensFile(resolution, propertiesMap)
+    generateTokensFile(resolution, propertiesMap),
   );
   await writeFile(join(outputDir, 'internal/generated/styles/tokens.d.ts'), generateTokensDeclarationFile(resolution));
 }
 
 export function generateTokensFile(
   resolution: SpecificResolution,
-  propertiesMap: ThemePreset['propertiesMap']
+  propertiesMap: ThemePreset['propertiesMap'],
 ): string {
   return Object.entries(resolution)
     .map(([token, value]) => `export var ${token} = "var(${propertiesMap[token]}, ${value})";`)

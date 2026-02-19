@@ -22,7 +22,7 @@ export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): 
     theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(preset.theme.selector)
+    createMultiThemeCustomizer(preset.theme.selector),
   );
 }
 

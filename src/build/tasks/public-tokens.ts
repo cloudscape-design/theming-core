@@ -32,7 +32,7 @@ export function renderSCSS(
   resolution: SpecificResolution,
   variablesMap: ThemePreset['variablesMap'],
   propertiesMap: ThemePreset['propertiesMap'],
-  tokens: Token[]
+  tokens: Token[],
 ): string {
   return tokens
     .map((token) => `${toSassName(variablesMap[token])}: var(${propertiesMap[token]}, ${resolution[token]});`)
@@ -42,7 +42,7 @@ export function renderSCSS(
 export function renderJS(
   resolution: SpecificResolution,
   propertiesMap: ThemePreset['propertiesMap'],
-  tokens: Token[]
+  tokens: Token[],
 ): string {
   return tokens
     .map((token) => `export var ${token} = "var(${propertiesMap[token]}, ${resolution[token]})";`)
@@ -54,7 +54,7 @@ export async function writeJSONfiles(
   outputDir: string,
   fileName: string,
   descriptions?: Record<string, string>,
-  jsonSchema?: boolean
+  jsonSchema?: boolean,
 ) {
   const { theme, secondary = [], exposed, variablesMap } = preset;
   await Promise.all(
@@ -68,7 +68,7 @@ export async function writeJSONfiles(
         validateJson(themeJson, themeJsonSchema);
         await writeFile(join(outputDir, `${fullFileName}-schema.json`), JSON.stringify(themeJsonSchema, null, 2));
       }
-    })
+    }),
   );
 }
 

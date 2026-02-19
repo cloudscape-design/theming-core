@@ -13,7 +13,7 @@ export function writeCssModule(
   relativeCssPath: string,
   targetFolder: string,
   scopedFileExt: string,
-  json: Record<string, unknown>
+  json: Record<string, unknown>,
 ): void {
   const modulePath = path.join(targetFolder, relativeCssPath);
   const stylesFilename = path.basename(relativeCssPath, '.css');

@@ -87,7 +87,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     scssDir,
     componentsOutputDir,
     getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
-    { failOnDeprecations }
+    { failOnDeprecations },
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
 

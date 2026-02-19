@@ -8,8 +8,10 @@ import { validateOverride } from '../shared/theme';
 import { copyAllFiles } from './tasks/copy';
 import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
 
-export interface BuildThemedComponentsParams
-  extends Pick<BuildThemedComponentsInternalParams, 'scssDir' | 'componentsOutputDir'> {
+export interface BuildThemedComponentsParams extends Pick<
+  BuildThemedComponentsInternalParams,
+  'scssDir' | 'componentsOutputDir'
+> {
   /**
    * The `preset` contains the base/fallback theme upon which the custom theme will be applied.
    * If the custom theme does not specify a value for a token, then the corresponding

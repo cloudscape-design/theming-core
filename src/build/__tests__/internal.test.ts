@@ -27,7 +27,7 @@ test('builds internal themed components without errors', async () => {
   };
   await buildThemedComponentsInternal(params);
   expect(
-    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8')
+    fs.readFileSync(join(componentsOutputDir, 'internal/base-component/styles.scoped.css'), 'utf-8'),
   ).toMatchSnapshot();
 });
 

@@ -60,10 +60,10 @@ beforeAll(async () => {
 
 test('provides package.json for themed components and design tokens folders', async () => {
   expect((await loadJSON(join(componentsOutputDir, 'package.json'))).name).toEqual(
-    '@cloudscape-design/themed-components-fixture'
+    '@cloudscape-design/themed-components-fixture',
   );
   expect((await loadJSON(join(designTokensOutputDir, 'package.json'))).name).toEqual(
-    '@cloudscape-design/themed-tokens-fixture'
+    '@cloudscape-design/themed-tokens-fixture',
   );
 });
 

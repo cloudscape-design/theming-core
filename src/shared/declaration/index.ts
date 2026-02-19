@@ -37,7 +37,7 @@ function createMinimalTheme(base: Theme, override: Override): Theme {
 
 function collectAllRequiredTokens(
   themes: Theme[],
-  initialTokens: string[]
+  initialTokens: string[],
 ): { referenceTokens: string[]; referencedTokens: string[] } {
   const referenceTokens: string[] = [];
   themes.forEach((theme) => referenceTokens.push(...Object.keys(flattenReferenceTokens(theme))));
@@ -70,7 +70,7 @@ export function createOverrideDeclarations(
   base: Theme,
   override: Override,
   propertiesMap: PropertiesMap,
-  selectorCustomizer: SelectorCustomizer
+  selectorCustomizer: SelectorCustomizer,
 ): string {
   const minimalTheme = createMinimalTheme(base, override);
   const initialTokens = Object.keys(minimalTheme.tokens);
@@ -83,7 +83,7 @@ export function createOverrideDeclarations(
   const usedTokens = [...initialTokens, ...referencedTokens];
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, usedTokens)
+    new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
@@ -94,7 +94,7 @@ export function createBuildDeclarations(
   secondary: Theme[],
   propertiesMap: PropertiesMap,
   selectorCustomizer: SelectorCustomizer,
-  used: string[]
+  used: string[],
 ): string {
   const themes = [primary, ...secondary];
   const { referenceTokens, referencedTokens } = collectAllRequiredTokens(themes, used);
@@ -102,7 +102,7 @@ export function createBuildDeclarations(
 
   const ruleCreator = new RuleCreator(
     new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, usedTokens)
+    new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();

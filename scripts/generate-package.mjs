@@ -2,9 +2,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const original = path.join(root, 'package.json');
 const originalContent = JSON.parse(fs.readFileSync(original).toString());
@@ -49,8 +51,8 @@ const packages = [
   },
 ];
 
-packages.forEach((package) => {
-  const { packageRoot, dependencies, manifest } = package;
+packages.forEach((packageObj) => {
+  const { packageRoot, dependencies, manifest } = packageObj;
   const { version } = originalContent;
 
   requiredFiles.forEach((filename) => {

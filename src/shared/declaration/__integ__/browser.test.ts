@@ -14,7 +14,7 @@ test(
     await injectRootTheme(page);
 
     expect(await page.getCSSPropertyResolution()).toEqual(getPropertyResolution());
-  })
+  }),
 );
 
 test(
@@ -24,7 +24,7 @@ test(
     await page.addClassToRoot(modeClass);
 
     expect(await page.getCSSPropertyResolution()).toEqual(getPropertyResolution(modeOverride));
-  })
+  }),
 );
 
 test(
@@ -33,7 +33,7 @@ test(
     await injectRootTheme(page);
 
     expect(await page.getCSSPropertyResolution(contextClass)).toEqual(getPropertyResolution(contextOverride));
-  })
+  }),
 );
 
 test(
@@ -43,7 +43,7 @@ test(
     await page.addClassToRoot(modeClass);
 
     expect(await page.getCSSPropertyResolution(contextClass)).toEqual(getPropertyResolution(modeAndContextOverride));
-  })
+  }),
 );
 
 test(
@@ -52,9 +52,9 @@ test(
     await injectRootTheme(page);
 
     expect(await page.getCSSPropertyResolution(`${modeClass} ${contextClass}`)).toEqual(
-      getPropertyResolution(modeAndContextOverride)
+      getPropertyResolution(modeAndContextOverride),
     );
-  })
+  }),
 );
 
 test(
@@ -86,7 +86,7 @@ test(
         medium: '2px',
         scaledSize: '2px',
         shadow: 'black',
-      })
+      }),
     );
     expect(resolutionContext).toEqual(
       getPropertyResolution({
@@ -96,7 +96,7 @@ test(
         shadow: 'black',
         medium: '2px',
         scaledSize: '2px',
-      })
+      }),
     );
     expect(resolutionMode).toEqual(
       getPropertyResolution({
@@ -104,9 +104,9 @@ test(
         lineShadow: 'brown',
         medium: '2px',
         scaledSize: '2px',
-      })
+      }),
     );
-  })
+  }),
 );
 
 test(
@@ -142,7 +142,7 @@ test(
       medium: '2px',
       shadow: 'grey',
     });
-  })
+  }),
 );
 
 function setupTest(testFn: (page: DeclarationPage) => Promise<void>) {
@@ -191,7 +191,7 @@ class DeclarationPage extends BasePageObject {
         elem.style.removeProperty('--temp-resolve');
         done(result);
       },
-      className
+      className,
     );
   }
   async addClassToRoot(className: string): Promise<void> {
@@ -222,7 +222,7 @@ async function injectRootTheme(page: DeclarationPage) {
     [],
     preset.propertiesMap,
     singleThemeCustomizer,
-    Object.keys(rootTheme.tokens)
+    Object.keys(rootTheme.tokens),
   );
   await page.injectStyles(css);
 }
@@ -232,7 +232,7 @@ async function injectOverride(page: DeclarationPage, override: Override) {
     rootTheme,
     override,
     preset.propertiesMap,
-    createMultiThemeCustomizer(rootTheme.selector)
+    createMultiThemeCustomizer(rootTheme.selector),
   );
   await page.injectStyles(css);
 }

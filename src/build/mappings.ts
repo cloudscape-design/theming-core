@@ -15,7 +15,7 @@ import { toSassName } from './token';
 export function renderMappings(
   resolution: SpecificResolution,
   variablesMap: ThemePreset['variablesMap'],
-  propertiesMap: ThemePreset['propertiesMap']
+  propertiesMap: ThemePreset['propertiesMap'],
 ): string {
   const lines = Object.entries(resolution).map(([token, value]) => {
     return `${toSassName(variablesMap[token])}: var(${propertiesMap[token]}, ${value});`;

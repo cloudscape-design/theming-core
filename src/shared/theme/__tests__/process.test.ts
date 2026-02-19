@@ -12,7 +12,11 @@ vi.mock('../color-generation/hct-utils', () => ({
   hctToHex: vi.fn(() => '#008080'),
   createHct: vi.fn((hue: number, chroma: number, tone: number) => ({ hue, chroma, tone })),
   Hct: class Hct {
-    constructor(public hue: number, public chroma: number, public tone: number) {}
+    constructor(
+      public hue: number,
+      public chroma: number,
+      public tone: number,
+    ) {}
     static from(hue: number, chroma: number, tone: number) {
       return new Hct(hue, chroma, tone);
     }

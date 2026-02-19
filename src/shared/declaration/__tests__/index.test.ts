@@ -11,7 +11,7 @@ describe('renderDeclarations', () => {
       [],
       preset.propertiesMap,
       (selector) => `:global ${selector}`,
-      Object.keys(rootTheme.tokens)
+      Object.keys(rootTheme.tokens),
     );
 
     expect(output).toMatchSnapshot();
@@ -23,7 +23,7 @@ describe('renderDeclarations', () => {
       [],
       preset.propertiesMap,
       (selector) => selector,
-      Object.keys(secondaryTheme.tokens)
+      Object.keys(secondaryTheme.tokens),
     );
 
     expect(output).toMatchSnapshot();
@@ -43,7 +43,7 @@ describe('renderDeclarations', () => {
       [secondaryTheme],
       preset.propertiesMap,
       (selector) => selector,
-      Object.keys(rootTheme.tokens)
+      Object.keys(rootTheme.tokens),
     );
 
     expect(output).toMatchSnapshot();

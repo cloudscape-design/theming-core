@@ -13,7 +13,7 @@ const findUsedSassVariablesInFile = (filePath: string, sassVariablesList: string
 const findusedUsedSassVariablesInDir = (scssDir: string, sassVariablesList: string[]): string[] => {
   const filePaths = globSync(`${scssDir}/**/*.scss`);
   const usedSassVariables = uniq(
-    flatten(filePaths.map((filePath) => findUsedSassVariablesInFile(filePath, sassVariablesList)))
+    flatten(filePaths.map((filePath) => findUsedSassVariablesInFile(filePath, sassVariablesList))),
   ).sort();
   return usedSassVariables;
 };
@@ -21,7 +21,7 @@ const findusedUsedSassVariablesInDir = (scssDir: string, sassVariablesList: stri
 const findNeededTokens = (scssDir: string, variablesMap: Record<string, string>, exposed: string[]): string[] => {
   const usedSassVariables = findusedUsedSassVariablesInDir(scssDir, Object.values(variablesMap));
   const usedTokens = Object.keys(variablesMap).filter(
-    (token: string) => usedSassVariables.indexOf(variablesMap[token]) !== -1
+    (token: string) => usedSassVariables.indexOf(variablesMap[token]) !== -1,
   );
 
   return uniq([...usedTokens, ...exposed]);

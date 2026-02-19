@@ -12,10 +12,13 @@ export class ThemeBuilder {
     this.theme = {
       id,
       selector,
-      modes: modes.reduce((acc, curr) => {
-        acc[curr.id] = curr;
-        return acc;
-      }, {} as Record<string, Mode>),
+      modes: modes.reduce(
+        (acc, curr) => {
+          acc[curr.id] = curr;
+          return acc;
+        },
+        {} as Record<string, Mode>,
+      ),
       tokens: {},
       contexts: {},
       tokenModeMap: {},
@@ -23,10 +26,13 @@ export class ThemeBuilder {
   }
 
   private addTokensToModeMap(tokens: Record<string, any>, mode: Mode): void {
-    const modeMap = Object.keys(tokens).reduce((acc, token) => {
-      acc[token] = mode.id;
-      return acc;
-    }, {} as Record<string, string>);
+    const modeMap = Object.keys(tokens).reduce(
+      (acc, token) => {
+        acc[token] = mode.id;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
     this.theme.tokenModeMap = {
       ...this.theme.tokenModeMap,

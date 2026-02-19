@@ -38,10 +38,13 @@ const sassVariables = [
 ];
 
 export const variablesMap = {
-  ...sassVariables.reduce((acc, sassVariable) => {
-    const tokenName = sassVariable.replace(/-([a-z]{1})/g, '$1');
-    acc[tokenName] = sassVariable;
-    return acc;
-  }, {} as Record<string, string>),
+  ...sassVariables.reduce(
+    (acc, sassVariable) => {
+      const tokenName = sassVariable.replace(/-([a-z]{1})/g, '$1');
+      acc[tokenName] = sassVariable;
+      return acc;
+    },
+    {} as Record<string, string>,
+  ),
   additionalTokenThatShouldNotAppear: 'additional-token',
 };
