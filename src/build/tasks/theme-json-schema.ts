@@ -24,15 +24,15 @@ const colorValueSchema: GenericSchema = {
 };
 const spaceValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '\\d+(px|rem|%)',
+  pattern: '^\\d+(\\.\\d+)?(px|rem|%)$',
 };
 const borderWidthValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '\\d+(px|rem|em)',
+  pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
 };
 const textSizeValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '\\d+(px|rem|em)',
+  pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
 };
 const textWeightValueSchema: GenericSchema = {
   type: 'string',
@@ -40,7 +40,7 @@ const textWeightValueSchema: GenericSchema = {
 };
 const letterSpacingValueSchema: GenericSchema = {
   type: 'string',
-  pattern: 'normal|inherit|initial|revert|revert-layer|unset|-?\\d*\\.?\\d+(px|rem|em)',
+  pattern: '^(normal|inherit|initial|revert|revert-layer|unset|-?\\d*\\.?\\d+(px|rem|em))$',
 };
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
