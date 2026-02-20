@@ -268,4 +268,44 @@ describe('validateJson', () => {
       });
     });
   });
+
+  describe('letter spacing', () => {
+    test('accepts positive, negative, and zero values with valid units', () => {
+      ['1px', '-0.5rem', '0em', '0.25px', '-1.5em', '.5px', '-.5rem'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'letter-spacing-button': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('accepts keyword values', () => {
+      ['normal', 'inherit', 'initial', 'revert', 'revert-layer', 'unset'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'letter-spacing-button': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid formats', () => {
+      ['100', '-1', '1.5', '100 px', '20ps', '.px', '-.rem'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'letter-spacing-button': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError(
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em)"',
+        );
+      });
+    });
+  });
 });
