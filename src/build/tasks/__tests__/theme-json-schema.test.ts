@@ -81,7 +81,7 @@ describe('validateJson', () => {
         },
       }),
     ).toThrowError(
-      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "\\\\d+(px|rem|%)"',
+      'Tokens validation error: instance.tokens.border-radius-one.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|%)$"',
     );
   });
 
@@ -158,7 +158,7 @@ describe('validateJson', () => {
           },
         }),
       ).toBe(true);
-      ['100 px', '20ps', '100 %'].forEach((invalidValue) => {
+      ['100 px', '20ps', '100 %', '100px a'].forEach((invalidValue) => {
         expect(() =>
           validateTokens({
             'space-button': {
@@ -169,7 +169,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "\\\\d+(px|rem|%)"',
+          'Tokens validation error: instance.tokens.space-button.$value.comfortable does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|%)$"',
         );
       });
     });
@@ -269,6 +269,62 @@ describe('validateJson', () => {
     });
   });
 
+  describe('font-size', () => {
+    test('accepts certain formats', () => {
+      ['14px', '2rem', '1em', '1.5rem'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'font-size-body': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid formats', () => {
+      ['14', '14 px', '14ps', '1em a'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'font-size-body': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError(
+          'Tokens validation error: instance.tokens.font-size-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
+        );
+      });
+    });
+  });
+
+  describe('line-height', () => {
+    test('accepts certain formats', () => {
+      ['20px', '1.5rem', '1em'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'line-height-body': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid formats', () => {
+      ['20', '20 px', '20ps', '1em a'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'line-height-body': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError(
+          'Tokens validation error: instance.tokens.line-height-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
+        );
+      });
+    });
+  });
+
   describe('letter spacing', () => {
     test('accepts positive, negative, and zero values with valid units', () => {
       ['1px', '-0.5rem', '0em', '0.25px', '-1.5em', '.5px', '-.5rem'].forEach((validValue) => {
@@ -295,7 +351,7 @@ describe('validateJson', () => {
     });
 
     test('rejects invalid formats', () => {
-      ['100', '-1', '1.5', '100 px', '20ps', '.px', '-.rem'].forEach((invalidValue) => {
+      ['100', '-1', '1.5', '100 px', '20ps', '.px', '-.rem', 'revert-', '1px test'].forEach((invalidValue) => {
         expect(() =>
           validateTokens({
             'letter-spacing-button': {
@@ -303,7 +359,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em)"',
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$"',
         );
       });
     });
