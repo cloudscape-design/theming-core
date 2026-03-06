@@ -98,7 +98,8 @@ function resolveToken(
 
   if (isReference(assignment)) {
     const ref = getReference(assignment);
-    if (propertiesMap?.[ref] && (theme.tokens[ref] || baseTheme?.tokens[ref])) {
+    // Only return CSS variable for reference tokens (palette tokens), not regular token references
+    if (propertiesMap?.[ref] && isReferenceToken('color', theme, ref)) {
       return `var(${propertiesMap[ref]})`;
     }
     return resolveToken(theme, ref, path, state, baseTheme, propertiesMap);
