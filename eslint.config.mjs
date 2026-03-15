@@ -2,15 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import { includeIgnoreFile } from '@eslint/compat';
 import eslint from '@eslint/js';
-import headerPlugin from 'eslint-plugin-header';
+import headerPlugin from '@tony.ganchev/eslint-plugin-header';
 import eslintPrettier from 'eslint-plugin-prettier/recommended';
 import unicornPlugin from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import path from 'node:path';
 import tsEslint from 'typescript-eslint';
-
-// https://github.com/Stuk/eslint-plugin-header/issues/57
-headerPlugin.rules.header.meta.schema = false;
 
 export default tsEslint.config(
   includeIgnoreFile(path.resolve('.gitignore')),
