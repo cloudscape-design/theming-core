@@ -7,27 +7,24 @@ import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
 import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
-import { UsedPropertyRegistry } from './registry';
+import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
 import { cloneDeep, values } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);
-  const contextTokens: Set<string> = new Set();
 
   values(minimalTheme.contexts).forEach((context) => {
+    const overrideContextTokens = override?.contexts?.[context.id]?.tokens ?? {};
     Object.keys(context.tokens).forEach((key) => {
-      const isInOverrideContext = key in (override?.contexts?.[context.id]?.tokens ?? {});
-      if (!(key in override.tokens) && !isInOverrideContext) {
+      if (!(key in overrideContextTokens)) {
         delete context.tokens[key];
-      } else {
-        contextTokens.add(key);
       }
     });
   });
 
   Object.keys(minimalTheme.tokens).forEach((key) => {
-    if (!contextTokens.has(key) && !(key in override.tokens)) {
+    if (!(key in override.tokens)) {
       delete minimalTheme.tokens[key];
     }
   });
@@ -86,6 +83,16 @@ export function createOverrideDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
+}
+
+export function createThemeDeclarations(
+  theme: Theme,
+  propertiesMap: PropertiesMap,
+  selectorCustomizer: SelectorCustomizer,
+): string {
+  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
+  const stylesheet = new SingleThemeCreator(theme, ruleCreator, undefined, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
 }
 

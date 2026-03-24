@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ThemePreset, Override, validateOverride } from '../shared/theme';
-import { createOverrideDeclarations } from '../shared/declaration';
+import { createOverrideDeclarations, createThemeDeclarations } from '../shared/declaration';
 import { getNonce, createStyleNode, appendStyleNode } from './dom';
 import { createMultiThemeCustomizer } from '../shared/declaration/customizer';
 import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
@@ -11,6 +11,8 @@ export interface GenerateThemeStylesheetParams {
   preset: ThemePreset;
   baseThemeId?: string;
 }
+
+export { createThemeDeclarations };
 
 export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): string {
   const { override, preset, baseThemeId } = params;
