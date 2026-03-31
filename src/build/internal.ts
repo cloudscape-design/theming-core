@@ -40,6 +40,8 @@ export interface BuildThemedComponentsInternalParams {
   jsonSchema?: boolean;
   /** Fail the build when SASS deprecation warning occurs **/
   failOnDeprecations?: boolean;
+  /** If set, wraps all component CSS output in a @layer with this name **/
+  layerName?: string;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -71,6 +73,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     descriptions = {},
     jsonSchema = false,
     failOnDeprecations,
+    layerName,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -87,7 +90,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     scssDir,
     componentsOutputDir,
     getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
-    { failOnDeprecations },
+    { failOnDeprecations, layerName },
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
 
