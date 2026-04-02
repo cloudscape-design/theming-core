@@ -42,6 +42,10 @@ const letterSpacingValueSchema: GenericSchema = {
   type: 'string',
   pattern: '^(normal|inherit|initial|revert|revert-layer|unset|-?\\d*\\.?\\d+(px|rem|em))$',
 };
+const sizeValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
+};
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
 const visualModes = ['light', 'dark'];
@@ -84,6 +88,7 @@ const tokensSchema: GenericSchema = {
     '^line-height-': getTokenSchema(textSizeValueSchema),
     '^font-weight-': getTokenSchema(textWeightValueSchema),
     '^letter-spacing-': getTokenSchema(letterSpacingValueSchema),
+    '^size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
   },
   additionalProperties: false,
 };
