@@ -295,12 +295,18 @@ describe('validateJson', () => {
               compact: '50%',
             },
           },
+          'size-auto': {
+            $value: {
+              comfortable: 'auto',
+              compact: 'auto',
+            },
+          },
         }),
       ).toBe(true);
     });
 
     test('rejects invalid formats', () => {
-      ['100 px', '20ps', '100 %', '100px a', 'auto', 'none', 'inherit'].forEach((invalidValue) => {
+      ['100 px', '20ps', '100 %', '100px a', 'none', 'inherit'].forEach((invalidValue) => {
         expect(() =>
           validateTokens({
             'size-button': {
@@ -311,7 +317,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.size-button.$value.comfortable does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em|%)$"',
+          'Tokens validation error: instance.tokens.size-button.$value.comfortable does not match pattern "^(auto|\\\\d+(\\\\.\\\\d+)?(px|rem|em|%))$"',
         );
       });
     });
