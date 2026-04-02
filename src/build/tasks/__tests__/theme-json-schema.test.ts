@@ -269,6 +269,54 @@ describe('validateJson', () => {
     });
   });
 
+  describe('size', () => {
+    test('should have comfortable and compact values defined', () => {
+      expect(() => {
+        validateTokens({
+          'size-button': {
+            $value: '10px',
+          },
+        });
+      }).toThrowError('Tokens validation error: instance.tokens.size-button.$value is not of a type(s) object');
+    });
+
+    test('accepts certain formats', () => {
+      expect(
+        validateTokens({
+          'size-button': {
+            $value: {
+              comfortable: '100px',
+              compact: '0rem',
+            },
+          },
+          'size-alert': {
+            $value: {
+              comfortable: '1.5em',
+              compact: '50%',
+            },
+          },
+        }),
+      ).toBe(true);
+    });
+
+    test('rejects invalid formats', () => {
+      ['100 px', '20ps', '100 %', '100px a', 'auto', 'none', 'inherit'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'size-button': {
+              $value: {
+                comfortable: invalidValue,
+                compact: invalidValue,
+              },
+            },
+          }),
+        ).toThrowError(
+          'Tokens validation error: instance.tokens.size-button.$value.comfortable does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em|%)$"',
+        );
+      });
+    });
+  });
+
   describe('font-size', () => {
     test('accepts certain formats', () => {
       ['14px', '2rem', '1em', '1.5rem'].forEach((validValue) => {

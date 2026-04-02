@@ -44,7 +44,7 @@ const letterSpacingValueSchema: GenericSchema = {
 };
 const sizeValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
+  pattern: '^\\d+(\\.\\d+)?(px|rem|em|%)$',
 };
 const durationValueSchema: GenericSchema = { type: 'string', pattern: '\\d+m?s' };
 
