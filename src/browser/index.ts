@@ -5,7 +5,6 @@ import { createOverrideDeclarations, createFullThemeDeclarations } from '../shar
 import { getNonce, createStyleNode, appendStyleNode } from './dom';
 import { createMultiThemeCustomizer } from '../shared/declaration/customizer';
 import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
-
 export interface GenerateThemeStylesheetParams {
   override: Override;
   preset: ThemePreset;
@@ -59,7 +58,7 @@ export interface GenerateFullThemeStylesheetParams {
 
 export function generateFullThemeStylesheet({ preset, baseThemeId }: GenerateFullThemeStylesheetParams): string {
   const theme = getThemeFromPreset(preset, baseThemeId);
-  return createFullThemeDeclarations(theme, preset.propertiesMap, createMultiThemeCustomizer(preset.theme.selector));
+  return createFullThemeDeclarations(theme, preset.propertiesMap);
 }
 
 export {

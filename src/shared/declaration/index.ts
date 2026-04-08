@@ -113,8 +113,9 @@ export function createFullThemeDeclarations(
   propertiesMap: PropertiesMap,
   selectorCustomizer: SelectorCustomizer = (s) => s,
 ): string {
+  const scopedTheme = { ...theme, selector: ':root' };
   const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
-  const stylesheet = new SingleThemeCreator(theme, ruleCreator).create();
+  const stylesheet = new SingleThemeCreator(scopedTheme, ruleCreator).create();
   const css = new MinimalTransformer().transform(stylesheet).toString();
   return `@layer cloudscape-base-theme, cloudscape-theme;\n@layer cloudscape-theme {\n${css}\n}`;
 }
