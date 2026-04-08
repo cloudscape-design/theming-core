@@ -7,7 +7,7 @@ import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
 import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
-import { UsedPropertyRegistry } from './registry';
+import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
 import { cloneDeep, values } from '../utils';
 
@@ -105,5 +105,16 @@ export function createBuildDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString();
+  return `@layer cloudscape-base-theme {\n${new MinimalTransformer().transform(stylesheet).toString()}\n}`;
+}
+
+export function createFullThemeDeclarations(
+  theme: Theme,
+  propertiesMap: PropertiesMap,
+  selectorCustomizer: SelectorCustomizer = (s) => s,
+): string {
+  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
+  const stylesheet = new SingleThemeCreator(theme, ruleCreator).create();
+  const css = new MinimalTransformer().transform(stylesheet).toString();
+  return `@layer cloudscape-base-theme, cloudscape-theme;\n@layer cloudscape-theme {\n${css}\n}`;
 }
