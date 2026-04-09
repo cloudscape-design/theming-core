@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { entries } from '../utils';
 import type Stylesheet from './stylesheet';
-import { Declaration } from './stylesheet';
+import { Declaration, Rule } from './stylesheet';
 import { getFirstSelector, isGlobalSelector } from '../styles/selector';
 import { getReferencedVar } from './utils';
 
@@ -91,6 +91,30 @@ export class MinimalTransformer implements Transformer {
       if (rule.size() === 0) {
         stylesheet.removeRule(rule);
       }
+    });
+
+    return stylesheet;
+  }
+}
+
+export class SelectorMergeOptimizer implements Transformer {
+  transform(stylesheet: Stylesheet): Stylesheet {
+    const rules = stylesheet.getAllRules();
+    const byDeclarations = new Map<string, Rule[]>();
+    rules.forEach((rule) => {
+      const key = `${rule.media ?? ''}|${rule
+        .getAllDeclarations()
+        .map((d) => d.toString())
+        .join('')}`;
+      const group = byDeclarations.get(key) ?? [];
+      group.push(rule);
+      byDeclarations.set(key, group);
+    });
+
+    byDeclarations.forEach((group) => {
+      if (group.length < 2) return;
+      group[0].selector = group.map((r) => r.selector).join(',\n');
+      group.slice(1).forEach((r) => stylesheet.removeRule(r));
     });
 
     return stylesheet;

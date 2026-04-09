@@ -47,9 +47,26 @@ export default class Stylesheet {
    * @returns CSS
    */
   toString(): string {
-    return asValuesArray(this.rulesMap)
-      .map((rule) => rule.toString())
-      .join('\n');
+    const rules = asValuesArray(this.rulesMap);
+    const mediaGroups = new Map<string, Rule[]>();
+    const result: string[] = [];
+
+    rules.forEach((rule) => {
+      if (!rule.media) {
+        result.push(rule.toString());
+        return;
+      }
+      const group = mediaGroups.get(rule.media) ?? [];
+      if (group.length === 0) mediaGroups.set(rule.media, group);
+      group.push(rule);
+    });
+
+    mediaGroups.forEach((group, media) => {
+      const inner = group.map((r) => r.toRuleString()).join('\n');
+      result.push(`@media ${media} {\n${inner}\n}`);
+    });
+
+    return result.join('\n');
   }
 }
 
@@ -82,12 +99,16 @@ export class Rule {
   }
 
   toString(): string {
-    const lines = asValuesArray(this.declarationsMap).map((decl) => decl.toString());
-    const rule = `${this.selector}{\n\t${lines.join('\n\t')}\n}`;
+    const rule = this.toRuleString();
     if (this.media) {
       return `@media ${this.media} {${rule}}`;
     }
     return rule;
+  }
+
+  toRuleString(): string {
+    const lines = asValuesArray(this.declarationsMap).map((decl) => decl.toString());
+    return `${this.selector}{\n\t${lines.join('\n\t')}\n}`;
   }
 
   isModeRule(): boolean {

@@ -8,7 +8,8 @@ import { SingleThemeCreator } from './single';
 import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
 import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
-import { MinimalTransformer } from './transformer';
+import { MinimalTransformer, SelectorMergeOptimizer } from './transformer';
+import Stylesheet from './stylesheet';
 import { cloneDeep, values } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
@@ -66,6 +67,10 @@ function addMissingTokensToTheme(theme: Theme, tokens: string[], sourceTheme: Th
   });
 }
 
+function optimize(stylesheet: Stylesheet): string {
+  return new SelectorMergeOptimizer().transform(new MinimalTransformer().transform(stylesheet)).toString();
+}
+
 export function createOverrideDeclarations(
   base: Theme,
   override: Override,
@@ -86,7 +91,7 @@ export function createOverrideDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString();
+  return optimize(stylesheet);
 }
 
 export function createBuildDeclarations(
@@ -105,7 +110,7 @@ export function createBuildDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
-  return `@layer cloudscape-base-theme {\n${new MinimalTransformer().transform(stylesheet).toString()}\n}`;
+  return `@layer cloudscape-base-theme {\n${optimize(stylesheet)}\n}`;
 }
 
 export function createFullThemeDeclarations(
@@ -115,6 +120,6 @@ export function createFullThemeDeclarations(
 ): string {
   const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
   const stylesheet = new SingleThemeCreator(theme, ruleCreator).create();
-  const css = new MinimalTransformer().transform(stylesheet).toString();
+  const css = optimize(stylesheet);
   return `@layer cloudscape-base-theme, cloudscape-theme;\n@layer cloudscape-theme {\n${css}\n}`;
 }
