@@ -114,7 +114,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([rootRule, parentContextRule, parentRule]),
+        compact([parentContextRule, rootRule, parentRule]),
       );
     });
 
@@ -167,10 +167,6 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         ]),
       );
 
-      const parentContextAndModeRuleGlobal = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [secondary.selector, context.selector] }),
-      );
-
       const contextAndModeRuleGlobal = this.ruleCreator.create(
         {
           global: [secondary.selector, optionalState.selector, context.selector],
@@ -184,10 +180,10 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         contextAndModeRuleGlobal,
         compact([
           contextRule,
-          modeRule,
-          parentContextAndModeRuleGlobal,
-          rootRule,
+          parentContextAndModeRule,
           parentContextRule,
+          modeRule,
+          rootRule,
           parentModeRule,
           parentRule,
         ]),

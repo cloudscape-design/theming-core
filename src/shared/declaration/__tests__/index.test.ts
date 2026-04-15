@@ -81,4 +81,40 @@ describe('renderDeclarations', () => {
     expect(output).toContain('.secondary-theme .navigation');
     expect(output).toContain('.navigation.secondary-theme');
   });
+
+  test('context descendant and same-element selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    expect(output).toContain('.secondary-theme .navigation,.navigation.secondary-theme');
+  });
+
+  test('mode+context descendant and same-element selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    expect(output).toContain('.dark.secondary-theme .navigation,.dark.navigation.secondary-theme');
+  });
+
+  test('secondary theme mode+context selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      rootTheme,
+      [secondaryTheme],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(rootTheme.tokens),
+    );
+
+    expect(output).toContain('.dark.secondary-theme .navigation,.dark.navigation.secondary-theme');
+  });
 });

@@ -55,14 +55,9 @@ body{
 .secondary-theme .navigation,.navigation.secondary-theme{
 	--boxShadow-css:var(--shadow-css);
 }
-@media not print {.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation,.dark.navigation.secondary-theme{
 	--shadow-css:var(--grey-css);
 	--boxShadow-css:var(--brown-css);
-}}
-@media not print {.dark.navigation.secondary-theme{
-	--shadow-css:var(--grey-css);
-	--boxShadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
 }}
 }"
 `;
