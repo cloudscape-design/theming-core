@@ -15,6 +15,14 @@ export default class Stylesheet {
   }
 
   appendRuleWithPath(rule: Rule, path: Rule[]) {
+    // When a global theme (body/:root/html) has a context, the descendant form
+    // { global: [body], local: [.ctx] } and the same-element form
+    // { global: [body, .ctx] } both resolve to the same selector string because
+    // the global selector is stripped. Silently skip the duplicate so that
+    // rulesMap and paths stay in sync (one entry each per selector).
+    if (this.rulesMap.has(rule.selector)) {
+      return;
+    }
     this.rulesMap.set(rule.selector, [rule, this.counter++]);
     this.paths.set(rule, path);
   }
@@ -46,10 +54,9 @@ export default class Stylesheet {
   /**
    * @returns CSS
    */
-  toString(): string {
-    return asValuesArray(this.rulesMap)
-      .map((rule) => rule.toString())
-      .join('\n');
+  toString(layer?: string): string {
+    const result = asValuesArray(this.rulesMap).map((rule) => rule.toString());
+    return layer ? `@layer ${layer} {\n${result.join('\n')}\n}` : result.join('\n');
   }
 }
 
@@ -77,13 +84,18 @@ export class Rule {
     return asValuesArray(this.declarationsMap);
   }
 
+  printAllDeclarations() {
+    return this.getAllDeclarations()
+      .map((decl) => decl.toString())
+      .join('\n\t');
+  }
+
   size(): number {
     return this.declarationsMap.size;
   }
 
   toString(): string {
-    const lines = asValuesArray(this.declarationsMap).map((decl) => decl.toString());
-    const rule = `${this.selector}{\n\t${lines.join('\n\t')}\n}`;
+    const rule = `${this.selector}{\n\t${this.printAllDeclarations()}\n}`;
     if (this.media) {
       return `@media ${this.media} {${rule}}`;
     }

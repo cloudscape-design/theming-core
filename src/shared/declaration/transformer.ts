@@ -93,8 +93,36 @@ export class MinimalTransformer implements Transformer {
       }
     });
 
-    return stylesheet;
+    return mergeSelectors(stylesheet);
   }
+}
+
+/**
+ * Merges adjacent rules with identical declarations into a single comma-separated selector.
+ *
+ * For example:
+ * .a { --color-background: red; }
+ * .b { --color-background: red; }
+ *
+ * becomes:
+ * .a,
+ * .b { --color-background: red; }
+ */
+function mergeSelectors(stylesheet: Stylesheet): Stylesheet {
+  const rules = stylesheet.getAllRules();
+  let i = 1;
+  while (i < rules.length) {
+    const prev = rules[i - 1];
+    const curr = rules[i];
+    if (prev.media === curr.media && prev.printAllDeclarations() === curr.printAllDeclarations()) {
+      prev.selector = `${prev.selector},${curr.selector}`;
+      stylesheet.removeRule(curr);
+      rules.splice(i, 1);
+    } else {
+      i++;
+    }
+  }
+  return stylesheet;
 }
 
 function difference<T>(mapA: Record<string, T>, mapB: Record<string, T>): Record<string, T> {

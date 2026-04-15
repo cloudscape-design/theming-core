@@ -56,4 +56,93 @@ describe('MinimalTransformer', () => {
     expect(result.getAllRules().length).toBe(1);
     expect(result.findRule('.child')).toBeUndefined();
   });
+
+  test('merges adjacent rules with identical declarations into a comma selector', () => {
+    const stylesheet = new Stylesheet();
+    const rootRule = new Rule(':root');
+    rootRule.appendDeclaration(new Declaration('--color', 'blue'));
+    stylesheet.appendRuleWithPath(rootRule, []);
+
+    const ruleA = new Rule('.a');
+    ruleA.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleA, [rootRule]);
+
+    const ruleB = new Rule('.b');
+    ruleB.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleB, [rootRule]);
+
+    const result = new MinimalTransformer().transform(stylesheet);
+
+    expect(result.getAllRules().length).toBe(2); // :root + merged
+    const merged = result.getAllRules().find((r) => r.selector.includes('.a'));
+    expect(merged!.selector).toBe('.a,.b');
+  });
+
+  test('does not merge non-adjacent rules with identical declarations', () => {
+    const stylesheet = new Stylesheet();
+    const rootRule = new Rule(':root');
+    rootRule.appendDeclaration(new Declaration('--color', 'blue'));
+    stylesheet.appendRuleWithPath(rootRule, []);
+
+    const ruleA = new Rule('.a');
+    ruleA.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleA, [rootRule]);
+
+    // .between has different declarations, breaking adjacency
+    const between = new Rule('.between');
+    between.appendDeclaration(new Declaration('--color', 'green'));
+    stylesheet.appendRuleWithPath(between, [rootRule]);
+
+    const ruleB = new Rule('.b');
+    ruleB.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleB, [rootRule]);
+
+    const result = new MinimalTransformer().transform(stylesheet);
+
+    expect(result.getAllRules().length).toBe(4);
+    expect(result.findRule('.a')).toBeDefined();
+    expect(result.findRule('.b')).toBeDefined();
+  });
+
+  test('does not merge adjacent rules with different declarations', () => {
+    const stylesheet = new Stylesheet();
+    const rootRule = new Rule(':root');
+    rootRule.appendDeclaration(new Declaration('--color', 'blue'));
+    stylesheet.appendRuleWithPath(rootRule, []);
+
+    const ruleA = new Rule('.a');
+    ruleA.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleA, [rootRule]);
+
+    const ruleB = new Rule('.b');
+    ruleB.appendDeclaration(new Declaration('--color', 'green'));
+    stylesheet.appendRuleWithPath(ruleB, [rootRule]);
+
+    const result = new MinimalTransformer().transform(stylesheet);
+
+    expect(result.getAllRules().length).toBe(3);
+    expect(result.findRule('.a')).toBeDefined();
+    expect(result.findRule('.b')).toBeDefined();
+  });
+
+  test('does not merge adjacent rules with identical declarations but different media', () => {
+    const stylesheet = new Stylesheet();
+    const rootRule = new Rule(':root');
+    rootRule.appendDeclaration(new Declaration('--color', 'blue'));
+    stylesheet.appendRuleWithPath(rootRule, []);
+
+    const ruleA = new Rule('.a');
+    ruleA.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleA, [rootRule]);
+
+    const ruleB = new Rule('.b', 'print');
+    ruleB.appendDeclaration(new Declaration('--color', 'red'));
+    stylesheet.appendRuleWithPath(ruleB, [rootRule]);
+
+    const result = new MinimalTransformer().transform(stylesheet);
+
+    expect(result.getAllRules().length).toBe(3);
+    expect(result.findRule('.a')).toBeDefined();
+    expect(result.findRule('.b')).toBeDefined();
+  });
 });

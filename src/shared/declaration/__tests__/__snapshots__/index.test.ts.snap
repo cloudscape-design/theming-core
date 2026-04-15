@@ -1,13 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
-":global body{
+"@layer cloudscape-base-theme {
+:global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+}
 }"
 `;
 
 exports[`renderDeclarations > includes secondary theme 1`] = `
-"body{
+"@layer cloudscape-base-theme {
+body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
@@ -41,11 +44,7 @@ exports[`renderDeclarations > includes secondary theme 1`] = `
 	--buttonShadow-css:var(--shadow-css);
 	--lineShadow-css:var(--buttonShadow-css);
 }
-@media not print {.dark .navigation{
-	--shadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
-}}
-@media not print {.dark.navigation{
+@media not print {.dark .navigation,.dark.navigation{
 	--shadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
 }}
@@ -53,10 +52,7 @@ exports[`renderDeclarations > includes secondary theme 1`] = `
 	--black-css:purple;
 	--brown-css:black;
 }
-.secondary-theme .navigation{
-	--boxShadow-css:var(--shadow-css);
-}
-.navigation.secondary-theme{
+.secondary-theme .navigation,.navigation.secondary-theme{
 	--boxShadow-css:var(--shadow-css);
 }
 @media not print {.dark.secondary-theme .navigation{
@@ -67,11 +63,13 @@ exports[`renderDeclarations > includes secondary theme 1`] = `
 	--shadow-css:var(--grey-css);
 	--boxShadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
-}}"
+}}
+}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with :root selector and context 1`] = `
-":global body{
+"@layer cloudscape-base-theme {
+:global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
@@ -105,18 +103,16 @@ exports[`renderDeclarations > renders declarations for theme with :root selector
 	--buttonShadow-css:var(--shadow-css);
 	--lineShadow-css:var(--buttonShadow-css);
 }
-@media not print {:global .dark .navigation{
+@media not print {:global .dark .navigation,:global .dark.navigation{
 	--shadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
 }}
-@media not print {:global .dark.navigation{
-	--shadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
-}}"
+}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with non :root selector 1`] = `
-".secondary-theme{
+"@layer cloudscape-base-theme {
+.secondary-theme{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:purple;
@@ -144,26 +140,16 @@ exports[`renderDeclarations > renders declarations for theme with non :root sele
 .disabled-motion.secondary-theme{
 	--appear-css:0;
 }
-.secondary-theme .navigation{
+.secondary-theme .navigation,.navigation.secondary-theme{
 	--shadow-css:var(--black-css);
 	--buttonShadow-css:var(--shadow-css);
 	--boxShadow-css:var(--shadow-css);
 	--lineShadow-css:var(--buttonShadow-css);
 }
-.navigation.secondary-theme{
-	--shadow-css:var(--black-css);
-	--buttonShadow-css:var(--shadow-css);
-	--boxShadow-css:var(--shadow-css);
-	--lineShadow-css:var(--buttonShadow-css);
-}
-@media not print {.dark.secondary-theme .navigation{
+@media not print {.dark.secondary-theme .navigation,.dark.navigation.secondary-theme{
 	--shadow-css:var(--grey-css);
 	--boxShadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
 }}
-@media not print {.dark.navigation.secondary-theme{
-	--shadow-css:var(--grey-css);
-	--boxShadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
-}}"
+}"
 `;
