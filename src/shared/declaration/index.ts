@@ -86,7 +86,15 @@ export function createOverrideDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString();
+
+  const overriddenProperties = new Set<string>();
+  initialTokens.forEach((token) => {
+    if (token in propertiesMap && token in (base.tokenModeMap ?? {})) {
+      overriddenProperties.add(propertiesMap[token]);
+    }
+  });
+
+  return new MinimalTransformer({ overriddenProperties }).transform(stylesheet).toString();
 }
 
 export function createBuildDeclarations(

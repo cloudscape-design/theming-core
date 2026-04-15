@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
 import { rootTheme, preset, secondaryTheme } from '../../../__fixtures__/common';
-import { createBuildDeclarations } from '..';
+import { createBuildDeclarations, createOverrideDeclarations } from '..';
+import { Override } from '../../theme';
 
 describe('renderDeclarations', () => {
   test('renders declarations for theme with :root selector and context', () => {
@@ -46,6 +47,40 @@ describe('renderDeclarations', () => {
       Object.keys(rootTheme.tokens),
     );
 
+    expect(output).toMatchSnapshot();
+  });
+});
+
+describe('createOverrideDeclarations', () => {
+  const selectorCustomizer = (selector: string) => selector;
+
+  test('preserves same-value mode token in dark mode rule', () => {
+    const override: Override = {
+      tokens: {
+        shadow: { light: 'red', dark: 'red' },
+      },
+    };
+    const output = createOverrideDeclarations(rootTheme, override, preset.propertiesMap, selectorCustomizer);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('does not add non-mode tokens to dark mode rule', () => {
+    const override: Override = {
+      tokens: {
+        fontFamilyBase: 'monospace',
+      },
+    };
+    const output = createOverrideDeclarations(rootTheme, override, preset.propertiesMap, selectorCustomizer);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('preserves different-value mode tokens', () => {
+    const override: Override = {
+      tokens: {
+        shadow: { light: 'yellow', dark: 'orange' },
+      },
+    };
+    const output = createOverrideDeclarations(rootTheme, override, preset.propertiesMap, selectorCustomizer);
     expect(output).toMatchSnapshot();
   });
 });
