@@ -92,9 +92,6 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
         }),
       );
 
-      const contextRuleGlobal = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [this.theme.selector, context.selector] }),
-      );
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextAndModeRule,
@@ -108,7 +105,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleAndModeRuleGlobal,
-        compact([contextRuleGlobal, modeRule, rootRule]),
+        compact([contextRule, modeRule, rootRule]),
       );
     });
 

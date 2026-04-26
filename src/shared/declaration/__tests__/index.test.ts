@@ -48,4 +48,73 @@ describe('renderDeclarations', () => {
 
     expect(output).toMatchSnapshot();
   });
+
+  test('global theme emits one context rule, not two', () => {
+    // body is a global selector — the same-element form would produce the same
+    // selector as the descendant form, so only one should be emitted.
+    const output = createBuildDeclarations(
+      rootTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(rootTheme.tokens),
+    );
+
+    const matches = output.match(/\.navigation/g) ?? [];
+    // Each context rule contains ".navigation" once in its selector.
+    // With deduplication: plain context (1) + dark descendant (1) + dark same-element (1) = 3.
+    // Without deduplication there would be 4 (an extra plain same-element rule).
+    expect(matches.length).toBe(3);
+  });
+
+  test('non-global theme emits two context rules with distinct selectors', () => {
+    // .secondary-theme is not global — descendant (.secondary-theme .navigation)
+    // and same-element (.navigation.secondary-theme) are genuinely different selectors.
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    expect(output).toContain('.secondary-theme .navigation');
+    expect(output).toContain('.navigation.secondary-theme');
+  });
+
+  test('context descendant and same-element selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    expect(output).toContain('.secondary-theme .navigation,.navigation.secondary-theme');
+  });
+
+  test('mode+context descendant and same-element selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    expect(output).toContain('.dark.secondary-theme .navigation,.dark.navigation.secondary-theme');
+  });
+
+  test('secondary theme mode+context selectors are merged into a single rule', () => {
+    const output = createBuildDeclarations(
+      rootTheme,
+      [secondaryTheme],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(rootTheme.tokens),
+    );
+
+    expect(output).toContain('.dark.secondary-theme .navigation,.dark.navigation.secondary-theme');
+  });
 });
