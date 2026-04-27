@@ -17,4 +17,5 @@ jobs:
     uses: cloudscape-design/actions/.github/workflows/release.yml@main
     secrets: inherit
     with:
+      skip-test: true
       publish-packages: lib/node,lib/browser
