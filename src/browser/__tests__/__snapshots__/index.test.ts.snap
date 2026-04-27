@@ -14,17 +14,10 @@ exports[`applyTheme > with baseThemeId > attaches one style node containing over
 	--shadow-css:orange;
 	--boxShadow-css:var(--brown-css);
 }}
-.secondary-theme.secondary-theme .navigation:not(#\\9){
+.secondary-theme.secondary-theme .navigation:not(#\\9),.navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
 }
-.navigation.navigation.secondary-theme:not(#\\9){
-	--shadow-css:pink;
-}
-@media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
-	--shadow-css:var(--grey-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
+@media not print {.dark.dark.secondary-theme .navigation:not(#\\9),.dark.dark.navigation.secondary-theme:not(#\\9){
 	--shadow-css:var(--grey-css);
 	--buttonShadow-css:green;
 }}"
@@ -48,11 +41,7 @@ exports[`applyTheme > with secondary theme > attaches one style node containing 
 	--shadow-css:pink;
 	--boxShadow-css:purple;
 }
-@media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:var(--brown-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
 	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
 }}"
@@ -76,11 +65,7 @@ exports[`applyTheme > with targetDocument > attaches one style node containing o
 	--shadow-css:pink;
 	--boxShadow-css:purple;
 }
-@media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:var(--brown-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
 	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
 }}"
@@ -104,11 +89,7 @@ exports[`applyTheme > without secondary theme > attaches one style node containi
 	--shadow-css:pink;
 	--boxShadow-css:purple;
 }
-@media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:var(--brown-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
 	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
 }}"
@@ -128,17 +109,10 @@ exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`
 	--shadow-css:orange;
 	--boxShadow-css:var(--brown-css);
 }}
-.secondary-theme.secondary-theme .navigation:not(#\\9){
+.secondary-theme.secondary-theme .navigation:not(#\\9),.navigation.navigation.secondary-theme:not(#\\9){
 	--shadow-css:pink;
 }
-.navigation.navigation.secondary-theme:not(#\\9){
-	--shadow-css:pink;
-}
-@media not print {.dark.dark.secondary-theme .navigation:not(#\\9){
-	--shadow-css:var(--grey-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation.secondary-theme:not(#\\9){
+@media not print {.dark.dark.secondary-theme .navigation:not(#\\9),.dark.dark.navigation.secondary-theme:not(#\\9){
 	--shadow-css:var(--grey-css);
 	--buttonShadow-css:green;
 }}"
@@ -169,11 +143,7 @@ exports[`generateThemeStylesheet > with secondary theme > creates override style
 	--shadow-css:pink;
 	--boxShadow-css:purple;
 }
-@media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:var(--brown-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
 	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
 }}"
@@ -197,11 +167,7 @@ exports[`generateThemeStylesheet > without secondary theme > creates override st
 	--shadow-css:pink;
 	--boxShadow-css:purple;
 }
-@media not print {.dark.dark .navigation:not(#\\9){
-	--shadow-css:var(--brown-css);
-	--buttonShadow-css:green;
-}}
-@media not print {.dark.dark.navigation:not(#\\9){
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
 	--shadow-css:var(--brown-css);
 	--buttonShadow-css:green;
 }}"
