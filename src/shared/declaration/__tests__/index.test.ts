@@ -117,4 +117,75 @@ describe('renderDeclarations', () => {
 
     expect(output).toContain('.dark.secondary-theme .navigation,.dark.navigation.secondary-theme');
   });
+
+  test('context token that differs from base is present in the same-element context rule', () => {
+    // shadow is overridden in navigationContext. The same-element context rule
+    // (.navigation.secondary-theme) must contain it, not just the descendant form.
+    // If both rules have identical content they will be merged into a comma-selector.
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    const mergedRule = output.match(/\.secondary-theme \.navigation,\.navigation\.secondary-theme\s*\{([^}]*)\}/);
+    expect(mergedRule).not.toBeNull();
+    expect(mergedRule![1]).toContain('--shadow-css');
+  });
+
+  test('context token that differs from base is present in the same-element context rule (multi-theme path)', () => {
+    // Same as above but via MultiThemeCreator (primary + secondary).
+    // The merged comma-selector proves both rules have identical content — if the
+    // same-element rule were diffed against a different parent, it would contain
+    // extra tokens and the rules would not merge.
+    // boxShadow is set in the primary's navigationContext but not in the secondary's,
+    // so it must be present in both the descendant and same-element secondary context rules.
+    const output = createBuildDeclarations(
+      rootTheme,
+      [secondaryTheme],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(rootTheme.tokens),
+    );
+
+    const mergedRule = output.match(/\.secondary-theme \.navigation,\.navigation\.secondary-theme\s*\{([^}]*)\}/);
+    expect(mergedRule).not.toBeNull();
+    expect(mergedRule![1]).toContain('--boxShadow-css');
+  });
+
+  test('mode+context descendant and same-element rules have identical declarations and are merged', () => {
+    // Both selectors must resolve to the same declarations so mergeSelectors can combine them.
+    const output = createBuildDeclarations(
+      secondaryTheme,
+      [],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(secondaryTheme.tokens),
+    );
+
+    const mergedRule = output.match(
+      /\.dark\.secondary-theme \.navigation,\.dark\.navigation\.secondary-theme\s*\{([^}]*)\}/,
+    );
+    expect(mergedRule).not.toBeNull();
+    expect(mergedRule![1]).toContain('--shadow-css');
+  });
+
+  test('mode+context descendant and same-element rules have identical declarations and are merged (multi-theme path)', () => {
+    // Same as above but via MultiThemeCreator (primary + secondary).
+    const output = createBuildDeclarations(
+      rootTheme,
+      [secondaryTheme],
+      preset.propertiesMap,
+      (selector) => selector,
+      Object.keys(rootTheme.tokens),
+    );
+
+    const mergedRule = output.match(
+      /\.dark\.secondary-theme \.navigation,\.dark\.navigation\.secondary-theme\s*\{([^}]*)\}/,
+    );
+    expect(mergedRule).not.toBeNull();
+    expect(mergedRule![1]).toContain('--shadow-css');
+  });
 });
