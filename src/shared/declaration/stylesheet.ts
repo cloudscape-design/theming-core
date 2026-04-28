@@ -54,9 +54,9 @@ export default class Stylesheet {
   /**
    * @returns CSS
    */
-  toString(layer?: string): string {
+  toString(): string {
     const result = asValuesArray(this.rulesMap).map((rule) => rule.toString());
-    return layer ? `@layer ${layer} {\n${result.join('\n')}\n}` : result.join('\n');
+    return result.join('\n');
   }
 }
 

@@ -1,16 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
-"@layer cloudscape-base-theme {
-:global body{
+":global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
-}
 }"
 `;
 
 exports[`renderDeclarations > includes secondary theme 1`] = `
-"@layer cloudscape-base-theme {
-body{
+"body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
@@ -58,13 +55,11 @@ body{
 @media not print {.dark.secondary-theme .navigation,.dark.navigation.secondary-theme{
 	--shadow-css:var(--grey-css);
 	--boxShadow-css:var(--brown-css);
-}}
-}"
+}}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with :root selector and context 1`] = `
-"@layer cloudscape-base-theme {
-:global body{
+":global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:black;
@@ -101,13 +96,11 @@ exports[`renderDeclarations > renders declarations for theme with :root selector
 @media not print {:global .dark .navigation,:global .dark.navigation{
 	--shadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
-}}
-}"
+}}"
 `;
 
 exports[`renderDeclarations > renders declarations for theme with non :root selector 1`] = `
-"@layer cloudscape-base-theme {
-.secondary-theme{
+".secondary-theme{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
 	--black-css:purple;
@@ -145,6 +138,5 @@ exports[`renderDeclarations > renders declarations for theme with non :root sele
 	--shadow-css:var(--grey-css);
 	--boxShadow-css:var(--brown-css);
 	--lineShadow-css:var(--boxShadow-css);
-}}
-}"
+}}"
 `;
