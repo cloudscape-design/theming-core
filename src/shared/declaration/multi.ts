@@ -104,7 +104,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRule,
-        compact([parentContextRule, rootRule, parentRule]),
+        compact([rootRule, parentContextRule, parentRule]),
       );
 
       const contextRuleGlobal = this.ruleCreator.create(
