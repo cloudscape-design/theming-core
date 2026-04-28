@@ -86,6 +86,9 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       const contextRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({ global: [this.theme.selector], local: [context.selector] }),
       );
+      const contextRuleGlobal = stylesheet.findRule(
+        this.ruleCreator.selectorFor({ global: [this.theme.selector, context.selector] }),
+      );
       const modeRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [this.theme.selector, (mode.states[state] as OptionalState).selector],
@@ -105,7 +108,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleAndModeRuleGlobal,
-        compact([contextRule, modeRule, rootRule]),
+        compact([contextRuleGlobal, modeRule, rootRule]),
       );
     });
 
