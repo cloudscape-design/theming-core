@@ -1,0 +1,223 @@
+# Temporary workflow to validate that the postCSS upgrade in theming-core
+# works correctly with the components fix branch.
+# See: https://github.com/cloudscape-design/components/pull/4475
+#
+# This is a copy of the upstream dry-run workflow with buildComponents
+# overridden to check out cloudscape-design/components from the fix branch
+# instead of main.
+#
+# DO NOT MERGE — delete this file once the components PR is merged.
+name: Dry-run (components fix branch)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HUSKY: 0
+
+jobs:
+  createBuildTree:
+    name: Create build tree
+    runs-on: ubuntu-latest
+    outputs:
+      repositories: ${{ steps.set-build-tree-output.outputs.repositories }}
+    steps:
+      - uses: cloudscape-design/actions/.github/actions/create-build-tree@main
+        id: set-build-tree-output
+        with:
+          package: ${{ github.event.repository.full_name }}
+
+  buildBuildTools:
+    name: Build build-tools
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/build-tools') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/build-tools
+
+  buildJestPreset:
+    name: Build jest-preset
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/jest-preset') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/jest-preset
+
+  buildGlobalStyles:
+    name: Build global-styles
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/global-styles') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/global-styles
+
+  buildCollectionHooks:
+    name: Build collection-hooks
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/collection-hooks') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/collection-hooks
+
+  buildBrowserTestTools:
+    name: Build browser-test-tools
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/browser-test-tools') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/browser-test-tools
+
+  buildDocumenter:
+    name: Build documenter
+    runs-on: ubuntu-latest
+    needs: [createBuildTree]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/documenter') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/documenter
+
+  buildTestUtils:
+    name: Build test-utils
+    runs-on: ubuntu-latest
+    needs: [createBuildTree, buildDocumenter]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/test-utils') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/test-utils
+
+  buildComponentToolkit:
+    name: Build component-toolkit
+    runs-on: ubuntu-latest
+    needs: [createBuildTree, buildBrowserTestTools]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/component-toolkit') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/component-toolkit
+
+  buildThemingCore:
+    name: Build theming-core
+    runs-on: ubuntu-latest
+    needs: [createBuildTree, buildBrowserTestTools, buildComponentToolkit]
+    steps:
+      - if: ${{ contains(needs.createBuildTree.outputs.repositories, 'cloudscape-design/theming-core') }}
+        uses: cloudscape-design/actions/.github/actions/build-repository@main
+        with:
+          repository: cloudscape-design/theming-core
+
+  # Overridden: checks out components from the fix branch instead of main.
+  buildComponents:
+    name: Build components${{ matrix.react != 16 && format(' (React {0})', matrix.react) || '' }}
+    runs-on: ubuntu-latest
+    needs:
+      - createBuildTree
+      - buildBuildTools
+      - buildJestPreset
+      - buildGlobalStyles
+      - buildCollectionHooks
+      - buildBrowserTestTools
+      - buildDocumenter
+      - buildTestUtils
+      - buildThemingCore
+      - buildComponentToolkit
+    strategy:
+      matrix:
+        react: [16, 18]
+    steps:
+      - name: Checkout components (fix branch)
+        uses: actions/checkout@v4
+        with:
+          repository: cloudscape-design/components
+          ref: chore/fix-link-constants-scss-indendation
+
+      - name: Set-up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download dependencies artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cloudscape-design-*
+          path: ./.build-cache
+          merge-multiple: true
+
+      - name: Patch local dependencies
+        uses: cloudscape-design/actions/.github/actions/patch-local-dependencies@main
+        with:
+          path: ${{ github.workspace }}
+
+      - name: Unlock dependencies
+        uses: cloudscape-design/actions/.github/actions/unlock-dependencies@main
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        if: ${{ matrix.react == 16 }}
+        env:
+          ALWAYS_VISUAL_REFRESH: true
+        run: npm run build
+
+      - name: Build (React 18)
+        if: ${{ matrix.react == 18 }}
+        env:
+          ALWAYS_VISUAL_REFRESH: true
+        run: npm run build:react18
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Package lib
+        run: |
+          cd ./lib
+          if [ -f "package.json" ]; then
+            npm pack
+          else
+            for dir in */; do
+              if [ -f "$dir/package.json" ]; then
+                cd "$dir"
+                npm pack
+                mv *.tgz ../
+                cd ..
+              fi
+            done
+          fi
+
+      - name: Sanitize package name
+        id: sanitize
+        run: |
+          SANITIZED_NAME=$(echo "cloudscape-design/components" | sed 's/@//g' | sed 's/\//-/g')
+          echo "sanitized_name=$SANITIZED_NAME" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        if: ${{ matrix.react == 16 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.sanitize.outputs.sanitized_name }}
+          path: lib/*.tgz
