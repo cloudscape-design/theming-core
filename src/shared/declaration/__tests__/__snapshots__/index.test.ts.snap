@@ -1,5 +1,47 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`createOverrideDeclarations > does not add non-mode tokens to dark mode rule 1`] = `
+"body{
+	--fontFamilyBase-css:monospace;
+}"
+`;
+
+exports[`createOverrideDeclarations > preserves different-value mode tokens 1`] = `
+"body{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+}
+@media not print {.dark{
+	--shadow-css:orange;
+}}
+.navigation{
+	--shadow-css:var(--black-css);
+}
+@media not print {.dark .navigation,.dark.navigation{
+	--shadow-css:var(--brown-css);
+}}"
+`;
+
+exports[`createOverrideDeclarations > preserves same-value mode token in dark mode rule 1`] = `
+"body{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:red;
+}
+@media not print {.dark{
+	--shadow-css:red;
+}}
+.navigation{
+	--shadow-css:var(--black-css);
+}
+@media not print {.dark .navigation,.dark.navigation{
+	--shadow-css:var(--brown-css);
+}}"
+`;
+
 exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
 "@layer cloudscape-base-theme {
 :global body{

@@ -11,6 +11,13 @@ export interface Transformer {
 }
 
 export class MinimalTransformer implements Transformer {
+  // Set of properties the consumer explicitly overrode when using new themes.
+  private overriddenProperties: Set<string>;
+
+  constructor(options?: { overriddenProperties?: Set<string> }) {
+    this.overriddenProperties = options?.overriddenProperties ?? new Set();
+  }
+
   transform(stylesheet: Stylesheet): Stylesheet {
     const rules = stylesheet.getAllRules();
     const rulesWithPath = rules.map((rule) => ({
@@ -50,6 +57,15 @@ export class MinimalTransformer implements Transformer {
 
       const firstSelector = getFirstSelector(rule.selector);
       const isModeRule = rule.isModeRule();
+
+      // Re-add overridden properties to prevent same values in dark/light mode to be accounted for (fixes AWSUI-61881).
+      if (isModeRule && this.overriddenProperties.size > 0) {
+        Object.keys(ruleValue).forEach((property) => {
+          if (this.overriddenProperties.has(property) && !(property in diff)) {
+            diff[property] = ruleValue[property];
+          }
+        });
+      }
 
       if (isGlobalSelector(firstSelector)) {
         rule.clear();
