@@ -64,3 +64,6 @@ export {
   ReferencePaletteDefinition,
   processColorPaletteInput,
 } from '../shared/theme';
+
+export { ThemeRegistry, ThemeTokens, ThemeChangeCallback, loadThemeRegistry } from '../shared/theme-registry';
+export { startThemeBroadcast, startThemeListener } from './theme-bridge';
