@@ -30,6 +30,14 @@ const borderWidthValueSchema: GenericSchema = {
   type: 'string',
   pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
 };
+const textDecorationThicknessValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '^(auto|from-font|0|(\\d+(\\.\\d+)?|\\.\\d+)(px|rem|em|%))$',
+};
+const textDecorationStyleValueSchema: GenericSchema = {
+  type: 'string',
+  pattern: '^(solid|double|dotted|dashed|wavy|none|underline|overline|line-through)$',
+};
 const textSizeValueSchema: GenericSchema = {
   type: 'string',
   pattern: '^\\d+(\\.\\d+)?(px|rem|em)$',
@@ -85,6 +93,8 @@ const tokensSchema: GenericSchema = {
     '^motion-keyframes-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^shadow-': getTokenSchema(getComplexValueSchema(stringValueSchema, visualModes)),
     '^font-size-': getTokenSchema(textSizeValueSchema),
+    '^font-decoration-thickness-': getTokenSchema(textDecorationThicknessValueSchema),
+    '^font-decoration-style-': getTokenSchema(textDecorationStyleValueSchema),
     '^line-height-': getTokenSchema(textSizeValueSchema),
     '^font-weight-': getTokenSchema(textWeightValueSchema),
     '^letter-spacing-': getTokenSchema(letterSpacingValueSchema),
