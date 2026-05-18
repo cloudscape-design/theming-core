@@ -418,4 +418,56 @@ describe('validateJson', () => {
       });
     });
   });
+
+  describe('font-decoration-thickness', () => {
+    test('accepts certain formats', () => {
+      ['1px', '0.5em', '1rem', '10%', 'auto', 'from-font'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'font-decoration-thickness-link': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid formats', () => {
+      ['1', 'thin', '1 px'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'font-decoration-thickness-link': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError('Tokens validation error');
+      });
+    });
+  });
+
+  describe('font-decoration-style', () => {
+    test('accepts valid values', () => {
+      ['solid', 'double', 'dotted', 'dashed', 'wavy', 'underline', 'none'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'font-decoration-style-link': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid values', () => {
+      ['bold', 'italic', '1px'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'font-decoration-style-link': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError('Tokens validation error');
+      });
+    });
+  });
 });
