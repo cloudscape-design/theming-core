@@ -470,4 +470,42 @@ describe('validateJson', () => {
       });
     });
   });
+
+  describe('font-weight', () => {
+    test('accepts numeric weights across the full CSS range', () => {
+      ['100', '200', '300', '400', '500', '600', '700', '800', '900', '1000', '1'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'font-weight-body': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('accepts keyword values', () => {
+      ['normal', 'bold', 'lighter', 'bolder', 'light', 'heavy'].forEach((validValue) => {
+        expect(
+          validateTokens({
+            'font-weight-body': {
+              $value: validValue,
+            },
+          }),
+        ).toBe(true);
+      });
+    });
+
+    test('rejects invalid values', () => {
+      ['0', '1001', '300px', '400 ', ' 400', 'bolder2'].forEach((invalidValue) => {
+        expect(() =>
+          validateTokens({
+            'font-weight-body': {
+              $value: invalidValue,
+            },
+          }),
+        ).toThrowError('Tokens validation error');
+      });
+    });
+  });
 });

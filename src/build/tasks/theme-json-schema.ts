@@ -44,7 +44,7 @@ const textSizeValueSchema: GenericSchema = {
 };
 const textWeightValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '300|400|700|900|normal|bold|light|heavy',
+  pattern: '^([1-9][0-9]{0,2}|1000|normal|bold|lighter|bolder|light|heavy)$',
 };
 const letterSpacingValueSchema: GenericSchema = {
   type: 'string',
