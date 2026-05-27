@@ -105,5 +105,5 @@ export function createBuildDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString('cloudscape-base-theme');
+  return new MinimalTransformer().transform(stylesheet).toString('awsui-base-theme');
 }
