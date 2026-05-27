@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Build-time theming of main theme with matching baseThemeId generates the correct css files 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
   body {
     --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
     --color-orange-500-25sm1g:#ec7211;
@@ -33,7 +33,7 @@ exports[`Build-time theming of main theme with matching baseThemeId generates th
 `;
 
 exports[`Build-time theming of secondary theme generates the correct css files 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
   body {
     --font-family-base-rpbu7d:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
     --color-orange-500-25sm1g:#ec7211;

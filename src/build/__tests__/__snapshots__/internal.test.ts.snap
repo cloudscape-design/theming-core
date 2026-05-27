@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`builds internal themed components without errors 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
   :root {
     --font-family-base-91xi75:"Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
     --color-orange-500-vz48fa:#ec7211;

@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
 :global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 }
@@ -9,7 +9,7 @@ exports[`renderDeclarations > does not render unnecessary declarations 1`] = `
 `;
 
 exports[`renderDeclarations > includes secondary theme 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
 body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
@@ -63,7 +63,7 @@ body{
 `;
 
 exports[`renderDeclarations > renders declarations for theme with :root selector and context 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
 :global body{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
@@ -106,7 +106,7 @@ exports[`renderDeclarations > renders declarations for theme with :root selector
 `;
 
 exports[`renderDeclarations > renders declarations for theme with non :root selector 1`] = `
-"@layer cloudscape-base-theme {
+"@layer awsui-base-theme {
 .secondary-theme{
 	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
 	--fontFamilyBody-css:var(--fontFamilyBase-css);
