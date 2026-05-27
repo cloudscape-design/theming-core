@@ -14,6 +14,7 @@ export interface InlineStylesheet {
 
 export interface BuildStylesOptions {
   failOnDeprecations?: boolean;
+  layerName?: string;
 }
 
 export async function buildStyles(
@@ -91,7 +92,9 @@ function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir:
     }
     const intermediate = path.join(sassDir, rename(file, '.css'));
     const postCSSForEachResult = await postCSSForEach(sassDir, outputDir, sassResult.css, intermediate);
-    const postCSSAfterAllResult = await postCSSAfterAll(postCSSForEachResult.css, intermediate);
+    const postCSSAfterAllResult = await postCSSAfterAll(postCSSForEachResult.css, intermediate, {
+      layerName: options.layerName,
+    });
 
     const output = path.join(outputDir, rename(file, scopedFileExt));
     await fs.promises.writeFile(output, postCSSAfterAllResult.css);
