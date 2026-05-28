@@ -82,7 +82,15 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           global: [primary.selector, optionalState.selector],
         }),
       );
-      MultiThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, compact([rootRule, parentModeRule, parentRule]));
+      // When the primary theme has inheriting contexts for this mode state, its mode rule
+      // matches context elements directly (via selector extension). The secondary's mode rule
+      // must override all differing tokens. Placing parentModeRule last in the path ensures
+      // the transformer keeps tokens that differ from the primary's mode values.
+      const hasInheritingInPrimary = Object.values(primary.contexts).some((ctx) => ctx.inheritsMode === state);
+      const path = hasInheritingInPrimary
+        ? compact([parentRule, rootRule, parentModeRule])
+        : compact([rootRule, parentModeRule, parentRule]);
+      MultiThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, path);
     });
 
     MultiThemeCreator.forEachContext(secondary, (context) => {
@@ -190,6 +198,8 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         ]),
       );
     });
+
+    MultiThemeCreator.extendModeRulesWithInheritingContexts(secondary, stylesheet, this.ruleCreator);
 
     return stylesheet;
   }

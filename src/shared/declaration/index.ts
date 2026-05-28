@@ -86,7 +86,8 @@ export function createOverrideDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString();
+  const transformed = new MinimalTransformer().transform(stylesheet);
+  return transformed.toString();
 }
 
 export function createBuildDeclarations(
@@ -105,5 +106,6 @@ export function createBuildDeclarations(
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
-  return new MinimalTransformer().transform(stylesheet).toString('awsui-base-theme');
+  const transformed = new MinimalTransformer().transform(stylesheet);
+  return transformed.toString('awsui-base-theme');
 }

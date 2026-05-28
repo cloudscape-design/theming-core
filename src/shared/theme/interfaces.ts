@@ -26,7 +26,14 @@ export interface Context {
   id: string;
   selector: string;
   tokens: Record<string, Assignment>;
+  /** @deprecated Use inheritsMode instead. Will be removed once consuming packages migrate. */
   defaultMode?: keyof Mode['states'];
+  /**
+   * When set, the context selector is appended to the specified mode's CSS rule
+   * (comma-separated), so the context inherits all mode values without duplication.
+   * Only the context's own token overrides are emitted in a separate rule.
+   */
+  inheritsMode?: string;
 }
 
 export interface Theme {

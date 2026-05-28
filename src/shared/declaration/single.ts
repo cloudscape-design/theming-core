@@ -112,6 +112,8 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       );
     });
 
+    SingleThemeCreator.extendModeRulesWithInheritingContexts(this.theme, stylesheet, this.ruleCreator);
+
     return stylesheet;
   }
 }

@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inheritsMode - snapshots > multi-theme with inheriting contexts 1`] = `
+"@layer awsui-base-theme {
+body{
+	--colorBg-css:white;
+	--colorText-css:black;
+	--spacing-css:8px;
+}
+@media not print {.dark,.nav{
+	--colorBg-css:black;
+	--colorText-css:white;
+}}
+.nav{
+	--colorBg-css:black;
+}
+.secondary{
+	--colorBg-css:beige;
+}
+@media not print {.dark.secondary,.secondary .nav,.nav.secondary{
+	--colorBg-css:darkblue;
+	--colorText-css:white;
+}}
+.secondary .nav,.nav.secondary{
+	--colorBg-css:darkblue;
+}
+}"
+`;
+
+exports[`inheritsMode - snapshots > scoped theme with inheriting and non-inheriting contexts 1`] = `
+"@layer awsui-base-theme {
+.scoped{
+	--colorBg-css:white;
+	--colorText-css:black;
+	--spacing-css:8px;
+}
+@media not print {.dark.scoped,.scoped .nav,.nav.scoped{
+	--colorBg-css:black;
+	--colorText-css:white;
+}}
+.scoped .nav,.nav.scoped{
+	--colorBg-css:navy;
+}
+.scoped .table,.scoped.table{
+	--colorBg-css:lightgrey;
+}
+}"
+`;
