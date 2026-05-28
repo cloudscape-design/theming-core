@@ -5,6 +5,7 @@ import { createPresetFiles } from './tasks/preset';
 import { createInternalTokenFiles } from './tasks/internal-tokens';
 import { createPublicTokenFiles } from './tasks/public-tokens';
 import { reduce, defaultsReducer, Theme, ThemePreset, resolveTheme } from '../shared/theme';
+import { createStandaloneContextFiles } from './tasks/standalone-contexts';
 import { getInlineStylesheets } from './inline-stylesheets';
 import { calculatePropertiesMap } from './properties';
 import findNeededTokens from './needed-tokens';
@@ -12,6 +13,11 @@ import findNeededTokens from './needed-tokens';
 export { buildStyles, InlineStylesheet, BuildStylesOptions };
 
 export type Tasks = 'preset' | 'design-tokens';
+
+function stripStandaloneContexts(theme: Theme): Theme {
+  const contexts = Object.fromEntries(Object.entries(theme.contexts).filter(([_, ctx]) => !ctx.destination));
+  return { ...theme, contexts };
+}
 
 export interface BuildThemedComponentsInternalParams {
   /** Primary theme used for generation of styles and scoped names */
@@ -82,11 +88,16 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const resolution = resolveTheme(primary);
   const defaults = reduce(resolution, primary, defaultsReducer());
 
+  // Strip standalone contexts (those with `destination`) from themes for the base pipeline.
+  // They are handled separately by createStandaloneContextDeclarations.
+  const basePrimary = stripStandaloneContexts(primary);
+  const baseSecondary = secondary.map(stripStandaloneContexts);
+
   const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap);
   const styleTask = buildStyles(
     scssDir,
     componentsOutputDir,
-    getInlineStylesheets(primary, secondary, defaults, variablesMap, propertiesMap, neededTokens),
+    getInlineStylesheets(basePrimary, baseSecondary, defaults, variablesMap, propertiesMap, neededTokens),
     { failOnDeprecations },
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
@@ -111,5 +122,15 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
           descriptions,
           jsonSchema,
         });
-  await Promise.all([internalTokensTask, designTokensTask, presetTask, styleTask]);
+
+  const standaloneContextsTask = createStandaloneContextFiles(
+    primary,
+    secondary,
+    propertiesMap,
+    (selector) => selector,
+    neededTokens,
+    componentsOutputDir,
+  );
+
+  await Promise.all([internalTokensTask, designTokensTask, presetTask, styleTask, standaloneContextsTask]);
 }
