@@ -48,6 +48,7 @@ export interface ReferenceTokens {
 
 export interface ColorReferenceTokens {
   primary?: ColorPaletteInput;
+  secondary?: ColorPaletteInput;
   neutral?: ColorPaletteInput;
   error?: ColorPaletteInput;
   success?: ColorPaletteInput;

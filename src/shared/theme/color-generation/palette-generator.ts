@@ -45,6 +45,7 @@ export function generatePaletteFromSeed(
       paletteSpec = warningPaletteSpec;
       break;
     case 'primary':
+    case 'secondary':
     case 'error':
     case 'success':
     case 'info':
