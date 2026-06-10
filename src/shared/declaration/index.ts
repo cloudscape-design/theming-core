@@ -7,7 +7,7 @@ import { RuleCreator } from './rule';
 import { SingleThemeCreator } from './single';
 import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
-import { UsedPropertyRegistry } from './registry';
+import { AllPropertyRegistry, UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
 import { cloneDeep, values } from '../utils';
 
@@ -106,4 +106,14 @@ export function createBuildDeclarations(
   );
   const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString('awsui-base-theme');
+}
+
+export function createFullThemeDeclarations(
+  theme: Theme,
+  propertiesMap: PropertiesMap,
+  selectorCustomizer: SelectorCustomizer,
+): string {
+  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), new AllPropertyRegistry(propertiesMap));
+  const stylesheet = new SingleThemeCreator(theme, ruleCreator).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
 }
