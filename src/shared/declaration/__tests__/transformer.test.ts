@@ -145,4 +145,69 @@ describe('MinimalTransformer', () => {
     expect(result.findRule('.a')).toBeDefined();
     expect(result.findRule('.b')).toBeDefined();
   });
+
+  describe('inheriting context rules', () => {
+    test('a media-bound context rule keeps only its delta vs the inherited mode parent', () => {
+      const stylesheet = new Stylesheet();
+      const rootRule = new Rule(':root');
+      rootRule.appendDeclaration(new Declaration('--text', 'black'));
+      rootRule.appendDeclaration(new Declaration('--bg', 'white'));
+      stylesheet.appendRuleWithPath(rootRule, []);
+
+      // Inherited mode rule (e.g. dark), media-bound.
+      const modeRule = new Rule('.dark', 'not print');
+      modeRule.appendDeclaration(new Declaration('--text', 'white'));
+      modeRule.appendDeclaration(new Declaration('--bg', 'black'));
+      stylesheet.appendRuleWithPath(modeRule, [rootRule]);
+
+      // Inheriting context rule: same media, parent path includes the mode rule.
+      // It carries the full inherited values plus its own override (--bg:navy).
+      const contextRule = new Rule('.ctx', 'not print', /* isContext */ true);
+      contextRule.appendDeclaration(new Declaration('--text', 'white'));
+      contextRule.appendDeclaration(new Declaration('--bg', 'navy'));
+      stylesheet.appendRuleWithPath(contextRule, [modeRule, rootRule]);
+
+      new MinimalTransformer().transform(stylesheet);
+
+      // Only the delta vs the inherited mode remains.
+      expect(contextRule.printAllDeclarations()).toContain('--bg:navy');
+      expect(contextRule.printAllDeclarations()).not.toContain('--text');
+    });
+
+    test('appends the registered context selector as a comma alias on the mode rule', () => {
+      const stylesheet = new Stylesheet();
+      const rootRule = new Rule(':root');
+      rootRule.appendDeclaration(new Declaration('--text', 'black'));
+      stylesheet.appendRuleWithPath(rootRule, []);
+
+      const modeRule = new Rule('.dark', 'not print');
+      modeRule.appendDeclaration(new Declaration('--text', 'white'));
+      stylesheet.appendRuleWithPath(modeRule, [rootRule]);
+
+      stylesheet.registerInheritedAlias(modeRule, '.ctx');
+
+      new MinimalTransformer().transform(stylesheet);
+
+      expect(modeRule.selector).toBe('.dark,.ctx');
+    });
+
+    test('skips the alias when the inherited mode rule was removed (no shared tokens)', () => {
+      const stylesheet = new Stylesheet();
+      const rootRule = new Rule(':root');
+      rootRule.appendDeclaration(new Declaration('--text', 'black'));
+      stylesheet.appendRuleWithPath(rootRule, []);
+
+      // Mode rule identical to root -> emptied and removed by the transformer.
+      const modeRule = new Rule('.dark', 'not print');
+      modeRule.appendDeclaration(new Declaration('--text', 'black'));
+      stylesheet.appendRuleWithPath(modeRule, [rootRule]);
+
+      stylesheet.registerInheritedAlias(modeRule, '.ctx');
+
+      const result = new MinimalTransformer().transform(stylesheet);
+
+      expect(result.findRule('.dark')).toBeUndefined();
+      expect(result.findRule('.dark,.ctx')).toBeUndefined();
+    });
+  });
 });

@@ -9,6 +9,17 @@ export default class Stylesheet {
   rulesMap: Map<string, [Rule, number]> = new Map();
   paths: Map<Rule, Rule[]> = new Map();
   counter = 0;
+  /**
+   * Records that an inheriting context's selector should be appended (as a
+   * comma alias) onto an inherited mode state's rule. Applied as a final step
+   * by the transformer, after all rule lookups and selector merges are done,
+   * so it never interferes with `findRule`.
+   */
+  inheritedAliases: Array<{ modeRule: Rule; aliasSelector: string }> = [];
+
+  registerInheritedAlias(modeRule: Rule, aliasSelector: string) {
+    this.inheritedAliases.push({ modeRule, aliasSelector });
+  }
 
   appendRule(rule: Rule) {
     this.rulesMap.set(rule.selector, [rule, this.counter++]);
@@ -63,12 +74,23 @@ export default class Stylesheet {
 export class Rule {
   selector: string;
   media?: string;
+  /**
+   * Whether this rule targets a visual context (a local/context selector).
+   * Used by the transformer to decide how referenced custom properties should
+   * be re-emitted: context rules always re-output overridden references (so
+   * they resolve in the context's DOM scope), whereas plain mode rules may rely
+   * on the natural cascade. This is tracked explicitly rather than inferred
+   * from the presence of a media query, because an inheriting context rule has
+   * both a media query and context semantics.
+   */
+  isContext: boolean;
   declarationsMap: Map<string, [Declaration, number]> = new Map();
   counter = 0;
 
-  constructor(selector: string, media?: string) {
+  constructor(selector: string, media?: string, isContext = false) {
     this.selector = selector;
     this.media = media;
+    this.isContext = isContext;
   }
 
   appendDeclaration(declaration: Declaration) {
@@ -104,6 +126,10 @@ export class Rule {
 
   isModeRule(): boolean {
     return !!this.media;
+  }
+
+  isContextRule(): boolean {
+    return this.isContext;
   }
 }
 
