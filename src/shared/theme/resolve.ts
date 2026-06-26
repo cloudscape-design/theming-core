@@ -135,7 +135,7 @@ export function resolveContext(
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
-  if (context.defaultMode && theme.modes) {
+  if (getInheritedState(context) && theme.modes) {
     resolveModeReferenceTokens(tmp, context, baseTheme);
   }
 
@@ -148,21 +148,37 @@ export function resolveContext(
   return resolveTheme(tmp, baseTheme, propertiesMap);
 }
 
-function resolveModeReferenceTokens(theme: Theme, context: Context, baseTheme?: Theme): void {
-  if (!context.defaultMode || !theme.modes) return;
+/**
+ * Returns the mode state a context inherits from, if any. Prefers the
+ * {@link Context.inheritsMode} field and falls back to the deprecated
+ * {@link Context.defaultMode} alias.
+ */
+export function getInheritedState(context: Context): string | undefined {
+  return context.inheritsMode ?? context.defaultMode;
+}
 
-  const defaultMode = context.defaultMode;
-  const mode = Object.values(theme.modes).find((m) => m.states[defaultMode]);
+function resolveModeReferenceTokens(theme: Theme, context: Context, baseTheme?: Theme): void {
+  const inheritedState = getInheritedState(context);
+  if (!inheritedState || !theme.modes) {
+    return;
+  }
+
+  const mode = Object.values(theme.modes).find((m) => m.states[inheritedState]);
   if (!mode) return;
 
   // Reference tokens must be resolved to their mode-specific values before path analysis
   // because resolveThemeWithPaths expects concrete values, not mode objects. Without this,
   // the resolution would fail when encountering reference tokens with mode values.
+  //
+  // Only pin a reference token when the inherited state is actually one of its mode states
+  // (e.g. a `dark`-inheriting context for color palettes). For a context that inherits a
+  // state of an unrelated mode (e.g. `compact` of the density mode), color reference tokens
+  // keep their mode object and resolve normally via the color mode states.
   Object.keys(theme.tokens).forEach((token) => {
     if (isReferenceToken('color', theme, token)) {
       const tokenValue = theme.tokens[token];
-      if (isModeValue(tokenValue)) {
-        theme.tokens[token] = tokenValue[defaultMode];
+      if (isModeValue(tokenValue) && inheritedState in tokenValue) {
+        theme.tokens[token] = tokenValue[inheritedState];
       }
     }
   });
@@ -274,6 +290,27 @@ export const modeReducer =
       return tokenResolution[state];
     } else if (isSpecificTokenResolution(tokenResolution)) {
       return tokenResolution;
+    }
+  };
+
+/**
+ * Like {@link defaultsReducer}, but for tokens belonging to `inheritedMode` it
+ * selects the `inheritedState` value instead of the mode's default state. Used
+ * to resolve a context that inherits a non-default mode state (e.g. a context
+ * that defaults to `dark`): its color tokens resolve to their dark values while
+ * all other modes (density, motion, ...) keep their defaults.
+ */
+export const inheritedDefaultsReducer =
+  (inheritedMode: Mode, inheritedState: string) =>
+  (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme, baseTheme?: Theme) => {
+    const mode = getMode(baseTheme ?? theme, token);
+    if (mode && isModeTokenResolution(tokenResolution)) {
+      const state = mode.id === inheritedMode.id ? inheritedState : getDefaultState(mode);
+      return tokenResolution[state];
+    } else if (isSpecificTokenResolution(tokenResolution)) {
+      return tokenResolution;
+    } else {
+      throw new Error(`Mismatch between resolution ${JSON.stringify(tokenResolution)} and mode ${mode}`);
     }
   };
 

@@ -10,6 +10,8 @@ export interface SelectorConfig {
   global: string[];
   local?: string[];
   media?: string;
+  /** Marks the produced rule as a visual-context rule (see {@link Rule.isContext}). */
+  isContext?: boolean;
 }
 export class RuleCreator {
   selector: Selector;
@@ -21,7 +23,7 @@ export class RuleCreator {
   }
 
   create(config: SelectorConfig, resolution: SpecificResolution): Rule {
-    const rule = new Rule(this.selectorFor(config), config.media);
+    const rule = new Rule(this.selectorFor(config), config.media, config.isContext ?? false);
     entries(resolution).forEach(([token, value]) => {
       const property = this.registry.get(token);
       if (property) {

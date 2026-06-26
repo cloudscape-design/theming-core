@@ -3,7 +3,7 @@
 import { isGlobalSelector } from '../styles/selector';
 import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../theme';
 import type { PropertiesMap } from './interfaces';
-import { AbstractCreator } from './abstract';
+import { AbstractCreator, contextDefaultsReducer, findInheritedModeState } from './abstract';
 import type { StylesheetCreator } from './interfaces';
 import { RuleCreator, SelectorConfig } from './rule';
 import { SingleThemeCreator } from './single';
@@ -86,15 +86,51 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     });
 
     MultiThemeCreator.forEachContext(secondary, (context) => {
+      const inherited = findInheritedModeState(secondary, context);
+      const media = inherited?.optionalState.media;
+
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
-        defaultsReducer(),
+        contextDefaultsReducer(inherited),
       );
-      const contextRule = this.ruleCreator.create(
-        { global: [secondary.selector], local: [context.selector] },
-        contextResolution,
-      );
+
+      const inheritedModeRule = inherited
+        ? stylesheet.findRule(
+            this.ruleCreator.selectorFor({ global: [secondary.selector, inherited.optionalState.selector] }),
+          )
+        : undefined;
+
+      // Cross-theme override protection. When the primary (global) theme defines
+      // the same context with mode inheritance, its context selector is unscoped
+      // (e.g. the join `.dark-mode, .ctx`) and applies the primary theme's
+      // inherited-mode values directly to the element — even inside the secondary
+      // theme. Tokens that are mode-scoped in the primary theme but mode-invariant
+      // here would be deduplicated out of this rule and then incorrectly inherit
+      // the primary theme's values. Including the primary theme's inherited-mode
+      // rule in the diff path makes those tokens differ from the resolved parent,
+      // so they are retained and override the leak.
+      const primaryContext = primary.contexts[context.id];
+      const primaryInherited = primaryContext ? findInheritedModeState(primary, primaryContext) : null;
+      const primaryInheritedModeRule = primaryInherited
+        ? stylesheet.findRule(
+            this.ruleCreator.selectorFor({ global: [primary.selector, primaryInherited.optionalState.selector] }),
+          )
+        : undefined;
+
+      const descendantConfig: SelectorConfig = {
+        global: [secondary.selector],
+        local: [context.selector],
+        media,
+        isContext: true,
+      };
+      const sameElementConfig: SelectorConfig = {
+        global: [secondary.selector, context.selector],
+        media,
+        isContext: true,
+      };
+
+      const contextRule = this.ruleCreator.create(descendantConfig, contextResolution);
       const parentContextRule = stylesheet.findRule(
         this.ruleCreator.selectorFor({
           global: [primary.selector],
@@ -104,21 +140,29 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRule,
-        compact([parentContextRule, rootRule, parentRule]),
+        compact([inheritedModeRule, primaryInheritedModeRule, parentContextRule, rootRule, parentRule]),
       );
 
-      const contextRuleGlobal = this.ruleCreator.create(
-        { global: [secondary.selector, context.selector] },
-        contextResolution,
-      );
+      const contextRuleGlobal = this.ruleCreator.create(sameElementConfig, contextResolution);
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([rootRule, parentContextRule, parentRule]),
+        compact([inheritedModeRule, primaryInheritedModeRule, rootRule, parentContextRule, parentRule]),
       );
+
+      if (inheritedModeRule) {
+        MultiThemeCreator.registerInheritedContextAliases(stylesheet, this.ruleCreator, inheritedModeRule, [
+          descendantConfig,
+          sameElementConfig,
+        ]);
+      }
     });
 
     MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
+      const inherited = findInheritedModeState(secondary, context);
+      if (inherited && inherited.mode.id === mode.id && inherited.state === state) {
+        return;
+      }
       const optionalState = mode.states[state] as OptionalState;
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),

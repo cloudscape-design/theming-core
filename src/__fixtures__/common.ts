@@ -497,3 +497,118 @@ export const overrideWithSeedColor: Override = {
     },
   },
 };
+
+/* ------------------------------------------------------------------ *
+ * Fixtures for visual-context mode inheritance (`inheritsMode`).
+ *
+ * - color mode: light (default) / dark (`.dark`, only on screen via media)
+ * - density mode: comfortable (default) / compact (`.compact`)
+ * - top-navigation context inherits `dark` and adds one own override
+ * - compact-table context inherits `compact` with no own overrides
+ * ------------------------------------------------------------------ */
+export const inheritanceColorMode: Mode = {
+  id: 'color',
+  states: {
+    light: { default: true },
+    dark: { selector: '.dark', media: 'not print' },
+  },
+};
+
+export const inheritanceDensityMode: Mode = {
+  id: 'density',
+  states: {
+    comfortable: { default: true },
+    compact: { selector: '.compact' },
+  },
+};
+
+export const topNavigationContext: Context = {
+  id: 'top-navigation',
+  selector: '.top-navigation',
+  inheritsMode: 'dark',
+  tokens: {
+    // Own override applied on top of the inherited dark values.
+    bgColor: 'navy',
+  },
+};
+
+export const compactTableContext: Context = {
+  id: 'compact-table',
+  selector: '.compact-table',
+  inheritsMode: 'compact',
+  // No own overrides: pure inheritance of the compact density state.
+  tokens: {},
+};
+
+export const inheritanceTheme: Theme = {
+  id: 'inheritance',
+  selector: 'body',
+  tokens: {
+    fontFamily: 'Arial',
+    textColor: { light: 'black', dark: 'white' },
+    bgColor: { light: 'white', dark: 'black' },
+    linkColor: { light: 'blue', dark: 'cyan' },
+    spaceScaled: { comfortable: '20px', compact: '4px' },
+  },
+  tokenModeMap: {
+    textColor: 'color',
+    bgColor: 'color',
+    linkColor: 'color',
+    spaceScaled: 'density',
+  },
+  contexts: {
+    'top-navigation': topNavigationContext,
+    'compact-table': compactTableContext,
+  },
+  modes: {
+    color: inheritanceColorMode,
+    density: inheritanceDensityMode,
+  },
+};
+
+export const inheritancePropertiesMap = createStubPropertiesMap(inheritanceTheme);
+
+/**
+ * Legacy context that uses the deprecated `defaultMode` field (as Cloudscape
+ * components still do today) with the inherited dark values copied into its
+ * tokens. `defaultMode` must NOT trigger the `inheritsMode` output dedup, so this
+ * context is expected to produce the original, unscoped, fully-listed CSS.
+ */
+export const legacyDefaultModeContext: Context = {
+  id: 'legacy-top-navigation',
+  selector: '.legacy-top-navigation',
+  defaultMode: 'dark',
+  tokens: {
+    // Dark values copied into the context (mode-invariant), mirroring how
+    // components author `defaultMode` contexts via pickState('dark').
+    textColor: { light: 'white', dark: 'white' },
+    bgColor: { light: 'navy', dark: 'navy' },
+    linkColor: { light: 'cyan', dark: 'cyan' },
+  },
+};
+
+export const legacyDefaultModeTheme: Theme = {
+  ...inheritanceTheme,
+  id: 'legacy',
+  contexts: {
+    'legacy-top-navigation': legacyDefaultModeContext,
+  },
+};
+
+/**
+ * Secondary (non-global) theme that also carries a `dark`-inheriting context,
+ * used to exercise the multi-theme inheritance path.
+ */
+export const inheritanceSecondaryTheme: Theme = {
+  ...inheritanceTheme,
+  id: 'inheritance-secondary',
+  selector: '.secondary',
+  tokens: {
+    ...inheritanceTheme.tokens,
+    // The secondary theme tweaks the dark link color.
+    linkColor: { light: 'green', dark: 'lime' },
+  },
+  contexts: {
+    'top-navigation': { ...topNavigationContext },
+  },
+};

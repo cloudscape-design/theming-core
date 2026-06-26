@@ -1,0 +1,81 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inheritsMode visual-context inheritance > full output snapshot 1`] = `
+"@layer awsui-base-theme {
+body{
+	--fontFamily-css:Arial;
+	--textColor-css:black;
+	--bgColor-css:white;
+	--linkColor-css:blue;
+	--spaceScaled-css:20px;
+}
+@media not print {.dark,.top-navigation{
+	--textColor-css:white;
+	--bgColor-css:black;
+	--linkColor-css:cyan;
+}}
+.compact,.compact-table{
+	--spaceScaled-css:4px;
+}
+@media not print {.top-navigation{
+	--bgColor-css:navy;
+}}
+}"
+`;
+
+exports[`inheritsMode visual-context inheritance > legacy defaultMode (must NOT trigger output dedup) > full output snapshot 1`] = `
+"@layer awsui-base-theme {
+body{
+	--fontFamily-css:Arial;
+	--textColor-css:black;
+	--bgColor-css:white;
+	--linkColor-css:blue;
+	--spaceScaled-css:20px;
+}
+@media not print {.dark{
+	--textColor-css:white;
+	--bgColor-css:black;
+	--linkColor-css:cyan;
+}}
+.compact{
+	--spaceScaled-css:4px;
+}
+.legacy-top-navigation{
+	--textColor-css:white;
+	--bgColor-css:navy;
+	--linkColor-css:cyan;
+}
+}"
+`;
+
+exports[`inheritsMode visual-context inheritance > secondary theme (multi-theme path) > full output snapshot 1`] = `
+"@layer awsui-base-theme {
+body{
+	--fontFamily-css:Arial;
+	--textColor-css:black;
+	--bgColor-css:white;
+	--linkColor-css:blue;
+	--spaceScaled-css:20px;
+}
+@media not print {.dark,.top-navigation{
+	--textColor-css:white;
+	--bgColor-css:black;
+	--linkColor-css:cyan;
+}}
+.compact,.compact-table{
+	--spaceScaled-css:4px;
+}
+@media not print {.top-navigation{
+	--bgColor-css:navy;
+}}
+.secondary{
+	--linkColor-css:green;
+}
+@media not print {.dark.secondary,.secondary .top-navigation,.secondary.top-navigation{
+	--linkColor-css:lime;
+}}
+@media not print {.secondary .top-navigation,.secondary.top-navigation{
+	--bgColor-css:navy;
+}}
+}"
+`;

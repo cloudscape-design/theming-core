@@ -12,9 +12,9 @@ import {
 } from '../theme';
 import type { PropertiesMap } from './interfaces';
 import Stylesheet from './stylesheet';
-import { AbstractCreator } from './abstract';
+import { AbstractCreator, contextDefaultsReducer, findInheritedModeState } from './abstract';
 import type { StylesheetCreator } from './interfaces';
-import type { RuleCreator } from './rule';
+import type { RuleCreator, SelectorConfig } from './rule';
 import { compact } from './utils';
 
 export class SingleThemeCreator extends AbstractCreator implements StylesheetCreator {
@@ -52,26 +52,62 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
     });
 
     SingleThemeCreator.forEachContext(this.theme, (context) => {
+      const inherited = findInheritedModeState(this.theme, context);
+      const media = inherited?.optionalState.media;
+
       const contextResolution = reduce(
         resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
-        defaultsReducer(),
+        contextDefaultsReducer(inherited),
         this.baseTheme,
       );
-      const contextRule = this.ruleCreator.create(
-        { global: [this.theme.selector], local: [context.selector] },
-        contextResolution,
-      );
-      SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule, [rootRule]);
 
-      const contextRule2 = this.ruleCreator.create(
-        { global: [this.theme.selector, context.selector] },
-        contextResolution,
-      );
-      SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule2, [rootRule]);
+      // When the context inherits a mode state, diff its standalone rule against
+      // that mode's rule so only the delta vs the inherited mode remains, and
+      // make it respect the inherited mode's media query.
+      const inheritedModeRule = inherited
+        ? stylesheet.findRule(
+            this.ruleCreator.selectorFor({ global: [this.theme.selector, inherited.optionalState.selector] }),
+          )
+        : undefined;
+      const parentPath = inheritedModeRule ? [inheritedModeRule, rootRule] : [rootRule];
+
+      const descendantConfig: SelectorConfig = {
+        global: [this.theme.selector],
+        local: [context.selector],
+        media,
+        isContext: true,
+      };
+      const sameElementConfig: SelectorConfig = {
+        global: [this.theme.selector, context.selector],
+        media,
+        isContext: true,
+      };
+
+      const contextRule = this.ruleCreator.create(descendantConfig, contextResolution);
+      SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule, parentPath);
+
+      const contextRule2 = this.ruleCreator.create(sameElementConfig, contextResolution);
+      SingleThemeCreator.appendRuleToStylesheet(stylesheet, contextRule2, parentPath);
+
+      // Share the inherited mode values with the context selector via a comma
+      // alias on the inherited mode rule (applied at the end of the transform).
+      if (inheritedModeRule) {
+        SingleThemeCreator.registerInheritedContextAliases(stylesheet, this.ruleCreator, inheritedModeRule, [
+          descendantConfig,
+          sameElementConfig,
+        ]);
+      }
     });
 
     SingleThemeCreator.forEachContextWithinOptionalModeState(this.theme, (context, mode, state) => {
+      const inherited = findInheritedModeState(this.theme, context);
+      // The context already inherits this exact mode state (shared via the alias
+      // on the mode rule plus the standalone delta rule), so the combination rule
+      // would be redundant.
+      if (inherited && inherited.mode.id === mode.id && inherited.state === state) {
+        return;
+      }
       const contextResolution = reduce(
         resolveContext(this.theme, context, this.baseTheme, this.resolution, this.propertiesMap),
         this.theme,
