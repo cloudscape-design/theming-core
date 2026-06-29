@@ -63,6 +63,7 @@ export default class Stylesheet {
 export class Rule {
   selector: string;
   media?: string;
+  hasInheritingSelectors = false;
   declarationsMap: Map<string, [Declaration, number]> = new Map();
   counter = 0;
 
@@ -103,7 +104,7 @@ export class Rule {
   }
 
   isModeRule(): boolean {
-    return !!this.media;
+    return !!this.media && !this.hasInheritingSelectors;
   }
 }
 

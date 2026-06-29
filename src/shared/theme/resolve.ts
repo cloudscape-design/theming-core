@@ -135,6 +135,9 @@ export function resolveContext(
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
+  // TODO: Remove this block once consuming packages migrate from defaultMode + pickState to inheritsMode.
+  // With inheritsMode, contexts no longer need to resolve mode-specific reference tokens at build time
+  // because they inherit mode values via CSS selector composition.
   if (context.defaultMode && theme.modes) {
     resolveModeReferenceTokens(tmp, context, baseTheme);
   }
