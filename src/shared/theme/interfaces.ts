@@ -27,6 +27,8 @@ export interface Context {
   selector: string;
   tokens: Record<string, Assignment>;
   defaultMode?: keyof Mode['states'];
+  /** If set, this context is excluded from base-component styles and output to this path instead. */
+  destination?: string;
 }
 
 export interface Theme {

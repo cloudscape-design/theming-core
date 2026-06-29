@@ -32,6 +32,14 @@ export default class Stylesheet {
     this.paths.delete(rule);
   }
 
+  retainRulesMatching(selector: string) {
+    for (const rule of this.getAllRules()) {
+      if (!rule.selector.includes(selector)) {
+        this.removeRule(rule);
+      }
+    }
+  }
+
   findRule(selector: string): Rule | undefined {
     const ruleOrUndefined = this.rulesMap.get(selector);
     return ruleOrUndefined?.[0];
