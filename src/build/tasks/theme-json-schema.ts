@@ -20,7 +20,7 @@ interface GenericSchema {
 const stringValueSchema: GenericSchema = { type: 'string' };
 const colorValueSchema: GenericSchema = {
   type: 'string',
-  pattern: '#[0-9a-f]{6}|rgba\\(\\d{1,3}%?(,\\s?\\d{1,3}%?){2},\\s?(1|0|0?\\.\\d+)\\)|transparent',
+  pattern: '#[0-9a-f]{6}|rgba\\(\\d{1,3}%?(,\\s?\\d{1,3}%?){2},\\s?(1|0|0?\\.\\d+)\\)|transparent|currentColor',
 };
 const spaceValueSchema: GenericSchema = {
   type: 'string',
