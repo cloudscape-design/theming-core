@@ -1,5 +1,100 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`applyTheme > with baseThemeId > attaches one style node containing overrides with the correct theme selector 1`] = `
+".secondary-theme.secondary-theme:not(#\\9){
+	--black-css:purple;
+	--grey-css:grey;
+	--brown-css:black;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+}
+@media not print {.dark.dark.secondary-theme:not(#\\9){
+	--shadow-css:orange;
+	--boxShadow-css:black;
+}}
+.secondary-theme.secondary-theme .navigation:not(#\\9),.navigation.navigation.secondary-theme:not(#\\9){
+	--shadow-css:pink;
+}
+@media not print {.dark.dark.secondary-theme .navigation:not(#\\9),.dark.dark.navigation.secondary-theme:not(#\\9){
+	--shadow-css:grey;
+	--buttonShadow-css:green;
+}}"
+`;
+
+exports[`applyTheme > with secondary theme > attaches one style node containing override 1`] = `
+"body:not(#\\9){
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+}
+@media not print {.dark.dark:not(#\\9){
+	--shadow-css:orange;
+	--boxShadow-css:brown;
+}}
+.navigation.navigation:not(#\\9){
+	--shadow-css:pink;
+	--boxShadow-css:purple;
+}
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
+	--shadow-css:brown;
+	--buttonShadow-css:green;
+}}"
+`;
+
+exports[`applyTheme > with targetDocument > attaches one style node containing override on the target document 1`] = `
+"body:not(#\\9){
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+}
+@media not print {.dark.dark:not(#\\9){
+	--shadow-css:orange;
+	--boxShadow-css:brown;
+}}
+.navigation.navigation:not(#\\9){
+	--shadow-css:pink;
+	--boxShadow-css:purple;
+}
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
+	--shadow-css:brown;
+	--buttonShadow-css:green;
+}}"
+`;
+
+exports[`applyTheme > without secondary theme > attaches one style node containing override 1`] = `
+"body:not(#\\9){
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+}
+@media not print {.dark.dark:not(#\\9){
+	--shadow-css:orange;
+	--boxShadow-css:brown;
+}}
+.navigation.navigation:not(#\\9){
+	--shadow-css:pink;
+	--boxShadow-css:purple;
+}
+@media not print {.dark.dark .navigation:not(#\\9),.dark.dark.navigation:not(#\\9){
+	--shadow-css:brown;
+	--buttonShadow-css:green;
+}}"
+`;
+
 exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`] = `
 ".secondary-theme.secondary-theme:not(#\\9){
 	--black-css:purple;

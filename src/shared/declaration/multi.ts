@@ -114,7 +114,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([parentContextRule, rootRule, parentRule]),
+        compact([rootRule, parentContextRule, parentRule]),
       );
     });
 

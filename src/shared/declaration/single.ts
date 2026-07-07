@@ -108,7 +108,7 @@ export class SingleThemeCreator extends AbstractCreator implements StylesheetCre
       SingleThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleAndModeRuleGlobal,
-        compact([contextRule, modeRule, rootRule]),
+        compact([contextRuleGlobal, modeRule, rootRule]),
       );
     });
 
