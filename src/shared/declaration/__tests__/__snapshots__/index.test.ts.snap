@@ -46,19 +46,30 @@ body{
 	--lineShadow-css:black;
 }
 @media not print {.dark .navigation,.dark.navigation{
-	--shadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
 }}
 .secondary-theme{
 	--black-css:purple;
 	--brown-css:black;
 }
+@media not print {.dark.secondary-theme{
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}}
 .secondary-theme .navigation,.navigation.secondary-theme{
-	--boxShadow-css:var(--shadow-css);
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--lineShadow-css:purple;
 }
 @media not print {.dark.secondary-theme .navigation,.dark.navigation.secondary-theme{
-	--shadow-css:var(--grey-css);
-	--boxShadow-css:var(--brown-css);
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
 }}
 }"
 `;
@@ -101,8 +112,9 @@ exports[`renderDeclarations > renders declarations for theme with :root selector
 	--lineShadow-css:black;
 }
 @media not print {:global .dark .navigation,:global .dark.navigation{
-	--shadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
 }}
 }"
 `;
@@ -139,15 +151,16 @@ exports[`renderDeclarations > renders declarations for theme with non :root sele
 	--appear-css:0;
 }
 .secondary-theme .navigation,.navigation.secondary-theme{
-	--shadow-css:var(--black-css);
-	--buttonShadow-css:var(--shadow-css);
-	--boxShadow-css:var(--shadow-css);
-	--lineShadow-css:var(--buttonShadow-css);
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
 }
 @media not print {.dark.secondary-theme .navigation,.dark.navigation.secondary-theme{
-	--shadow-css:var(--grey-css);
-	--boxShadow-css:var(--brown-css);
-	--lineShadow-css:var(--boxShadow-css);
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
 }}
 }"
 `;
