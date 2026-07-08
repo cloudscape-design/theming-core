@@ -111,6 +111,12 @@ describe('validateJson', () => {
               dark: 'transparent',
             },
           },
+          'color-text': {
+            $value: {
+              light: 'currentColor',
+              dark: 'currentColor',
+            },
+          },
         }),
       ).toBe(true);
 
@@ -125,7 +131,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.color-button.$value.light does not match pattern "#[0-9a-f]{6}|rgba\\\\(\\\\d{1,3}%?(,\\\\s?\\\\d{1,3}%?){2},\\\\s?(1|0|0?\\\\.\\\\d+)\\\\)|transparent"',
+          'Tokens validation error: instance.tokens.color-button.$value.light does not match pattern "#[0-9a-f]{6}|rgba\\\\(\\\\d{1,3}%?(,\\\\s?\\\\d{1,3}%?){2},\\\\s?(1|0|0?\\\\.\\\\d+)\\\\)|transparent|currentColor"',
         );
       });
     });
