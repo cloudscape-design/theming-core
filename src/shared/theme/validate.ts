@@ -63,14 +63,10 @@ export function validateOverride(override: Override, themeable: Token[], availab
       return [contextId, newContext] as [string, Context];
     });
 
-  let completeTokens = {};
-  if (override.referenceTokens?.color) {
-    const generatedTokens = processReferenceTokens(override.referenceTokens.color);
-    // Reference tokens should override existing tokens
-    completeTokens = { ...fromEntries(tokensEntries), ...generatedTokens };
-  } else {
-    completeTokens = fromEntries(tokensEntries);
-  }
+  const completeTokens = override.referenceTokens?.color
+    ? // Reference tokens should override existing tokens
+      { ...fromEntries(tokensEntries), ...processReferenceTokens(override.referenceTokens.color) }
+    : fromEntries(tokensEntries);
 
   return {
     contexts: fromEntries(contextEntries),
