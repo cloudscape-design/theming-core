@@ -7,7 +7,7 @@ import { AbstractCreator } from './abstract';
 import type { StylesheetCreator } from './interfaces';
 import { RuleCreator, SelectorConfig } from './rule';
 import { SingleThemeCreator } from './single';
-import Stylesheet, { Rule } from './stylesheet';
+import Stylesheet from './stylesheet';
 import { compact } from './utils';
 
 /**
@@ -16,14 +16,10 @@ import { compact } from './utils';
  */
 export class MultiThemeCreator extends AbstractCreator implements StylesheetCreator {
   themes: Theme[];
-  ruleCreator: RuleCreator;
-  propertiesMap?: PropertiesMap;
 
   constructor(themes: Theme[], ruleCreator: RuleCreator, propertiesMap?: PropertiesMap) {
-    super();
+    super(ruleCreator, propertiesMap);
     this.themes = themes;
-    this.ruleCreator = ruleCreator;
-    this.propertiesMap = propertiesMap;
   }
 
   create(): Stylesheet {
@@ -64,10 +60,10 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
   appendRulesForSecondary(stylesheet: Stylesheet, primary: Theme, secondary: Theme) {
     const secondaryResolution = resolveTheme(secondary, undefined, this.propertiesMap);
-    const defaults = reduce(secondaryResolution, secondary, defaultsReducer());
+    const defaults = reduce(secondaryResolution, secondary, defaultsReducer(null));
 
     const rootRule = this.ruleCreator.create({ global: [secondary.selector] }, defaults);
-    const parentRule = this.findRule(stylesheet, { global: [primary.selector] });
+    const parentRule = this.findExpectedRule(stylesheet, { global: [primary.selector] });
     MultiThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, compact([parentRule]));
 
     MultiThemeCreator.forEachOptionalModeState(secondary, (mode, state) => {
@@ -77,57 +73,76 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         { global: [secondary.selector, optionalState.selector], media: optionalState.media },
         modeResolution,
       );
-      const parentModeRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({
-          global: [primary.selector, optionalState.selector],
-        }),
-      );
+      const parentModeRule = this.findRule(stylesheet, { global: [primary.selector, optionalState.selector] });
       MultiThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, compact([rootRule, parentModeRule, parentRule]));
     });
 
     MultiThemeCreator.forEachContext(secondary, (context) => {
+      const inheritedMode = this.findInheritedModeState(secondary, context);
+
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
-        defaultsReducer(),
+        defaultsReducer(inheritedMode),
       );
-      const contextRule = this.ruleCreator.create(
-        { global: [secondary.selector], local: [context.selector] },
-        contextResolution,
-      );
-      const parentContextRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({
-          global: [primary.selector],
-          local: [context.selector],
-        }),
-      );
+
+      // The mode rule (e.g. the `.dark` rule) is the diff parent for the context that inherits it.
+      const inheritedModeRule = inheritedMode ? stylesheet.findRule(inheritedMode.selector) : undefined;
+
+      // If primary theme context uses mode inheritance - this can unintentionally override secondary themes.
+      // To prevent that, we include primary inherited mode rule into the diff order.
+      const primaryInheritedMode = this.findParentInheritedModeState(primary, context.id);
+      const primaryInheritedModeRule = primaryInheritedMode
+        ? stylesheet.findRule(primaryInheritedMode.selector)
+        : undefined;
+
+      // By default, visual contexts have no media, but they can inherit media from the mode.
+      const shared = { media: inheritedMode?.media, isContext: true };
+
+      const parentContextRule = this.findRule(stylesheet, { global: [primary.selector], local: [context.selector] });
+      const descendantConfig: SelectorConfig = { global: [secondary.selector], local: [context.selector], ...shared };
+      const contextRule = this.ruleCreator.create(descendantConfig, contextResolution);
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRule,
-        compact([parentContextRule, rootRule, parentRule]),
+        compact([inheritedModeRule, primaryInheritedModeRule, parentContextRule, rootRule, parentRule]),
       );
 
-      const contextRuleGlobal = this.ruleCreator.create(
-        { global: [secondary.selector, context.selector] },
-        contextResolution,
-      );
+      const sameElementConfig: SelectorConfig = { global: [secondary.selector, context.selector], ...shared };
+      const contextRuleGlobal = this.ruleCreator.create(sameElementConfig, contextResolution);
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([rootRule, parentContextRule, parentRule]),
+        compact([inheritedModeRule, primaryInheritedModeRule, rootRule, parentContextRule, parentRule]),
       );
+
+      // Make the inherited mode values apply to the context by appending the context selector(s)
+      // as comma aliases onto the inherited mode rule (e.g. `.dark, .top-navigation { ... }`).
+      if (inheritedModeRule) {
+        const configs = [descendantConfig, sameElementConfig];
+        this.registerInheritedContextAliases(stylesheet, inheritedModeRule, configs);
+      }
     });
 
     MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
+      // We skip resolution for context/state pairs that are already handled via mode inheritance.
+      const inherited = this.findInheritedModeState(secondary, context);
+      if (inherited && inherited.mode.id === mode.id && inherited.state === state) {
+        return;
+      }
+
       const optionalState = mode.states[state] as OptionalState;
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
         modeReducer(mode, state),
       );
-      const contextRule = this.findRule(stylesheet, { global: [secondary.selector], local: [context.selector] });
-      const contextRuleGlobal = this.findRule(stylesheet, { global: [secondary.selector, context.selector] });
-      const modeRule = this.findRule(stylesheet, {
+      const contextRule = this.findExpectedRule(stylesheet, {
+        global: [secondary.selector],
+        local: [context.selector],
+      });
+      const contextRuleGlobal = this.findExpectedRule(stylesheet, { global: [secondary.selector, context.selector] });
+      const modeRule = this.findExpectedRule(stylesheet, {
         global: [secondary.selector, optionalState.selector],
       });
       const contextAndModeRule = this.ruleCreator.create(
@@ -138,21 +153,13 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         },
         contextResolution,
       );
-      const parentContextRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({ global: [primary.selector], local: [context.selector] }),
-      );
+      const parentContextRule = this.findRule(stylesheet, { global: [primary.selector], local: [context.selector] });
 
-      const parentModeRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({
-          global: [primary.selector, optionalState.selector],
-        }),
-      );
-      const parentContextAndModeRule = stylesheet.findRule(
-        this.ruleCreator.selectorFor({
-          global: [primary.selector, optionalState.selector],
-          local: [context.selector],
-        }),
-      );
+      const parentModeRule = this.findRule(stylesheet, { global: [primary.selector, optionalState.selector] });
+      const parentContextAndModeRule = this.findRule(stylesheet, {
+        global: [primary.selector, optionalState.selector],
+        local: [context.selector],
+      });
 
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
@@ -192,16 +199,6 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     });
 
     return stylesheet;
-  }
-
-  private findRule(stylesheet: Stylesheet, config: SelectorConfig): Rule {
-    const rule = stylesheet.findRule(this.ruleCreator.selectorFor(config));
-    if (!rule) {
-      // Rules are creating in reverse order to dependency, which is why
-      // we should always have a rule.
-      throw new Error(`No rule for selector ${JSON.stringify(config)} found`);
-    }
-    return rule;
   }
 
   private getThemesWithout(theme: Theme) {

@@ -89,7 +89,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const neededTokens = findNeededTokens(scssDir, variablesMap, exposed);
 
   const resolution = resolveTheme(primary);
-  const defaults = reduce(resolution, primary, defaultsReducer());
+  const defaults = reduce(resolution, primary, defaultsReducer(null));
 
   const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap, tokenVersions);
   // Strip standalone contexts (those with `destination`) from themes for the base pipeline.
