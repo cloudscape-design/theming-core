@@ -3,11 +3,13 @@
 import { Context, Mode } from '.';
 import { cloneDeep, values } from '../utils';
 import { Theme, Value } from './interfaces';
-import type { PropertiesMap } from '../declaration/interfaces';
+import type { InheritedModeState, PropertiesMap } from '../declaration/interfaces';
 import {
   areAssignmentsEqual,
-  getDefaultState,
-  getMode,
+  getInheritedState,
+  getThemeMode,
+  getThemeModeByState,
+  getModeState,
   getReference,
   isModeValue,
   isReference,
@@ -48,7 +50,7 @@ export function resolveThemeWithPaths(
   const resolutionPaths: FullResolutionPaths = {};
 
   Object.keys(baseTheme?.tokens ?? theme.tokens).forEach((token) => {
-    const mode = getMode(baseTheme ?? theme, token);
+    const mode = getThemeMode(baseTheme ?? theme, token);
     if (mode) {
       const modeTokenResolutionPaths: ModeTokenResolutionPath = {};
       const resolvedToken = Object.keys(mode.states).reduce<Record<string, string>>((acc, state: string) => {
@@ -136,9 +138,7 @@ export function resolveContext(
 ): FullResolution {
   const tmp = cloneDeep(theme);
 
-  if (context.defaultMode && theme.modes) {
-    resolveModeReferenceTokens(tmp, context, baseTheme);
-  }
+  resolveModeReferenceTokens(tmp, context, baseTheme);
 
   if (!baseTheme || !themeResolution) {
     tmp.tokens = { ...tmp.tokens, ...context.tokens };
@@ -149,21 +149,37 @@ export function resolveContext(
   return resolveTheme(tmp, baseTheme, propertiesMap);
 }
 
+/**
+ * For a context that defaults to a non-default mode state, resolves the relevant
+ * mode-specific reference tokens so that path analysis and the context resolution
+ * use the inherited state's values. No-ops when the context does not inherit a mode.
+ */
 function resolveModeReferenceTokens(theme: Theme, context: Context, baseTheme?: Theme): void {
-  if (!context.defaultMode || !theme.modes) return;
+  const inheritedState = getInheritedState(context);
+  if (!inheritedState) {
+    return;
+  }
 
-  const defaultMode = context.defaultMode;
-  const mode = Object.values(theme.modes).find((m) => m.states[defaultMode]);
-  if (!mode) return;
+  const mode = getThemeModeByState(theme, inheritedState);
+  if (!mode) {
+    return;
+  }
 
   // Reference tokens must be resolved to their mode-specific values before path analysis
   // because resolveThemeWithPaths expects concrete values, not mode objects. Without this,
   // the resolution would fail when encountering reference tokens with mode values.
+  //
+  // Only pin a reference token when the inherited state is actually one of its mode states
+  // (e.g. a `dark`-inheriting context for color palettes). For a context that inherits a
+  // state of an unrelated mode (e.g. `compact` of the density mode), `inheritedState` is not
+  // a key of a color palette's `{ light, dark }` object, so we must leave it as a mode object
+  // and let it resolve normally via the color mode states. (Pinning to `tokenValue['compact']`
+  // would otherwise corrupt the palette to `undefined`.)
   Object.keys(theme.tokens).forEach((token) => {
     if (isReferenceToken('color', theme, token)) {
       const tokenValue = theme.tokens[token];
-      if (isModeValue(tokenValue)) {
-        theme.tokens[token] = tokenValue[defaultMode];
+      if (isModeValue(tokenValue) && inheritedState in tokenValue) {
+        theme.tokens[token] = tokenValue[inheritedState];
       }
     }
   });
@@ -253,13 +269,22 @@ export function reduce(
   }, {} as SpecificResolution);
 }
 
+/**
+ * Reduces a full token resolution to a single value by selecting each token's
+ * default mode state. For example, the resolution { light: 'white',  dark: 'black' }
+ * will resolve to 'white', because light is the default state for color mode.
+ *
+ * The function accepts an optional `inherited` override. When defined, the inherited
+ * mode is used instead of default. Thus, for context tokens that inherit from the
+ * dark mode - the value will resolve to 'black' instead.
+ */
 export const defaultsReducer =
-  () =>
+  (inherited: null | InheritedModeState) =>
   (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme, baseTheme?: Theme) => {
-    const mode = getMode(baseTheme ?? theme, token);
+    const mode = getThemeMode(baseTheme ?? theme, token);
     if (mode && isModeTokenResolution(tokenResolution)) {
-      const defaultState = getDefaultState(mode);
-      return tokenResolution[defaultState];
+      const state = getModeState(mode, inherited);
+      return tokenResolution[state];
     } else if (isSpecificTokenResolution(tokenResolution)) {
       return tokenResolution;
     } else {
@@ -270,7 +295,7 @@ export const defaultsReducer =
 export const modeReducer =
   (mode: Mode, state: string) =>
   (tokenResolution: ModeTokenResolution | SpecificTokenResolution, token: string, theme: Theme, baseTheme?: Theme) => {
-    const tokenMode = getMode(baseTheme ?? theme, token);
+    const tokenMode = getThemeMode(baseTheme ?? theme, token);
     if (tokenMode && tokenMode.id === mode.id && isModeTokenResolution(tokenResolution)) {
       return tokenResolution[state];
     } else if (isSpecificTokenResolution(tokenResolution)) {
