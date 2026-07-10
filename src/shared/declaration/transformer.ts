@@ -44,12 +44,14 @@ export class MinimalTransformer implements Transformer {
       // it will be a descendant of `body` in the DOM. When a descendant overrides a token,
       // tokens that reference it must be re-output, otherwise they resolve in the parent context.
       //
-      // However, for mode rules (which have media queries), we should skip tokens that have
-      // identical values to their parent, even if referenced variables are overridden. These can inherit
-      // properly via natural css variable cascade rules.
+      // However, for plain mode rules (media query, no context selector) we skip tokens that have
+      // identical values to their parent, even if referenced variables are overridden: these inherit
+      // properly via the natural CSS variable cascade. Context rules (including inheriting context
+      // rules that also carry a media query) are always re-output, hence the explicit isContextRule.
 
       const firstSelector = getFirstSelector(rule.selector);
       const isModeRule = rule.isModeRule();
+      const isContextRule = rule.isContextRule();
 
       if (isGlobalSelector(firstSelector)) {
         rule.clear();
@@ -76,9 +78,11 @@ export class MinimalTransformer implements Transformer {
       Object.keys(ruleValue).forEach((property) => {
         const referencedVar = getReferencedVar(ruleValue[property]);
         if (!referencedVar || !isOverridden(referencedVar)) return;
-        // For mode rules, only output if value actually differs from resolved parent
-        // For context rules, always output to ensure correct resolution
-        const canInherit = isModeRule && ruleValue[property] === resolvedParent[property];
+        // This decides whether a token that references an overridden var
+        // can be left out and resolved via the natural CSS variable cascade.
+        // - Plain mode rules: yes - identical values inherit fine, so skip re-emitting.
+        // - Context rules: no - a context rule must resolve in the context's own DOM scope.
+        const canInherit = isModeRule && !isContextRule && ruleValue[property] === resolvedParent[property];
         if (canInherit) return;
 
         if (!(property in diff)) {
@@ -93,36 +97,14 @@ export class MinimalTransformer implements Transformer {
       }
     });
 
-    return mergeSelectors(stylesheet);
-  }
-}
+    // Inherited aliases are applied as near-last step so that findRule lookups work correctly.
+    stylesheet.applyInheritedAliases();
 
-/**
- * Merges adjacent rules with identical declarations into a single comma-separated selector.
- *
- * For example:
- * .a { --color-background: red; }
- * .b { --color-background: red; }
- *
- * becomes:
- * .a,
- * .b { --color-background: red; }
- */
-function mergeSelectors(stylesheet: Stylesheet): Stylesheet {
-  const rules = stylesheet.getAllRules();
-  let i = 1;
-  while (i < rules.length) {
-    const prev = rules[i - 1];
-    const curr = rules[i];
-    if (prev.media === curr.media && prev.printAllDeclarations() === curr.printAllDeclarations()) {
-      prev.selector = `${prev.selector},${curr.selector}`;
-      stylesheet.removeRule(curr);
-      rules.splice(i, 1);
-    } else {
-      i++;
-    }
+    // Selectors are merged after aliases resolution so that final selectors are compared.
+    stylesheet.mergeSelectors();
+
+    return stylesheet;
   }
-  return stylesheet;
 }
 
 function difference<T>(mapA: Record<string, T>, mapB: Record<string, T>): Record<string, T> {

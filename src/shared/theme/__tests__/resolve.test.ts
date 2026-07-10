@@ -10,8 +10,9 @@ import {
   themeWithTokenWithoutModeResolution,
   colorMode,
 } from '../../../__fixtures__/common';
-import { resolveTheme, resolveThemeWithPaths, resolveContext } from '../resolve';
-import { Theme, Context } from '../interfaces';
+import { resolveTheme, resolveThemeWithPaths, resolveContext, reduce, defaultsReducer } from '../resolve';
+import { getInheritedState } from '../utils';
+import { Theme, Context, Mode } from '../interfaces';
 
 describe('resolve', () => {
   test('resolves theme to full resolution', () => {
@@ -140,5 +141,78 @@ describe('resolveContext', () => {
 
     expect(context.tokens.colorPrimary500).toBe('#0073bb');
     expect(context.tokens.buttonBackground).toBe('{colorNeutral500}');
+  });
+});
+
+describe('inheritsMode value seeding', () => {
+  const colorMode: Mode = {
+    id: 'color',
+    states: { light: { default: true }, dark: { selector: '.dark', media: 'not print' } },
+  };
+  const densityMode: Mode = {
+    id: 'density',
+    states: { comfortable: { default: true }, compact: { selector: '.compact' } },
+  };
+  const theme: Theme = {
+    id: 'test',
+    selector: 'body',
+    tokens: {
+      textColor: { light: 'black', dark: 'white' },
+      bgColor: { light: 'white', dark: 'black' },
+      spaceScaled: { comfortable: '20px', compact: '4px' },
+      fontFamily: 'Arial',
+    },
+    tokenModeMap: { textColor: 'color', bgColor: 'color', spaceScaled: 'density' },
+    contexts: {},
+    modes: { color: colorMode, density: densityMode },
+  };
+
+  test('getInheritedState prefers inheritsMode and falls back to defaultMode', () => {
+    expect(getInheritedState({ id: 'c', selector: '.c', tokens: {}, inheritsMode: 'dark' })).toBe('dark');
+    expect(getInheritedState({ id: 'c', selector: '.c', tokens: {}, defaultMode: 'compact' })).toBe('compact');
+    expect(
+      getInheritedState({ id: 'c', selector: '.c', tokens: {}, inheritsMode: 'dark', defaultMode: 'compact' }),
+    ).toBe('dark');
+    expect(getInheritedState({ id: 'c', selector: '.c', tokens: {} })).toBeNull();
+  });
+
+  test('defaultsReducer throws on a resolution that is neither a mode object nor a string', () => {
+    const reducer = defaultsReducer({ mode: colorMode, state: 'dark', selector: '.dark' });
+    // `textColor` is mode-scoped, but the resolution is malformed (a number),
+    // which is neither a ModeTokenResolution (object) nor a SpecificTokenResolution (string).
+    expect(() => reducer(123 as never, 'textColor', theme)).toThrow('Mismatch between resolution');
+  });
+
+  test('a dark-inheriting context resolves color tokens to dark, other modes to default', () => {
+    const context: Context = { id: 'top', selector: '.top', tokens: { bgColor: 'navy' }, inheritsMode: 'dark' };
+
+    const resolved = reduce(
+      resolveContext(theme, context),
+      theme,
+      defaultsReducer({ mode: colorMode, state: 'dark', selector: '.dark' }),
+    );
+
+    // Inherited color mode -> dark values
+    expect(resolved.textColor).toBe('white');
+    // Own override applies on top of the inherited dark value
+    expect(resolved.bgColor).toBe('navy');
+    // Orthogonal density mode keeps its default (comfortable)
+    expect(resolved.spaceScaled).toBe('20px');
+    // Mode-invariant token unchanged
+    expect(resolved.fontFamily).toBe('Arial');
+  });
+
+  test('a compact-inheriting context resolves density tokens to compact, colors to default', () => {
+    const context: Context = { id: 'ct', selector: '.ct', tokens: {}, inheritsMode: 'compact' };
+
+    const resolved = reduce(
+      resolveContext(theme, context),
+      theme,
+      defaultsReducer({ mode: densityMode, state: 'compact', selector: '.compact' }),
+    );
+
+    expect(resolved.spaceScaled).toBe('4px');
+    expect(resolved.textColor).toBe('black');
+    expect(resolved.bgColor).toBe('white');
   });
 });
