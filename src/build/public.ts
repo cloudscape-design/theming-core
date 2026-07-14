@@ -57,6 +57,7 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
     designTokensOutputDir,
     scssDir,
     designTokensFileName: preset.theme.id,
+    tokenVersions: preset.tokenVersions,
   });
 }
 
@@ -74,7 +75,11 @@ function createThemedPreset(preset: ThemePreset, override: Override, baseThemeId
     const themeIndex = (newPreset.secondary || []).findIndex((item) => item.id === theme.id);
     (newPreset.secondary || [])[themeIndex] = result;
   }
-  const propertiesMap = calculatePropertiesMap([newPreset.theme, ...(newPreset.secondary || [])], preset.variablesMap);
+  const propertiesMap = calculatePropertiesMap(
+    [newPreset.theme, ...(newPreset.secondary || [])],
+    preset.variablesMap,
+    preset.tokenVersions,
+  );
   newPreset.propertiesMap = propertiesMap;
 
   return newPreset;

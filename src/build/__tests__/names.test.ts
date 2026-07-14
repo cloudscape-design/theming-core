@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { toCssVarName, toSassName } from '../token';
+import { toCssVarName, toSassName, toStableCssVarName } from '../token';
 
 const reference = toCssVarName('color', ['red', 'blue']);
 
@@ -39,5 +39,25 @@ describe('toSassName', () => {
     ['font-font-family-base', '$font-font-family-base'],
   ])('%p becomes %p', (input, expected) => {
     expect(toSassName(input)).toBe(expected);
+  });
+});
+
+describe('toStableCssVarName', () => {
+  test('produces the --<name>-<hash> format', () => {
+    expect(toStableCssVarName('color-background', 'v3-1')).toMatch(/^--color-background-[0-9a-z]+$/);
+  });
+
+  test('is deterministic for the same inputs', () => {
+    expect(toStableCssVarName('color-background', 'v3-1')).toBe(toStableCssVarName('color-background', 'v3-1'));
+  });
+
+  test('differs between different tokens having the same version', () => {
+    expect(toStableCssVarName('color-a', 'v3-1')).not.toBe(toStableCssVarName('color-b', 'v3-1'));
+  });
+
+  test('changes when the version changes', () => {
+    const reference = toStableCssVarName('color-background', 'v3-1');
+    expect(toStableCssVarName('color-background', 'v3-2')).not.toBe(reference);
+    expect(toStableCssVarName('color-background', 'v4-1')).not.toBe(reference);
   });
 });
