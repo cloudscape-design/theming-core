@@ -127,4 +127,6 @@ export interface ThemePreset {
   propertiesMap: Record<Token, string>;
   /** Map between design tokens and variable names */
   variablesMap: Record<Token, string>;
+  /** Allowlist of tokens to version strings for stable naming; unlisted tokens stay legacy. */
+  tokenVersions?: Record<Token, string>;
 }

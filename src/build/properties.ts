@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { FullResolution, Theme, ThemePreset, resolveContext, resolveTheme } from '../shared/theme';
-import { toCssVarName } from './token';
+import { toCssVarName, toStableCssVarName } from './token';
 
 interface TokensValuesMap {
   [token: string]: Array<string>;
@@ -10,6 +10,7 @@ interface TokensValuesMap {
 export function calculatePropertiesMap(
   themes: Array<Theme>,
   variablesMap: ThemePreset['variablesMap'],
+  tokenVersions?: Record<string, string>,
 ): Record<string, string> {
   const resolutions: Array<FullResolution> = [];
   themes.forEach((theme) => {
@@ -22,6 +23,10 @@ export function calculatePropertiesMap(
   const tokensValuesMap = getTokensValuesFromResolutions(resolutions);
 
   const mapEntries = Object.entries(tokensValuesMap).map(([token, values]) => {
+    const version = tokenVersions?.[token];
+    if (version !== undefined) {
+      return [token, toStableCssVarName(variablesMap[token], version)];
+    }
     return [token, toCssVarName(variablesMap[token], values.filter((value) => !!value) as Array<string>)];
   });
   return Object.fromEntries(mapEntries);

@@ -40,6 +40,8 @@ export interface BuildThemedComponentsInternalParams {
   jsonSchema?: boolean;
   /** Fail the build when SASS deprecation warning occurs **/
   failOnDeprecations?: boolean;
+  /** Allowlist of tokens to version strings for stable naming; unlisted tokens stay legacy. */
+  tokenVersions?: Record<string, string>;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -71,6 +73,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     descriptions = {},
     jsonSchema = false,
     failOnDeprecations,
+    tokenVersions,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -82,7 +85,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const resolution = resolveTheme(primary);
   const defaults = reduce(resolution, primary, defaultsReducer(null));
 
-  const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap);
+  const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap, tokenVersions);
   const styleTask = buildStyles(
     scssDir,
     componentsOutputDir,
