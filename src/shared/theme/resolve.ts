@@ -118,9 +118,24 @@ function getAssignment(theme: Theme, token: string, state: string | undefined, b
 
   if (isModeValue(assignment)) {
     if (!state) {
-      throw new Error(
-        `Mode resolution for token ${token} does not have any mode value. modes: ${JSON.stringify(assignment)}`,
-      );
+      // A mode-value token reached without a state. This happens during path
+      // analysis (resolveThemeWithPaths runs without a propertiesMap, so token
+      // references are not short-circuited to `var(...)` and resolution recurses
+      // into raw mode-value tokens). The mode-value's own keys are state names, so
+      // infer the owning mode from them and use its default state. Path analysis
+      // only needs to traverse the reference chain, so the chosen state does not
+      // affect the collected paths. Note this does NOT rely on the token being in
+      // tokenModeMap — palette tokens generated outside the mode map still resolve.
+      // A mode value whose keys match no mode is still an error (a malformed theme).
+      const anyState = Object.keys(assignment)[0];
+      const inferredMode =
+        getThemeModeByState(theme, anyState) ?? (baseTheme ? getThemeModeByState(baseTheme, anyState) : null);
+      if (!inferredMode) {
+        throw new Error(
+          `Mode resolution for token ${token} does not have any mode value. modes: ${JSON.stringify(assignment)}`,
+        );
+      }
+      state = getModeState(inferredMode, null);
     }
     assignment = assignment[state];
   }
@@ -136,15 +151,20 @@ export function resolveContext(
   propertiesMap?: PropertiesMap,
 ): FullResolution {
   const tmp = cloneDeep(theme);
+  // Shallow-copy the context's tokens: resolveModeReferenceTokens only appends keys (it never
+  // mutates values), and the caller's context objects are shared/import-cached. This keeps the
+  // authored context intact for callers (mode-reactive override detection, the preset) without a
+  // deep clone.
+  const contextCopy: Context = { ...context, tokens: { ...context.tokens } };
 
-  resolveModeReferenceTokens(tmp, context, baseTheme);
+  resolveModeReferenceTokens(tmp, contextCopy, baseTheme);
 
   if (!baseTheme || !themeResolution) {
-    tmp.tokens = { ...tmp.tokens, ...context.tokens };
+    tmp.tokens = { ...tmp.tokens, ...contextCopy.tokens };
     return resolveTheme(tmp, baseTheme, propertiesMap);
   }
 
-  tmp.tokens = applyContextPrecedenceRules(theme, context, baseTheme, themeResolution, propertiesMap);
+  tmp.tokens = applyContextPrecedenceRules(theme, contextCopy, baseTheme, themeResolution, propertiesMap);
   return resolveTheme(tmp, baseTheme, propertiesMap);
 }
 

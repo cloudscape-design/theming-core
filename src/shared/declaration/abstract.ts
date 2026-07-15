@@ -1,6 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { Mode, Context, Theme } from '../theme';
+import { defaultsReducer, FullResolution, reduce, SpecificResolution } from '../theme';
 import { getThemeModeByState, isOptionalState } from '../theme/utils';
 import { entries } from '../utils';
 import type Stylesheet from './stylesheet';
@@ -101,6 +102,57 @@ export abstract class AbstractCreator {
   findParentInheritedModeState(theme: Theme, contextId: string) {
     const parentContext = theme.contexts[contextId];
     return parentContext ? this.findInheritedModeState(theme, parentContext) : null;
+  }
+
+  /**
+   * Resolves an inheriting context's standalone rule: the context's own (authored) overrides are
+   * taken in the default state so mode-varying overrides stay mode-reactive; everything else takes
+   * the inherited state and is deduplicated against the mode-alias join.
+   */
+  resolveInheritingContext(
+    theme: Theme,
+    context: Context,
+    inheritedMode: null | InheritedModeState,
+    full: FullResolution,
+    baseTheme?: Theme,
+  ): SpecificResolution {
+    const resolution = reduce(full, theme, defaultsReducer(inheritedMode), baseTheme);
+    if (inheritedMode) {
+      const defaults = reduce(full, theme, defaultsReducer(null), baseTheme);
+      Object.keys(context.tokens).forEach((token) => {
+        if (token in defaults) {
+          resolution[token] = defaults[token];
+        }
+      });
+    }
+    return resolution;
+  }
+
+  /**
+   * Narrows an inherited-state context resolution down to the context's mode-reactive authored
+   * overrides (those whose value differs between default and inherited state), mutating it in
+   * place. Returns false when there is nothing mode-reactive to emit.
+   */
+  retainModeReactiveOverrides(
+    theme: Theme,
+    context: Context,
+    resolution: SpecificResolution,
+    full: FullResolution,
+    baseTheme?: Theme,
+  ): boolean {
+    const defaults = reduce(full, theme, defaultsReducer(null), baseTheme);
+    const reactive = new Set(
+      Object.keys(context.tokens).filter((token) => token in resolution && resolution[token] !== defaults[token]),
+    );
+    if (reactive.size === 0) {
+      return false;
+    }
+    Object.keys(resolution).forEach((token) => {
+      if (!reactive.has(token)) {
+        delete resolution[token];
+      }
+    });
+    return true;
   }
 
   /**

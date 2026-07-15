@@ -80,11 +80,8 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     MultiThemeCreator.forEachContext(secondary, (context) => {
       const inheritedMode = this.findInheritedModeState(secondary, context);
 
-      const contextResolution = reduce(
-        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
-        secondary,
-        defaultsReducer(inheritedMode),
-      );
+      const full = resolveContext(secondary, context, undefined, undefined, this.propertiesMap);
+      const contextResolution = this.resolveInheritingContext(secondary, context, inheritedMode, full);
 
       // The mode rule (e.g. the `.dark` rule) is the diff parent for the context that inherits it.
       const inheritedModeRule = inheritedMode ? stylesheet.findRule(inheritedMode.selector) : undefined;
@@ -113,7 +110,9 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
       MultiThemeCreator.appendRuleToStylesheet(
         stylesheet,
         contextRuleGlobal,
-        compact([inheritedModeRule, primaryInheritedModeRule, rootRule, parentContextRule, parentRule]),
+        // Same diff-parent order as the descendant form so both produce identical declarations and
+        // merge into a single selector downstream (they target the same element).
+        compact([inheritedModeRule, primaryInheritedModeRule, parentContextRule, rootRule, parentRule]),
       );
 
       // Make the inherited mode values apply to the context by appending the context selector(s)
@@ -125,18 +124,17 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
     });
 
     MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
-      // We skip resolution for context/state pairs that are already handled via mode inheritance.
       const inherited = this.findInheritedModeState(secondary, context);
-      if (inherited && inherited.mode.id === mode.id && inherited.state === state) {
-        return;
-      }
+      const isInheritedCombo = !!inherited && inherited.mode.id === mode.id && inherited.state === state;
 
       const optionalState = mode.states[state] as OptionalState;
-      const contextResolution = reduce(
-        resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
-        secondary,
-        modeReducer(mode, state),
-      );
+      const full = resolveContext(secondary, context, undefined, undefined, this.propertiesMap);
+      const contextResolution = reduce(full, secondary, modeReducer(mode, state));
+
+      // Inherited state is delivered via the join; emit it only for mode-reactive overrides.
+      if (isInheritedCombo && !this.retainModeReactiveOverrides(secondary, context, contextResolution, full)) {
+        return;
+      }
       const contextRule = this.findExpectedRule(stylesheet, {
         global: [secondary.selector],
         local: [context.selector],

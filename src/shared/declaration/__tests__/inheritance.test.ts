@@ -127,8 +127,44 @@ describe('visual context inheritance', () => {
 
     // Primary .ctx carries the --btnBg-css with the primary dark value.
     expect(matchExactRule(css, '.dark,.ctx')).toBe('--btnBg-css:var(--paletteDark-css);');
-    // Secondary .ctx re-declares --btnBg-css with the secondary value so it wins over the primary.
-    expect(matchExactRule(css, '.secondary .ctx,.ctx.secondary')).toBe('--btnBg-css:var(--borderColor-css);');
+    // The secondary's own --btnBg-css is delivered via its shared join (merged across both context
+    // forms), so it wins over the primary value by selector specificity rather than being duplicated
+    // on a per-context standalone rule.
+    const secondaryJoin = matchExactRule(css, '.dark.secondary,.secondary .ctx,.ctx.secondary');
+    expect(secondaryJoin).toContain('--btnBg-css:var(--borderColor-css);');
+    // No per-context standalone rule is emitted for the shared reference.
+    expect(css).not.toMatch(/[\n}]\.secondary \.ctx\{/);
+  });
+
+  test('a non-moded token referencing a moded token is delivered via the join, not per-context', () => {
+    // Mirrors the open-source `colorBackgroundButtonPrimaryDefault = {colorBorderButtonNormalDefault}`:
+    // a mode-invariant reference (NOT in tokenModeMap) pointing at a moded token. The reference must
+    // resolve against the context's dark border, but it needs no per-context rule: it is emitted once
+    // on the shared mode-alias join (aliased to every inheriting context), where it re-resolves in scope.
+    const theme: Theme = {
+      id: 'theme',
+      selector: 'body',
+      tokens: {
+        borderColor: { light: 'lightblue', dark: 'darkblue' },
+        buttonBg: '{borderColor}',
+      },
+      tokenModeMap: { borderColor: 'color' },
+      contexts: {
+        'content-header': { id: 'content-header', selector: '.content-header', inheritsMode: 'dark', tokens: {} },
+      },
+      modes: { color: fixtures.colorMode },
+    };
+    const usedTokens = ['borderColor', 'buttonBg'];
+    const propertiesMap = usedTokens.reduce((acc, t) => ({ ...acc, [t]: `--${t}-css` }), {});
+    const css = createBuildDeclarations(theme, [], propertiesMap, (s) => s, usedTokens);
+
+    // Both the moded border and the token referencing it are delivered element-direct via the join,
+    // so the reference re-resolves against the context's dark border.
+    const join = matchExactRule(css, '.dark,.content-header');
+    expect(join).toContain('--borderColor-css:darkblue;');
+    expect(join).toContain('--buttonBg-css:var(--borderColor-css);');
+    // No per-context standalone rule is emitted for the shared reference.
+    expect(css).not.toMatch(/[\n}]\.content-header\{/);
   });
 
   test('inheritance is ignored if inherited mode state does not exist or is default', () => {

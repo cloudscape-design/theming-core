@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { entries } from '../utils';
 import type Stylesheet from './stylesheet';
-import { Declaration } from './stylesheet';
+import { Declaration, Rule } from './stylesheet';
 import { getFirstSelector, isGlobalSelector } from '../styles/selector';
 import { getReferencedVar } from './utils';
 
@@ -13,79 +13,125 @@ export interface Transformer {
 export class MinimalTransformer implements Transformer {
   transform(stylesheet: Stylesheet): Stylesheet {
     const rules = stylesheet.getAllRules();
-    const rulesWithPath = rules.map((rule) => ({
-      rule,
-      path: stylesheet.getPath(rule),
-    }));
-    const sorted = rulesWithPath.sort(({ path: pathA }, { path: pathB }) => pathA.length - pathB.length);
+    const sorted = rules
+      .map((rule) => ({ rule, path: stylesheet.getPath(rule) }))
+      .sort(({ path: pathA }, { path: pathB }) => pathA.length - pathB.length);
 
-    sorted.forEach(({ rule, path }) => {
-      if (path.length === 0) {
-        // Root rule nothing to see here.
-        return;
-      }
-
-      const resolvedParent: Record<string, string> = {};
+    // Values inherited through the ancestor cascade. `includeModeRules: false` excludes inherited
+    // mode rules, whose values reach an inheriting context element-direct via the alias join rather
+    // than through normal inheritance.
+    const collectParent = (path: Rule[], includeModeRules: boolean): Record<string, string> => {
+      const acc: Record<string, string> = {};
       for (let i = path.length - 1; i >= 0; i--) {
-        const parent = path[i];
-        const declarations = parent.getAllDeclarations();
-        declarations.forEach((decl) => {
-          resolvedParent[decl.property] = decl.value;
+        if (!includeModeRules && path[i].isModeRule()) {
+          continue;
+        }
+        path[i].getAllDeclarations().forEach((decl) => {
+          acc[decl.property] = decl.value;
         });
       }
-      const ruleValue = rule.getAllDeclarations().reduce<Record<string, string>>((acc, decl) => {
+      return acc;
+    };
+    const valuesOf = (rule: Rule): Record<string, string> =>
+      rule.getAllDeclarations().reduce<Record<string, string>>((acc, decl) => {
         acc[decl.property] = decl.value;
         return acc;
       }, {});
-      const diff = difference(resolvedParent, ruleValue);
 
-      // CSS variables with nested var() references need special handling for non-global selectors.
-      // Even if the selector doesn't explicitly show a descendant combinator (like `.navigation`),
-      // it will be a descendant of `body` in the DOM. When a descendant overrides a token,
-      // tokens that reference it must be re-output, otherwise they resolve in the parent context.
-      //
-      // However, for plain mode rules (media query, no context selector) we skip tokens that have
-      // identical values to their parent, even if referenced variables are overridden: these inherit
-      // properly via the natural CSS variable cascade. Context rules (including inheriting context
-      // rules that also carry a media query) are always re-output, hence the explicit isContextRule.
+    // Does the ref chain reach a token this rule overrides relative to its parent? Such a token is
+    // redeclared in this rule's scope, so referencing tokens must be re-emitted here too.
+    const reachesOverride = (
+      varName: string,
+      ruleValue: Record<string, string>,
+      resolvedParent: Record<string, string>,
+      visited = new Set<string>(),
+    ): boolean => {
+      if (visited.has(varName)) return false;
+      visited.add(varName);
+      if (varName in ruleValue && varName in resolvedParent && ruleValue[varName] !== resolvedParent[varName]) {
+        return true;
+      }
+      const ref = varName in ruleValue ? getReferencedVar(ruleValue[varName]) : null;
+      return ref ? reachesOverride(ref, ruleValue, resolvedParent, visited) : false;
+    };
+
+    // Does the ref chain reach a mode-delivered token (differs between the mode-inclusive parent and
+    // the root cascade)? Those reach an inheriting context element-direct via the join.
+    const reachesModeDelivered = (
+      varName: string,
+      ruleValue: Record<string, string>,
+      resolvedParent: Record<string, string>,
+      rootParent: Record<string, string>,
+      visited = new Set<string>(),
+    ): boolean => {
+      if (visited.has(varName)) return false;
+      visited.add(varName);
+      if (varName in resolvedParent && varName in rootParent && resolvedParent[varName] !== rootParent[varName]) {
+        return true;
+      }
+      const ref = varName in ruleValue ? getReferencedVar(ruleValue[varName]) : null;
+      return ref ? reachesModeDelivered(ref, ruleValue, resolvedParent, rootParent, visited) : false;
+    };
+
+    // Pass 1: an inheriting context references non-moded tokens that only depend on mode-delivered
+    // values. Emit each such reference once on the shared mode-alias join (path[0]) - it re-resolves
+    // in every aliased context's scope - instead of duplicating it on each context's standalone rule.
+    // These are recorded as "forced" so pass 2 keeps them on the join (they equal the root value and
+    // would otherwise be deduplicated away).
+    const forcedOnJoin = new Map<Rule, Set<string>>();
+    sorted.forEach(({ rule, path }) => {
+      if (path.length === 0 || !rule.isContextRule()) return;
+      const join = path[0]?.isModeRule() && !path[0]?.isContextRule() ? path[0] : undefined;
+      if (!join) return;
+      const resolvedParent = collectParent(path, true);
+      const rootParent = collectParent(path, false);
+      const ruleValue = valuesOf(rule);
+      Object.keys(ruleValue).forEach((property) => {
+        const referencedVar = getReferencedVar(ruleValue[property]);
+        if (!referencedVar) return;
+        if (reachesOverride(referencedVar, ruleValue, resolvedParent)) return;
+        if (reachesModeDelivered(referencedVar, ruleValue, resolvedParent, rootParent)) {
+          join.appendDeclaration(new Declaration(property, ruleValue[property]));
+          const forced = forcedOnJoin.get(join) ?? new Set<string>();
+          forced.add(property);
+          forcedOnJoin.set(join, forced);
+        }
+      });
+    });
+
+    // Pass 2: minimize each rule against its resolved parent. Joins now carry the routed refs, so an
+    // inheriting context deduplicates them and its standalone rule keeps only its own overrides.
+    sorted.forEach(({ rule, path }) => {
+      if (path.length === 0) {
+        return;
+      }
+
+      const resolvedParent = collectParent(path, true);
+      const rootParent = collectParent(path, false);
+      const ruleValue = valuesOf(rule);
+      const diff = difference(resolvedParent, ruleValue);
 
       const firstSelector = getFirstSelector(rule.selector);
       const isModeRule = rule.isModeRule();
       const isContextRule = rule.isContextRule();
 
-      if (isGlobalSelector(firstSelector)) {
-        rule.clear();
-        entries(diff).forEach(([property, value]) => rule.appendDeclaration(new Declaration(property, value)));
-        if (rule.size() === 0) {
-          stylesheet.removeRule(rule);
-        }
-        return;
+      if (!isGlobalSelector(firstSelector)) {
+        Object.keys(ruleValue).forEach((property) => {
+          const referencedVar = getReferencedVar(ruleValue[property]);
+          if (!referencedVar || !reachesOverride(referencedVar, ruleValue, resolvedParent)) return;
+          // Plain mode rules can rely on the natural cascade when the value equals the parent's;
+          // context rules must resolve in their own DOM scope.
+          const canInherit = isModeRule && !isContextRule && ruleValue[property] === resolvedParent[property];
+          if (!canInherit && !(property in diff)) {
+            diff[property] = ruleValue[property];
+          }
+        });
       }
 
-      const isOverridden = (varName: string, visited = new Set<string>()): boolean => {
-        if (visited.has(varName)) return false;
-        visited.add(varName);
-
-        const isDirectlyOverridden =
-          varName in ruleValue && varName in resolvedParent && ruleValue[varName] !== resolvedParent[varName];
-
-        if (isDirectlyOverridden) return true;
-
-        const referencedVar = varName in ruleValue ? getReferencedVar(ruleValue[varName]) : null;
-        return referencedVar ? isOverridden(referencedVar, visited) : false;
-      };
-
-      Object.keys(ruleValue).forEach((property) => {
-        const referencedVar = getReferencedVar(ruleValue[property]);
-        if (!referencedVar || !isOverridden(referencedVar)) return;
-        // This decides whether a token that references an overridden var
-        // can be left out and resolved via the natural CSS variable cascade.
-        // - Plain mode rules: yes - identical values inherit fine, so skip re-emitting.
-        // - Context rules: no - a context rule must resolve in the context's own DOM scope.
-        const canInherit = isModeRule && !isContextRule && ruleValue[property] === resolvedParent[property];
-        if (canInherit) return;
-
-        if (!(property in diff)) {
+      // Keep refs routed onto this join in pass 1 (they equal the root value, so difference() drops
+      // them, but the aliased inheriting contexts depend on them being present here).
+      forcedOnJoin.get(rule)?.forEach((property) => {
+        if (property in ruleValue) {
           diff[property] = ruleValue[property];
         }
       });

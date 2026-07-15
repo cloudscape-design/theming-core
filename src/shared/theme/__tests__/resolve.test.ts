@@ -110,7 +110,7 @@ describe('resolveContext', () => {
     expect(result.color).toBe('blue');
   });
 
-  test('collects reference tokens when resolving context with defaultMode', () => {
+  test('resolves a context that references tokens without mutating the caller context', () => {
     const theme: Theme = {
       id: 'test',
       selector: ':root',
@@ -137,10 +137,17 @@ describe('resolveContext', () => {
       defaultMode: 'light',
     };
 
-    resolveContext(theme, context);
+    const result = resolveContext(theme, context);
 
-    expect(context.tokens.colorPrimary500).toBe('#0073bb');
+    // resolveContext must NOT mutate the caller's context: it appends reference/dependent tokens
+    // to an internal copy only. The context keeps exactly the tokens it authored.
+    expect(Object.keys(context.tokens)).toEqual(['buttonBackground']);
     expect(context.tokens.buttonBackground).toBe('{colorNeutral500}');
+
+    // The context override is still applied and the reference token is still pinned to the
+    // inherited ('light') state in the output.
+    expect(result.buttonBackground).toBe('#888888');
+    expect(result.colorPrimary500).toEqual({ light: '#0073bb', dark: '#0073bb' });
   });
 });
 
@@ -214,5 +221,43 @@ describe('inheritsMode value seeding', () => {
     expect(resolved.spaceScaled).toBe('4px');
     expect(resolved.textColor).toBe('black');
     expect(resolved.bgColor).toBe('white');
+  });
+
+  test('a non-color-inheriting context does not crash on color reference mode-values reached without a state', () => {
+    // Regression for the AWS-UI-Components build failure. A density (`compact`)
+    // inheriting context runs resolveModeReferenceTokens, whose internal path
+    // analysis runs without a propertiesMap and therefore recurses into raw token
+    // values. `colorTextError` is a mode-invariant reference to `colorError300`, a
+    // color mode-value that is NOT registered in tokenModeMap (it's a generated
+    // palette step, not a declared mode token). Without a propertiesMap the
+    // reference is not short-circuited to var(), so resolution reaches
+    // `colorError300` without a mode state and previously threw "does not have any
+    // mode value". getAssignment now infers the owning mode from the value's keys.
+    const paletteTheme: Theme = {
+      id: 'palette',
+      selector: 'body',
+      tokens: {
+        // A color mode-value that is intentionally absent from tokenModeMap.
+        colorError300: { light: '#ff9e9e', dark: '#ff9e9e' },
+        // A non-moded semantic token that references it.
+        colorTextError: '{colorError300}',
+        spaceScaled: { comfortable: '20px', compact: '4px' },
+      },
+      tokenModeMap: { spaceScaled: 'density' },
+      referenceTokens: { color: { error: { 300: { light: '#ff9e9e', dark: '#ff9e9e' } } } },
+      contexts: {},
+      modes: { color: colorMode, density: densityMode },
+    };
+    const context: Context = { id: 'ct', selector: '.ct', tokens: {}, inheritsMode: 'compact' };
+
+    // The real build passes a propertiesMap (so the final resolveTheme short-circuits
+    // references to var()). The crash is isolated to resolveModeReferenceTokens, whose
+    // internal path analysis runs without a propertiesMap.
+    const propertiesMap = {
+      colorError300: '--colorError300',
+      colorTextError: '--colorTextError',
+      spaceScaled: '--spaceScaled',
+    };
+    expect(() => resolveContext(paletteTheme, context, undefined, undefined, propertiesMap)).not.toThrow();
   });
 });
