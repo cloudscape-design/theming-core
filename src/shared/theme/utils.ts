@@ -1,7 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { InheritedModeState } from '../declaration/interfaces';
-import { Assignment, Context, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces';
+import { Assignment, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces';
 import { Value, Reference, ModeValue, Mode } from './interfaces';
 
 export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, token: string): boolean {
@@ -128,20 +127,9 @@ export function collectReferencedTokens(theme: Theme, tokens: string[]): string[
   return Array.from(referenced);
 }
 
-export function getThemeMode(theme: Theme, token: string): Mode | null {
+export function getMode(theme: Theme, token: string): Mode | null {
   const modeId = theme.tokenModeMap[token];
   return theme.modes[modeId] ?? null;
-}
-
-export function getThemeModeByState(theme: Theme, stateId: string): null | Mode {
-  return Object.values(theme.modes).find((mode) => mode.states[stateId]) ?? null;
-}
-
-export function getModeState(mode: Mode, inherited: null | InheritedModeState) {
-  if (inherited && inherited.mode.id === mode.id) {
-    return inherited.state;
-  }
-  return getDefaultState(mode);
 }
 
 export function getDefaultState(mode: Mode): string {
@@ -154,10 +142,6 @@ export function getDefaultState(mode: Mode): string {
     }
   }
   throw new Error(`Mode ${JSON.stringify(mode)} does not have a default state`);
-}
-
-export function getInheritedState(context: Context): null | string {
-  return context.inheritsMode ?? context.defaultMode ?? null;
 }
 
 export function isValidPaletteStep(step: number): boolean {

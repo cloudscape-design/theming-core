@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from 'path';
 import { ThemePreset } from '../../shared/theme';
-import { getThemeMode } from '../../shared/theme/utils';
+import { getMode } from '../../shared/theme/utils';
 import { getContexts } from '../../shared/theme/validate';
 import { writeFile } from '../file';
 
@@ -44,7 +44,7 @@ export declare const preset: ThemePreset;
 
 function renderTypedOverrideInterface(preset: ThemePreset): string {
   const tokens = preset.themeable.map((token) => {
-    const mode = getThemeMode(preset.theme, token);
+    const mode = getMode(preset.theme, token);
     if (mode) {
       const states = Object.keys(mode.states);
       return `${token}?: GlobalValue | TypedModeValueOverride<${states.map((state) => `'${state}'`).join(' | ')}>`;

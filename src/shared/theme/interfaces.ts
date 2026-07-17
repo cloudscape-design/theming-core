@@ -26,22 +26,6 @@ export interface Context {
   id: string;
   selector: string;
   tokens: Record<string, Assignment>;
-  /**
-   * Declares that this context inherits the values of a non-default mode state
-   * (e.g. `dark` of the color mode or `compact` of the density mode).
-   *
-   * When set, the generated CSS joins the context selector onto the inherited
-   * mode state's rule (so the inherited values are shared, not duplicated) and
-   * the standalone context rule only declares the tokens that differ from the
-   * inherited mode. The context also respects the inherited mode state's media
-   * query (e.g. a `dark`-inheriting context reverts to the default mode in
-   * `@media print`).
-   */
-  inheritsMode?: keyof Mode['states'];
-  /**
-   * @deprecated Use {@link Context.inheritsMode} instead. Retained as an alias
-   * for backwards compatibility; `inheritsMode` takes precedence when both are set.
-   */
   defaultMode?: keyof Mode['states'];
   /** If set, this context is excluded from base-component styles and output to this path instead. */
   destination?: string;
