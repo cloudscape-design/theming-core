@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { Theme, Override, Assignment } from './interfaces';
 import { cloneDeep, entries } from '../utils';
-import { getThemeMode, isModeValue, isReference, isValue } from './utils';
+import { getMode, isModeValue, isReference, isValue } from './utils';
 
 /**
  * This function applies all tokens from the override to the theme.
@@ -15,7 +15,7 @@ export function mergeInPlace(theme: Theme, override: Override): Theme {
     update: (typeof override.tokens)[string],
   ): Assignment | undefined {
     const isGlobal = isValue(update) || isReference(update);
-    const mode = getThemeMode(theme, token);
+    const mode = getMode(theme, token);
 
     if (mode && isGlobal) {
       return Object.keys(mode.states).reduce(

@@ -10,7 +10,6 @@ export interface SelectorConfig {
   global: string[];
   local?: string[];
   media?: string;
-  isContext?: boolean;
 }
 export class RuleCreator {
   selector: Selector;
@@ -22,7 +21,7 @@ export class RuleCreator {
   }
 
   create(config: SelectorConfig, resolution: SpecificResolution): Rule {
-    const rule = new Rule(this.selectorFor(config), config.media, config.isContext);
+    const rule = new Rule(this.selectorFor(config), config.media);
     entries(resolution).forEach(([token, value]) => {
       const property = this.registry.get(token);
       if (property) {

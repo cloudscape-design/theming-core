@@ -83,7 +83,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const neededTokens = findNeededTokens(scssDir, variablesMap, exposed);
 
   const resolution = resolveTheme(primary);
-  const defaults = reduce(resolution, primary, defaultsReducer(null));
+  const defaults = reduce(resolution, primary, defaultsReducer());
 
   const propertiesMap = calculatePropertiesMap([primary, ...secondary], variablesMap, tokenVersions);
   const styleTask = buildStyles(
