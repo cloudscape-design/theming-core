@@ -9,7 +9,6 @@ export default class Stylesheet {
   rulesMap: Map<string, [Rule, number]> = new Map();
   paths: Map<Rule, Rule[]> = new Map();
   counter = 0;
-  inheritedAliases: Array<{ aliasSelector: string; rule: Rule }> = [];
 
   appendRule(rule: Rule) {
     this.rulesMap.set(rule.selector, [rule, this.counter++]);
@@ -53,58 +52,6 @@ export default class Stylesheet {
   }
 
   /**
-   * Records that an inheriting context's selector should be appended (as a comma alias)
-   * onto an inherited mode state's rule. Applied as a final step by the transformer,
-   * after all rule lookups are done, so it never interferes with `findRule`.
-   */
-  registerInheritedAlias(aliasSelector: string, rule: Rule) {
-    this.inheritedAliases.push({ aliasSelector, rule });
-  }
-
-  /**
-   * Appends each inheriting context's selector as a comma alias onto its inherited
-   * mode state's rule. This makes the inherited mode values apply to the context
-   * (e.g. `.dark-mode, .top-navigation { ... }`) without duplicating them, while
-   * the context's standalone rule keeps only the tokens that differ from the mode.
-   */
-  applyInheritedAliases() {
-    const present = new Set(this.getAllRules());
-    this.inheritedAliases.forEach(({ aliasSelector, rule }) => {
-      if (!present.has(rule)) {
-        return;
-      }
-      rule.selector = `${rule.selector},${aliasSelector}`;
-    });
-  }
-
-  /**
-   * Merges adjacent rules with identical declarations into a single comma-separated selector.
-   *
-   * For example:
-   * .a { --color-background: red; }
-   * .b { --color-background: red; }
-   *
-   * becomes:
-   * .a,
-   * .b { --color-background: red; }
-   */
-  mergeSelectors() {
-    const rules = this.getAllRules();
-    let i = 1;
-    while (i < rules.length) {
-      const prev = rules[i - 1];
-      const curr = rules[i];
-      if (prev.media === curr.media && prev.printAllDeclarations() === curr.printAllDeclarations()) {
-        prev.selector = `${prev.selector},${curr.selector}`;
-        this.removeRule(curr);
-        rules.splice(i, 1);
-      } else {
-        i++;
-      }
-    }
-  }
-
-  /**
    * @returns CSS
    */
   toString(layer?: string): string {
@@ -116,19 +63,12 @@ export default class Stylesheet {
 export class Rule {
   selector: string;
   media?: string;
-  /**
-   * Whether this rule targets a visual context (a local/context selector). Used by the transformer to decide
-   * how referenced custom properties should be re-emitted: context rules always re-output overridden references
-   * (so they resolve in the context's DOM scope), whereas plain mode rules may rely on the natural cascade.
-   */
-  isContext: boolean;
   declarationsMap: Map<string, [Declaration, number]> = new Map();
   counter = 0;
 
-  constructor(selector: string, media?: string, isContext = false) {
+  constructor(selector: string, media?: string) {
     this.selector = selector;
     this.media = media;
-    this.isContext = isContext;
   }
 
   appendDeclaration(declaration: Declaration) {
@@ -164,10 +104,6 @@ export class Rule {
 
   isModeRule(): boolean {
     return !!this.media;
-  }
-
-  isContextRule(): boolean {
-    return this.isContext;
   }
 }
 

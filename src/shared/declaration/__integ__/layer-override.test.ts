@@ -23,7 +23,7 @@ import { preset as inputPreset } from '../../../build/__tests__/__fixtures__/tem
 const propertiesMap = calculatePropertiesMap([inputPreset.theme], inputPreset.variablesMap);
 const preset: ThemePreset = { ...inputPreset, propertiesMap };
 
-const resolution = reduce(resolveTheme(preset.theme), preset.theme, defaultsReducer(null));
+const resolution = reduce(resolveTheme(preset.theme), preset.theme, defaultsReducer());
 const allTokens = Object.keys(preset.theme.tokens);
 
 // getInlineStylesheets produces CSS with :global() wrappers (CSS modules syntax).
