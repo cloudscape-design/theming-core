@@ -130,7 +130,6 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     primary,
     secondary,
     propertiesMap,
-    (selector) => selector,
     neededTokens,
     componentsOutputDir,
   );

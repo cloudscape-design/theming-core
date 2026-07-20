@@ -130,7 +130,6 @@ export function createStandaloneContextDeclarations(
   primary: Theme,
   secondary: Theme[],
   propertiesMap: PropertiesMap,
-  selectorCustomizer: SelectorCustomizer,
   used: string[],
 ): Record<string, string> {
   const themes = [primary, ...secondary];
@@ -158,13 +157,16 @@ export function createStandaloneContextDeclarations(
         return { ...theme, contexts: { [contextId]: context } } as Theme;
       });
 
-    if (contextThemes.length === 0) return;
+    if (contextThemes.length === 0) {
+      return;
+    }
 
-    const stylesheet = buildStylesheet(contextThemes, propertiesMap, selectorCustomizer, usedTokens);
+    const stylesheet = buildStylesheet(contextThemes, propertiesMap, (selector) => selector, usedTokens);
     const transformed = new MinimalTransformer().transform(stylesheet);
     transformed.retainRulesMatching(contextThemes[0].contexts[contextId].selector);
 
-    const css = transformed.toString();
+    // Standalone contexts must be wrapped with the same layer as base theme.
+    const css = transformed.toString('awsui-base-theme');
     if (css.trim()) {
       result[destination] = css;
     }

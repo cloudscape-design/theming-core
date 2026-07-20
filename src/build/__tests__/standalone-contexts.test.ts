@@ -44,25 +44,20 @@ describe('standalone visual contexts', () => {
   });
 
   test('standalone context is generated separately', () => {
-    const result = createStandaloneContextDeclarations(
-      themeWithStandaloneContext,
-      [],
-      propertiesMap,
-      identity,
-      allTokens,
-    );
+    const result = createStandaloneContextDeclarations(themeWithStandaloneContext, [], propertiesMap, allTokens);
     expect(result['visual-contexts/nav-bar-dark.css']).toBeDefined();
     expect(result['visual-contexts/nav-bar-dark.css']).toContain('.awsui-context-nav-bar-dark');
   });
 
+  test('standalone context CSS is wrapped in the awsui-base-theme cascade layer', () => {
+    const result = createStandaloneContextDeclarations(themeWithStandaloneContext, [], propertiesMap, allTokens);
+    const css = result['visual-contexts/nav-bar-dark.css'];
+    expect(css.trimStart()).toMatch(/^@layer awsui-base-theme \{/);
+    expect(css.trimEnd()).toMatch(/\}$/);
+  });
+
   test('standalone context CSS contains only context-specific rules', () => {
-    const result = createStandaloneContextDeclarations(
-      themeWithStandaloneContext,
-      [],
-      propertiesMap,
-      identity,
-      allTokens,
-    );
+    const result = createStandaloneContextDeclarations(themeWithStandaloneContext, [], propertiesMap, allTokens);
     const css = result['visual-contexts/nav-bar-dark.css'];
     // Every rule should reference the context selector
     const ruleLines = css.split('\n').filter((l) => l.includes('{') && !l.includes('@'));
@@ -72,7 +67,7 @@ describe('standalone visual contexts', () => {
   });
 
   test('returns empty map when no standalone contexts exist', () => {
-    const result = createStandaloneContextDeclarations(rootTheme, [], propertiesMap, identity, allTokens);
+    const result = createStandaloneContextDeclarations(rootTheme, [], propertiesMap, allTokens);
     expect(Object.keys(result)).toHaveLength(0);
   });
 
@@ -82,18 +77,16 @@ describe('standalone visual contexts', () => {
   });
 
   test('standalone context CSS receives PostCSS processing (specificity increase)', async () => {
-    const result = createStandaloneContextDeclarations(
-      themeWithStandaloneContext,
-      [],
-      propertiesMap,
-      identity,
-      allTokens,
-    );
+    const result = createStandaloneContextDeclarations(themeWithStandaloneContext, [], propertiesMap, allTokens);
     const rawCss = result['visual-contexts/nav-bar-dark.css'];
     const processed = await postCSSAfterAll(rawCss, 'visual-contexts/nav-bar-dark.css');
     // PostCSS should add :not(#\9) specificity increase to context selectors
     expect(processed.css).toContain('.awsui-context-nav-bar-dark:not(#\\9)');
     // Original raw CSS should NOT have the specificity increase
     expect(rawCss).not.toContain(':not(#\\9)');
+    // The context selector must remain a literal global class: not run through the CSS-modules
+    // transform (no hashed/scoped rename).
+    expect(processed.css).not.toContain(':global(');
+    expect(rawCss).not.toContain(':global(');
   });
 });
