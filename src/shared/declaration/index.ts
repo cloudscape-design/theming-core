@@ -141,9 +141,14 @@ export function createStandaloneContextDeclarations(
   for (const theme of themes) {
     Object.keys(theme.contexts).forEach((id) => {
       const context = theme.contexts[id];
-      if (context.destination && !(id in standaloneContexts)) {
-        standaloneContexts[id] = context.destination;
+      if (!context.destination) {
+        return;
       }
+      const existing = standaloneContexts[id];
+      if (existing !== undefined && existing !== context.destination) {
+        throw new Error(`Context "${id}" destinations do not match: "${existing}", "${context.destination}".`);
+      }
+      standaloneContexts[id] = context.destination;
     });
   }
 
@@ -156,10 +161,6 @@ export function createStandaloneContextDeclarations(
         const context = { ...theme.contexts[contextId], destination: undefined };
         return { ...theme, contexts: { [contextId]: context } } as Theme;
       });
-
-    if (contextThemes.length === 0) {
-      return;
-    }
 
     const stylesheet = buildStylesheet(contextThemes, propertiesMap, (selector) => selector, usedTokens);
     const transformed = new MinimalTransformer().transform(stylesheet);
