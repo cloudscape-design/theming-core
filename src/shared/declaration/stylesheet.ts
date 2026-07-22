@@ -32,6 +32,16 @@ export default class Stylesheet {
     this.paths.delete(rule);
   }
 
+  retainRulesMatching(selector: string) {
+    // Callers generate one context per stylesheet, so a simple containment check is enough to keep
+    // the context's rules and drop the leftover base/mode rules.
+    for (const rule of this.getAllRules()) {
+      if (!rule.selector.includes(selector)) {
+        this.removeRule(rule);
+      }
+    }
+  }
+
   findRule(selector: string): Rule | undefined {
     const ruleOrUndefined = this.rulesMap.get(selector);
     return ruleOrUndefined?.[0];

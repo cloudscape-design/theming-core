@@ -9,6 +9,7 @@ import { MultiThemeCreator } from './multi';
 import { Selector } from './selector';
 import { UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
+import type Stylesheet from './stylesheet';
 import { cloneDeep, values } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
@@ -66,6 +67,24 @@ function addMissingTokensToTheme(theme: Theme, tokens: string[], sourceTheme: Th
   });
 }
 
+function resolveUsedTokens(themes: Theme[], used: string[]): string[] {
+  const { referenceTokens, referencedTokens } = collectAllRequiredTokens(themes, used);
+  return [...used, ...referenceTokens, ...referencedTokens];
+}
+
+function buildStylesheet(
+  themes: Theme[],
+  propertiesMap: PropertiesMap,
+  selectorCustomizer: SelectorCustomizer,
+  usedTokens: string[],
+): Stylesheet {
+  const ruleCreator = new RuleCreator(
+    new Selector(selectorCustomizer),
+    new UsedPropertyRegistry(propertiesMap, usedTokens),
+  );
+  return new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
+}
+
 export function createOverrideDeclarations(
   base: Theme,
   override: Override,
@@ -97,13 +116,68 @@ export function createBuildDeclarations(
   used: string[],
 ): string {
   const themes = [primary, ...secondary];
-  const { referenceTokens, referencedTokens } = collectAllRequiredTokens(themes, used);
-  const usedTokens = [...used, ...referenceTokens, ...referencedTokens];
+  const usedTokens = resolveUsedTokens(themes, used);
 
-  const ruleCreator = new RuleCreator(
-    new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, usedTokens),
-  );
-  const stylesheet = new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
+  const stylesheet = buildStylesheet(themes, propertiesMap, selectorCustomizer, usedTokens);
   return new MinimalTransformer().transform(stylesheet).toString('awsui-base-theme');
+}
+
+/**
+ * Generates CSS declarations for standalone visual contexts (those with a `destination` set).
+ * Returns a map of destination path → CSS string.
+ */
+export function createStandaloneContextDeclarations(
+  primary: Theme,
+  secondary: Theme[],
+  propertiesMap: PropertiesMap,
+  used: string[],
+): Record<string, string> {
+  const themes = [primary, ...secondary];
+  const usedTokens = resolveUsedTokens(themes, used);
+  const result: Record<string, string> = {};
+
+  // Collect all standalone contexts across themes
+  const standaloneContexts: Record<string, string> = {};
+  const destinationOwners: Record<string, string> = {};
+  for (const theme of themes) {
+    Object.keys(theme.contexts).forEach((id) => {
+      const context = theme.contexts[id];
+      if (!context.destination) {
+        return;
+      }
+      const existing = standaloneContexts[id];
+      if (existing !== undefined && existing !== context.destination) {
+        throw new Error(`Context "${id}" destinations do not match: "${existing}", "${context.destination}".`);
+      }
+      const owner = destinationOwners[context.destination];
+      if (owner !== undefined && owner !== id) {
+        throw new Error(`Contexts "${owner}" and "${id}" share the destination "${context.destination}".`);
+      }
+      standaloneContexts[id] = context.destination;
+      destinationOwners[context.destination] = id;
+    });
+  }
+
+  Object.keys(standaloneContexts).forEach((contextId) => {
+    const destination = standaloneContexts[contextId];
+    // Create a temporary theme per standalone context (with only this context, destination removed)
+    const contextThemes = themes
+      .filter((theme) => theme.contexts[contextId])
+      .map((theme) => {
+        const context = { ...theme.contexts[contextId], destination: undefined };
+        return { ...theme, contexts: { [contextId]: context } } as Theme;
+      });
+
+    const stylesheet = buildStylesheet(contextThemes, propertiesMap, (selector) => selector, usedTokens);
+    const transformed = new MinimalTransformer().transform(stylesheet);
+    transformed.retainRulesMatching(contextThemes[0].contexts[contextId].selector);
+
+    // Standalone contexts must be wrapped with the same layer as base theme.
+    const css = transformed.toString('awsui-base-theme');
+    if (css.trim()) {
+      result[destination] = css;
+    }
+  });
+
+  return result;
 }
