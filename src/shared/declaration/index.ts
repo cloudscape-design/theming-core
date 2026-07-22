@@ -138,6 +138,7 @@ export function createStandaloneContextDeclarations(
 
   // Collect all standalone contexts across themes
   const standaloneContexts: Record<string, string> = {};
+  const destinationOwners: Record<string, string> = {};
   for (const theme of themes) {
     Object.keys(theme.contexts).forEach((id) => {
       const context = theme.contexts[id];
@@ -148,7 +149,12 @@ export function createStandaloneContextDeclarations(
       if (existing !== undefined && existing !== context.destination) {
         throw new Error(`Context "${id}" destinations do not match: "${existing}", "${context.destination}".`);
       }
+      const owner = destinationOwners[context.destination];
+      if (owner !== undefined && owner !== id) {
+        throw new Error(`Contexts "${owner}" and "${id}" share the destination "${context.destination}".`);
+      }
       standaloneContexts[id] = context.destination;
+      destinationOwners[context.destination] = id;
     });
   }
 

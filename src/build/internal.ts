@@ -15,7 +15,7 @@ export { buildStyles, InlineStylesheet, BuildStylesOptions };
 export type Tasks = 'preset' | 'design-tokens';
 
 function stripStandaloneContexts(theme: Theme): Theme {
-  const contexts = Object.fromEntries(Object.entries(theme.contexts).filter(([_, ctx]) => !ctx.destination));
+  const contexts = Object.fromEntries(Object.entries(theme.contexts).filter(([_, context]) => !context.destination));
   return { ...theme, contexts };
 }
 

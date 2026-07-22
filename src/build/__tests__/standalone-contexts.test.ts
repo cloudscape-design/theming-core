@@ -142,6 +142,19 @@ describe('standalone visual contexts', () => {
     );
   });
 
+  test('throws when two different contexts declare the same destination', () => {
+    const theme: Theme = {
+      ...rootTheme,
+      contexts: {
+        x1: { id: 'x1', selector: '.x1', destination: 'x.css', tokens: { boxShadow: 'red' } },
+        x2: { id: 'x2', selector: '.x2', destination: 'x.css', defaultMode: 'dark', tokens: { boxShadow: 'red' } },
+      },
+    };
+    expect(() => createStandaloneContextDeclarations(theme, [], propertiesMap, allTokens)).toThrow(
+      /share the destination/,
+    );
+  });
+
   test('createStandaloneContextFiles writes context to its destination path', async () => {
     const outputDir = join(outputRoot, 'writes');
     await createStandaloneContextFiles(themeWithStandaloneContext, [], propertiesMap, allTokens, outputDir);
