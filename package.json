@@ -52,7 +52,7 @@
     "loader-utils": "^3.2.1",
     "lodash": "^4.17.21",
     "merge": "^2.1.1",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.23",
     "postcss-discard-empty": "^6.0.0",
     "postcss-inline-svg": "^6.0.0",
     "postcss-modules": "^6.0.0",
