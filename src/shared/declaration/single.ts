@@ -9,13 +9,13 @@ import {
   resolveContext,
   resolveTheme,
   Theme,
-} from '../theme';
-import type { PropertiesMap } from './interfaces';
-import Stylesheet from './stylesheet';
-import { AbstractCreator } from './abstract';
-import type { StylesheetCreator } from './interfaces';
-import type { RuleCreator } from './rule';
-import { compact } from './utils';
+} from '../theme/index.js';
+import type { PropertiesMap } from './interfaces.js';
+import Stylesheet from './stylesheet.js';
+import { AbstractCreator } from './abstract.js';
+import type { StylesheetCreator } from './interfaces.js';
+import type { RuleCreator } from './rule.js';
+import { compact } from './utils.js';
 
 export class SingleThemeCreator extends AbstractCreator implements StylesheetCreator {
   theme: Theme;

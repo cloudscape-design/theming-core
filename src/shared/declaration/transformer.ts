@@ -1,10 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { entries } from '../utils';
-import type Stylesheet from './stylesheet';
-import { Declaration } from './stylesheet';
-import { getFirstSelector, isGlobalSelector } from '../styles/selector';
-import { getReferencedVar } from './utils';
+import { entries } from '../utils.js';
+import type Stylesheet from './stylesheet.js';
+import { Declaration } from './stylesheet.js';
+import { getFirstSelector, isGlobalSelector } from '../styles/selector.js';
+import { getReferencedVar } from './utils.js';
 
 export interface Transformer {
   transform(stylesheet: Stylesheet): Stylesheet;

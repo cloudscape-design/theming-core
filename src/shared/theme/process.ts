@@ -1,14 +1,14 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { generatePaletteFromSeed } from './color-generation/palette-generator';
+import { generatePaletteFromSeed } from './color-generation/palette-generator.js';
 import {
   ColorReferenceTokens,
   ColorPaletteInput,
   PaletteStep,
   ReferencePaletteDefinition,
   Assignment,
-} from './interfaces';
-import { generateReferenceTokenName, isValidPaletteStep } from './utils';
+} from './interfaces.js';
+import { generateReferenceTokenName, isValidPaletteStep } from './utils.js';
 
 export type TokenCategory<T extends string, V> = Record<T, V>;
 
