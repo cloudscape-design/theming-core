@@ -6,6 +6,8 @@ import { postCSSForEach, postCSSAfterAll, scopedFileExt } from './postcss';
 import path from 'path';
 import fs from 'fs';
 import { pathToFileURL } from 'url';
+import { writeFile } from '../file';
+import { getEmptyStylesheet, StylesheetImport } from '../stylesheet-import';
 
 export interface InlineStylesheet {
   url: string;
@@ -14,6 +16,11 @@ export interface InlineStylesheet {
 
 export interface BuildStylesOptions {
   failOnDeprecations?: boolean;
+  /**
+   * How the emitted class-name modules reference their stylesheet. Defaults to `'relative'`, which
+   * only a bundler can resolve. See {@link StylesheetImport}.
+   */
+  stylesheetImport?: StylesheetImport;
 }
 
 export async function buildStyles(
@@ -26,6 +33,10 @@ export async function buildStyles(
   const compiler = createCompiler(inlines, outputDir, sassDir, options);
 
   const promises = files.map((file) => compiler(file));
+  if (options.stylesheetImport === 'subpath') {
+    const { path: emptyStylesheetPath, contents } = getEmptyStylesheet();
+    promises.push(writeFile(path.join(outputDir, emptyStylesheetPath), contents));
+  }
 
   await Promise.all(promises);
 }
@@ -90,7 +101,13 @@ function createCompiler(inlines: InlineStylesheet[], outputDir: string, sassDir:
       throw new Error('Unexpected deprecation warnings during sass build.');
     }
     const intermediate = path.join(sassDir, rename(file, '.css'));
-    const postCSSForEachResult = await postCSSForEach(sassDir, outputDir, sassResult.css, intermediate);
+    const postCSSForEachResult = await postCSSForEach(
+      sassDir,
+      outputDir,
+      sassResult.css,
+      intermediate,
+      options.stylesheetImport,
+    );
     const postCSSAfterAllResult = await postCSSAfterAll(postCSSForEachResult.css, intermediate);
 
     const output = path.join(outputDir, rename(file, scopedFileExt));
