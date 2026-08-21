@@ -74,5 +74,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.0"
+  },
+  "overrides": {
+    "@puppeteer/browsers": "^3.2.0",
+    "deepmerge-ts": "8.0.1"
   }
 }
