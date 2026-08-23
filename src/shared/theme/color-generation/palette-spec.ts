@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ReferencePaletteDefinition } from '../interfaces';
-import { createHct, Hct, hctToHex, hexToHct } from './hct-utils';
+import { ReferencePaletteDefinition } from '../interfaces.js';
+import { createHct, Hct, hctToHex, hexToHct } from './hct-utils.js';
 
 interface ColorSpecification<PaletteKeys> {
   position: PaletteKeys;

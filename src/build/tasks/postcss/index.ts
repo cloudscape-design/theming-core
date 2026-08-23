@@ -10,6 +10,7 @@ import postCSSModules from 'postcss-modules';
 import postCSSIncreaseSpecificity from './increase-specifity';
 import { createRelativeScopedNameFunction } from './generate-scoped-name';
 import { writeCssModule } from './write-css-modules';
+import { StylesheetImport } from '../../stylesheet-import';
 
 export const scopedFileExt = '.scoped.css';
 
@@ -31,14 +32,20 @@ export const postCSSAfterAll = (input: string, filename: string) => {
   ]).process(input, { from: filename });
 };
 
-export const postCSSForEach = (sourceDir: string, outputDir: string, input: string, filename: string) => {
+export const postCSSForEach = (
+  sourceDir: string,
+  outputDir: string,
+  input: string,
+  filename: string,
+  stylesheetImport: StylesheetImport = 'relative',
+) => {
   return postcss([
     // inline local svg before creating module
     postCSSInlineSVG(),
     postCSSModules({
       generateScopedName: createRelativeScopedNameFunction(sourceDir),
       getJSON(cssFileName: string, json: Record<string, string>) {
-        writeCssModule(path.relative(sourceDir, cssFileName), outputDir, scopedFileExt, json);
+        writeCssModule(path.relative(sourceDir, cssFileName), outputDir, scopedFileExt, json, stylesheetImport);
       },
     }),
   ]).process(input, { from: filename });
