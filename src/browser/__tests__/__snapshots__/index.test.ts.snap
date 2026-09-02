@@ -149,6 +149,93 @@ exports[`generateThemeStylesheet > with secondary theme > creates override style
 }}"
 `;
 
+exports[`generateThemeStylesheet > without override > creates full theme styles 1`] = `
+"body{
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:grey;
+	--lineShadow-css:grey;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact:not(#\\9){
+	--scaledSize-css:1px;
+}
+@media not print {.dark:not(#\\9){
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:brown;
+	--lineShadow-css:brown;
+}}
+.disabled-motion:not(#\\9){
+	--appear-css:0;
+}
+.navigation:not(#\\9){
+	--shadow-css:black;
+	--buttonShadow-css:black;
+	--boxShadow-css:purple;
+	--lineShadow-css:black;
+}
+@media not print {.dark .navigation:not(#\\9),.dark.navigation:not(#\\9){
+	--shadow-css:brown;
+	--buttonShadow-css:brown;
+	--lineShadow-css:purple;
+}}"
+`;
+
+exports[`generateThemeStylesheet > without override > creates full theme styles with secondary theme 1`] = `
+".secondary-theme:not(#\\9){
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:"Helvetica Neue", Arial, sans-serif;
+	--black-css:purple;
+	--grey-css:grey;
+	--brown-css:black;
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:grey;
+	--lineShadow-css:grey;
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:3px;
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:2px 3px orange, -1px 0 8px olive;
+}
+.compact.secondary-theme:not(#\\9){
+	--scaledSize-css:1px;
+}
+@media not print {.dark.secondary-theme:not(#\\9){
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}}
+.disabled-motion.secondary-theme:not(#\\9){
+	--appear-css:0;
+}
+.secondary-theme .navigation:not(#\\9),.navigation.secondary-theme:not(#\\9){
+	--shadow-css:purple;
+	--buttonShadow-css:purple;
+	--boxShadow-css:purple;
+	--lineShadow-css:purple;
+}
+@media not print {.dark.secondary-theme .navigation:not(#\\9),.dark.navigation.secondary-theme:not(#\\9){
+	--shadow-css:grey;
+	--buttonShadow-css:grey;
+	--boxShadow-css:black;
+	--lineShadow-css:black;
+}}"
+`;
+
 exports[`generateThemeStylesheet > without secondary theme > creates override styles 1`] = `
 "body:not(#\\9){
 	--black-css:black;

@@ -212,6 +212,26 @@ describe('generateThemeStylesheet', () => {
     });
   });
 
+  describe('without override', () => {
+    test('creates full theme styles', () => {
+      const styles = generateThemeStylesheet({ preset });
+
+      expect(styles).toMatchSnapshot();
+    });
+
+    test('creates full theme styles with secondary theme', () => {
+      const styles = generateThemeStylesheet({ preset: presetWithSecondaryTheme, baseThemeId: 'secondary' });
+
+      expect(styles).toMatchSnapshot();
+    });
+
+    test('throws error if baseThemeId is not available', () => {
+      expect(() => generateThemeStylesheet({ preset: presetWithSecondaryTheme, baseThemeId: 'invalid' })).toThrow(
+        `Specified baseThemeId 'invalid' is not available. Available values are 'root', 'secondary'.`,
+      );
+    });
+  });
+
   describe('performance: seed vs explicit palette', () => {
     test('applyTheme with seed in preset', () => {
       const start = performance.now();
