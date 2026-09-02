@@ -48,18 +48,24 @@ export interface BuildThemedComponentsInternalParams {
   failOnDeprecations?: boolean;
   /** Allowlist of tokens to version strings for stable naming; unlisted tokens stay legacy. */
   tokenVersions?: Record<string, string>;
+  /**
+   * Build system identifier (e.g. 'core', 'console'), exposed to SCSS via the `awsui:environment`
+   * inline stylesheet as `$system`. Lets components gate build-variant specific output. Default: 'core'.
+   */
+  system?: string;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
  *
- * The styles will be build with three inline stylesheets:
- * * `awsui:environment` - Stylesheet containing a simple environment context
+ * The styles will be built with four inline stylesheets:
  * * `awsui:globals` - Root stylesheet with custom property assignments
- * * `awsui:tokens`  - Mapping between SASS variables and var() assignments
+ * * `awsui:tokens` - Mapping between SASS variables and var() assignments
+ * * `awsui:resolved-tokens` - Resolved token values per theme selector
+ * * `awsui:environment` - Build environment context, exposing `$system` (e.g. 'core' / 'console')
  *
- * If designTokensOuputDir is specified and not skipped, three with designTokensFileName will be generated:
- * * Typescript
- * * Typescript definitions
+ * If designTokensOutputDir is specified and not skipped, three files with designTokensFileName will be generated:
+ * * TypeScript
+ * * TypeScript definitions
  * * SCSS
  *
  * @param params build themed components parameters
@@ -80,6 +86,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     jsonSchema = false,
     failOnDeprecations,
     tokenVersions,
+    system = 'core',
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -100,7 +107,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
   const styleTask = buildStyles(
     scssDir,
     componentsOutputDir,
-    getInlineStylesheets(basePrimary, baseSecondary, defaults, variablesMap, propertiesMap, neededTokens),
+    getInlineStylesheets(basePrimary, baseSecondary, defaults, variablesMap, propertiesMap, neededTokens, system),
     { failOnDeprecations },
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);

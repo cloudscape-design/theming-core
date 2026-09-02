@@ -19,6 +19,7 @@ export function getInlineStylesheets(
   variablesMap: Record<string, string>,
   propertiesMap: Record<string, string>,
   neededTokens: string[],
+  system = 'core',
 ): InlineStylesheet[] {
   const declarations = createBuildDeclarations(
     primary,
@@ -46,5 +47,10 @@ export function getInlineStylesheets(
       .join(',\n')}];`,
   };
 
-  return [declaration, mapping, resolvedTokens];
+  const environment = {
+    url: 'awsui:environment',
+    contents: `$system: '${system}';`,
+  };
+
+  return [declaration, mapping, resolvedTokens, environment];
 }
