@@ -212,6 +212,76 @@ describe('generateThemeStylesheet', () => {
     });
   });
 
+  describe('with custom selector', () => {
+    const selector = '.my-theme';
+
+    test('uses the custom selector with gradual specificity for the root rule', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector });
+
+      // The custom selector is the customizer root, so it only receives the
+      // gradual (class-repetition) specificity increase, without :not(#\9).
+      expect(styles).toContain('.my-theme.my-theme{');
+    });
+
+    test('combines the custom selector with mode state classes', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector });
+
+      // Mode state class and custom selector form one compound (sorted
+      // alphabetically), with the :not(#\9) specificity suffix for non-root rules.
+      expect(styles).toContain('@media not print {.dark.dark.my-theme:not(#\\9){');
+    });
+
+    test('uses the custom selector for context rules', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector });
+
+      // Descendant and same-element forms of the context rule.
+      expect(styles).toContain('.my-theme.my-theme .navigation:not(#\\9)');
+      expect(styles).toContain('.my-theme.my-theme.navigation:not(#\\9)');
+      // Context rules within a mode state.
+      expect(styles).toContain('.dark.dark.my-theme .navigation:not(#\\9)');
+      expect(styles).toContain('.dark.dark.my-theme.navigation:not(#\\9)');
+    });
+
+    test('does not include the default theme selector anywhere', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector });
+      expect(styles).not.toContain('body');
+    });
+
+    test('wraps a complex selector in :is() and doubles it for the root rule', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector: '#app .content' });
+      expect(styles).toContain(':is(#app .content):is(#app .content){');
+    });
+
+    test('combines a complex selector with mode state classes', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector: '#app .content' });
+
+      // Mode state class is repeated for gradual specificity while the
+      // functional pseudo-class is skipped; :not(#\9) applies to non-root rules.
+      expect(styles).toContain('@media not print {:not(#\\9):is(#app .content).dark.dark{');
+    });
+
+    test('uses a complex selector for context rules', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector: '#app .content' });
+
+      // Descendant and same-element forms of the context rule.
+      expect(styles).toContain(':not(#\\9):is(#app .content) .navigation.navigation');
+      expect(styles).toContain(':not(#\\9):is(#app .content).navigation.navigation');
+      // Context rules within a mode state.
+      expect(styles).toContain(':not(#\\9):is(#app .content).dark.dark .navigation');
+      expect(styles).toContain(':not(#\\9):is(#app .content).dark.dark.navigation');
+    });
+
+    test('falls back to the preset default selector for an empty string', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector: '' });
+      expect(styles).toEqual(generateThemeStylesheet({ override, preset }));
+    });
+
+    test('creates override styles', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector });
+      expect(styles).toMatchSnapshot();
+    });
+  });
+
   describe('performance: seed vs explicit palette', () => {
     test('applyTheme with seed in preset', () => {
       const start = performance.now();

@@ -5,15 +5,17 @@ import { createOverrideDeclarations } from '../shared/declaration';
 import { getNonce, createStyleNode, appendStyleNode } from './dom';
 import { createMultiThemeCustomizer } from '../shared/declaration/customizer';
 import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
+import { wrapComplexSelector } from '../shared/styles/selector';
 
 export interface GenerateThemeStylesheetParams {
   override: Override;
   preset: ThemePreset;
+  selector?: string;
   baseThemeId?: string;
 }
 
 export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): string {
-  const { override, preset, baseThemeId } = params;
+  const { override, preset, baseThemeId, selector } = params;
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
   const theme = getThemeFromPreset(preset, baseThemeId);
@@ -22,7 +24,8 @@ export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): 
     theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(preset.theme.selector),
+    createMultiThemeCustomizer(selector ? wrapComplexSelector(selector) : preset.theme.selector),
+    selector,
   );
 }
 

@@ -90,6 +90,7 @@ export function createOverrideDeclarations(
   override: Override,
   propertiesMap: PropertiesMap,
   selectorCustomizer: SelectorCustomizer,
+  selectorOverride?: string,
 ): string {
   const minimalTheme = createMinimalTheme(base, override);
   const initialTokens = Object.keys(minimalTheme.tokens);
@@ -104,7 +105,7 @@ export function createOverrideDeclarations(
     new Selector(selectorCustomizer),
     new UsedPropertyRegistry(propertiesMap, usedTokens),
   );
-  const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
+  const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap, selectorOverride).create();
   return new MinimalTransformer().transform(stylesheet).toString();
 }
 
