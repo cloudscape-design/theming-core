@@ -23,11 +23,12 @@ export function getFirstSelector(selector: string): string {
 }
 
 /**
- * Wrap selectors that could contains combinators or commas in `:is()` to safely
- * combine with other selectors.
+ * Wrap risky selectors that could contain combinators or commas in `:is()` to
+ * safely combine with other selectors.
  */
 export function wrapComplexSelector(selector: string): string {
-  return /[\s>+~,]/.test(selector.trim()) ? `:is(${selector.trim()})` : selector;
+  const trimmed = selector.trim();
+  return /[\s>+~,\\]/.test(trimmed) ? `:is(${trimmed})` : trimmed;
 }
 
 /**
@@ -53,7 +54,8 @@ export function increaseSpecificityGradually(selectors: string): string {
 function blankParenthesizedContent(selector: string): string {
   let result = '';
   let depth = 0;
-  for (const char of selector) {
+  for (let i = 0; i < selector.length; i++) {
+    const char = selector.charAt(i);
     if (char === ')') depth--;
     result += depth > 0 ? ' ' : char;
     if (char === '(') depth++;

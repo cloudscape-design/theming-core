@@ -19,13 +19,14 @@ export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): 
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
   const theme = getThemeFromPreset(preset, baseThemeId);
+  const selectorOverride = selector?.trim();
 
   return createOverrideDeclarations(
     theme,
     validated,
     preset.propertiesMap,
-    createMultiThemeCustomizer(selector ? wrapComplexSelector(selector) : preset.theme.selector),
-    selector,
+    createMultiThemeCustomizer(selectorOverride ? wrapComplexSelector(selectorOverride) : preset.theme.selector),
+    selectorOverride,
   );
 }
 
