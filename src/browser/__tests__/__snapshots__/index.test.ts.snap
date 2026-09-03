@@ -118,6 +118,30 @@ exports[`generateThemeStylesheet > with baseThemeId > creates override styles 1`
 }}"
 `;
 
+exports[`generateThemeStylesheet > with custom selector > creates override styles 1`] = `
+".my-theme.my-theme{
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+	--boxShadow-css:green;
+	--lineShadow-css:pink;
+}
+@media not print {.dark.dark.my-theme:not(#\\9){
+	--shadow-css:orange;
+	--boxShadow-css:var(--brown-css);
+}}
+.my-theme.my-theme .navigation:not(#\\9),.my-theme.my-theme.navigation:not(#\\9){
+	--shadow-css:pink;
+	--boxShadow-css:purple;
+}
+@media not print {.dark.dark.my-theme .navigation:not(#\\9),.dark.dark.my-theme.navigation:not(#\\9){
+	--shadow-css:var(--brown-css);
+	--buttonShadow-css:green;
+}}"
+`;
+
 exports[`generateThemeStylesheet > with reference tokens > creates override styles with CSS variables 1`] = `
 "body:not(#\\9){
 	--colorPrimary600-css:#ff6600;
