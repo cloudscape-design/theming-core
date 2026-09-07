@@ -6,11 +6,7 @@ import { Declaration } from './stylesheet';
 import { getFirstSelector, isGlobalSelector } from '../styles/selector';
 import { getReferencedVar } from './utils';
 
-export interface Transformer {
-  transform(stylesheet: Stylesheet): Stylesheet;
-}
-
-export class MinimalTransformer implements Transformer {
+export class MinimalTransformer {
   transform(stylesheet: Stylesheet): Stylesheet {
     const rules = stylesheet.getAllRules();
     const rulesWithPath = rules.map((rule) => ({

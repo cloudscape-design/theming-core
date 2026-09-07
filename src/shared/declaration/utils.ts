@@ -1,5 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { Context, Mode, Theme } from '../theme';
+import { isOptionalState } from '../theme/utils';
+import { entries } from '../utils';
+import type Stylesheet from './stylesheet';
+import type { Rule } from './stylesheet';
+
 export function compact<T>(arr: (T | undefined)[]): T[] {
   const result: T[] = [];
   for (const item of arr) {
@@ -8,6 +14,41 @@ export function compact<T>(arr: (T | undefined)[]): T[] {
     }
   }
   return result;
+}
+
+export function forEachOptionalModeState(theme: Theme, func: (mode: Mode, stateKey: string) => void) {
+  Object.keys(theme.modes).forEach((key) => {
+    const mode = theme.modes[key];
+    entries(mode.states).forEach(([stateKey, state]) => {
+      if (isOptionalState(state)) {
+        func(mode, stateKey);
+      }
+    });
+  });
+}
+
+export function forEachContext(theme: Theme, func: (context: Context) => void) {
+  Object.keys(theme.contexts).forEach((key) => {
+    const context = theme.contexts[key];
+    func(context);
+  });
+}
+
+export function forEachContextWithinOptionalModeState(
+  theme: Theme,
+  func: (context: Context, mode: Mode, stateName: string) => void,
+) {
+  forEachOptionalModeState(theme, (mode, stateKey) => {
+    forEachContext(theme, (context) => {
+      func(context, mode, stateKey);
+    });
+  });
+}
+
+export function appendRuleToStylesheet(stylesheet: Stylesheet, rule: Rule, path: Rule[]) {
+  if (rule.size()) {
+    stylesheet.appendRuleWithPath(rule, path);
+  }
 }
 
 /**
