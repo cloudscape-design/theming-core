@@ -149,6 +149,19 @@ exports[`generateThemeStylesheet > with secondary theme > creates override style
 }}"
 `;
 
+exports[`generateThemeStylesheet > with selector (scoped theming) > creates scoped override styles 1`] = `
+".my-scope{
+	--shadow-css:yellow;
+	--buttonShadow-css:red;
+}
+@media not print {.dark.my-scope{
+	--shadow-css:orange;
+}}
+.my-scope .navigation,.my-scope.navigation{
+	--shadow-css:pink;
+}"
+`;
+
 exports[`generateThemeStylesheet > without secondary theme > creates override styles 1`] = `
 "body:not(#\\9){
 	--black-css:black;

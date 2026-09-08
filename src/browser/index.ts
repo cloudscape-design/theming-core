@@ -1,22 +1,30 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ThemePreset, Override, validateOverride } from '../shared/theme';
-import { createOverrideDeclarations } from '../shared/declaration';
+import { createOverrideDeclarations, createCompleteThemeDeclarations } from '../shared/declaration';
 import { getNonce, createStyleNode, appendStyleNode } from './dom';
 import { createMultiThemeCustomizer } from '../shared/declaration/customizer';
-import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
+import { getContexts, getThemeFromPreset, validateCompleteThemeOverride } from '../shared/theme/validate';
 
 export interface GenerateThemeStylesheetParams {
   override: Override;
   preset: ThemePreset;
   baseThemeId?: string;
+
+  selector?: string;
 }
 
 export function generateThemeStylesheet(params: GenerateThemeStylesheetParams): string {
-  const { override, preset, baseThemeId } = params;
+  const { override, preset, baseThemeId, selector } = params;
   const availableContexts = getContexts(preset);
   const validated = validateOverride(override, preset.themeable, availableContexts);
   const theme = getThemeFromPreset(preset, baseThemeId);
+
+  const scopedSelector = selector?.trim();
+  if (scopedSelector) {
+    validateCompleteThemeOverride(theme, validated);
+    return createCompleteThemeDeclarations(theme, validated, preset.propertiesMap, scopedSelector);
+  }
 
   return createOverrideDeclarations(
     theme,
@@ -31,6 +39,8 @@ export interface ApplyThemeParams {
   preset: ThemePreset;
   baseThemeId?: string;
   targetDocument?: Document;
+
+  selector?: string;
 }
 
 export interface ApplyThemeResult {

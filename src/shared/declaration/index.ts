@@ -9,14 +9,15 @@ import { SingleThemeCreator } from './theme-creator/single';
 import { MultiThemeCreator } from './theme-creator/multi';
 import { Selector } from './selector';
 import { MinimalTransformer } from './transformer';
+import { wrapComplexSelector } from '../styles/selector';
 import type Stylesheet from './stylesheet';
-import { cloneDeep, values } from '../utils';
+import { cloneDeep } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);
   const contextTokens: Set<string> = new Set();
 
-  values(minimalTheme.contexts).forEach((context) => {
+  Object.values(minimalTheme.contexts).forEach((context) => {
     Object.keys(context.tokens).forEach((key) => {
       const isInOverrideContext = key in (override?.contexts?.[context.id]?.tokens ?? {});
       if (!(key in override.tokens) && !isInOverrideContext) {
@@ -99,6 +100,57 @@ export function createOverrideDeclarations(
   const usedTokens = [...initialTokens, ...referencedTokens];
   const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), propertiesMap, usedTokens);
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
+}
+
+/**
+ * Creates a stylesheet where the values only come from the override theme,
+ * without falling back to the "base" theme. The base theme exists to provide
+ * the schema that the override must follow (modes, media queries, contexts,
+ * token-mode association).
+ */
+export function createCompleteThemeDeclarations(
+  schemaTheme: Theme,
+  override: Override,
+  propertiesMap: PropertiesMap,
+  selector: string,
+): string {
+  // We iterate over the keys and definitions in the schema theme, but use the values
+  // from the override.
+  const contexts: Theme['contexts'] = {};
+  Object.values(schemaTheme.contexts).forEach((schemaContext) => {
+    contexts[schemaContext.id] = {
+      id: schemaContext.id,
+      selector: schemaContext.selector,
+      defaultMode: schemaContext.defaultMode,
+      // Empty contexts are fine, the theme creators remove them from the generated styles.
+      tokens: { ...override.contexts?.[schemaContext.id]?.tokens } as Theme['tokens'],
+    };
+  });
+
+  // Create a new theme with the non-themeable parts (mode, tokenModeMap) from the schema
+  // themeable parts (tokens, contexts) from the override.
+  const scopedTheme: Theme = {
+    ...schemaTheme,
+    selector: wrapComplexSelector(selector),
+    referenceTokens: override.referenceTokens,
+    tokens: { ...override.tokens } as Theme['tokens'],
+    contexts,
+  };
+
+  // Since this method generates an isolated base theme rather than a combined components
+  // package, there's no clear association between the component styles and the base theme.
+  // Instead, let's consider tokens that aren't explicitly included in the styles as pruneable.
+  // This puts more control in the builder's hands.
+  const usedTokens = Object.keys(scopedTheme.tokens);
+  Object.values(contexts).forEach((context) => usedTokens.push(...Object.keys(context.tokens)));
+
+  // No customizer needed in new Selector() to increase selector specificity, we assume that
+  // the base theme styles are in a cascade layer (awsui-base-theme), which has lower priority
+  // than unlayered styles.
+  const ruleCreator = new RuleCreator(new Selector(), propertiesMap, usedTokens);
+  // No baseTheme, since the scopedTheme is meant to be complete and self-contained.
+  const stylesheet = new SingleThemeCreator(scopedTheme, ruleCreator, undefined, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
 }
 

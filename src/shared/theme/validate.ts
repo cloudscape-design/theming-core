@@ -3,6 +3,7 @@
 import { entries, fromEntries, includes } from '../utils';
 import { Override, Theme, ThemePreset, Token } from './interfaces';
 import { processReferenceTokens } from './process';
+import { getMode } from './utils';
 
 /**
  * This function compares the theme override against the list of tokens that are allowed
@@ -73,6 +74,53 @@ export function validateOverride(override: Override, themeable: Token[], availab
     tokens: completeTokens,
     referenceTokens: override.referenceTokens,
   };
+}
+
+/**
+ * Validation specific to full-theme overrides. Since the theme that contains the
+ * mode, context, and token definitions (schema theme) can't be used as a fallback
+ * for the token values, the override must define a value for all states of the mode.
+ */
+export function validateCompleteThemeOverride(schemaTheme: Theme, override: Override): void {
+  function validateTokens(tokens: Override['tokens'], contextId?: string) {
+    Object.entries(tokens).forEach(([token, value]) => {
+      // This check only applies to tokens values defined as objects.
+      if (value === undefined || typeof value === 'string') {
+        return;
+      }
+
+      // Verify that object values are only provided for tokens that can have modes.
+      const where = contextId ? ` in context "${contextId}"` : '';
+      const mode = getMode(schemaTheme, token);
+      if (!mode) {
+        throw new Error(
+          `Scoped theme token "${token}"${where} does not support mode-specific values. ` +
+            `Provide a single string value instead of ${JSON.stringify(value)}.`,
+        );
+      }
+
+      // Treat keys with undefined values as absent.
+      const provided = Object.keys(value).filter((key) => value[key] !== undefined);
+      const expected = Object.keys(mode.states);
+      const missing = expected.filter((state) => !provided.includes(state));
+      const unknown = provided.filter((state) => !expected.includes(state));
+      if (missing.length || unknown.length) {
+        throw new Error(
+          `Scoped theme token "${token}"${where} must define all states of its mode. ` +
+            `Provided states: [${provided.join(', ')}]. Expected states: [${expected.join(', ')}].` +
+            (missing.length ? ` Missing: [${missing.join(', ')}].` : '') +
+            (unknown.length ? ` Unknown: [${unknown.join(', ')}].` : ''),
+        );
+      }
+    });
+  }
+
+  validateTokens(override.tokens);
+  Object.entries(override.contexts ?? {}).forEach(([contextId, context]) => {
+    if (context) {
+      validateTokens(context.tokens, contextId);
+    }
+  });
 }
 
 export function getContexts(preset: ThemePreset) {
