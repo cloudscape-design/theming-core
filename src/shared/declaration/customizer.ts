@@ -1,8 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { SelectorCustomizer } from './interfaces';
 import { increaseSpecificity, increaseSpecificityGradually, isIncreased } from '../styles/selector';
 import { includes } from '../utils';
+
+export type SelectorCustomizer = (selector: string) => string;
 
 export function createMultiThemeCustomizer(root: string): SelectorCustomizer {
   // non root selector receives an increased specificity at build time

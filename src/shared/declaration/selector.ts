@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { SelectorCustomizer } from './interfaces';
+import type { SelectorCustomizer } from './customizer';
 import { isGlobalSelector } from '../styles/selector';
 
 interface SelectorParams {
