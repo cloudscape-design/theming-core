@@ -120,19 +120,11 @@ export function createScopedThemeDeclarations(
     selector: wrapComplexSelector(selector),
   };
 
-  // Since this method generates a full theme rather than a combined components package, there's
-  // no clear association between the component styles and the base theme. So we have treat all
-  // included tokens as used tokens for safety.
-  const usedTokens = Object.keys(scopedTheme.tokens);
-  Object.values(scopedTheme.contexts).forEach((context) => {
-    usedTokens.push(...Object.keys(context.tokens));
-  });
-
   // No customizer needed in new Selector() to increase selector specificity, we assume that
   // the base theme styles are in a cascade layer (awsui-base-theme), which has lower priority
   // than unlayered styles. Builders can wrap the returned stylesheet in a @layer to customize
   // ordering even further.
-  const ruleCreator = new RuleCreator(new Selector(), propertiesMap, usedTokens);
+  const ruleCreator = new RuleCreator(new Selector(), propertiesMap);
   // No baseTheme, since the scopedTheme stylesheet should be generated fully complete.
   const stylesheet = new SingleThemeCreator(scopedTheme, ruleCreator, undefined, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
