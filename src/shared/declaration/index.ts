@@ -104,10 +104,9 @@ export function createOverrideDeclarations(
 }
 
 /**
- * Creates a stylesheet where the values only come from the override theme,
- * without falling back to the "base" theme. The base theme exists to provide
- * the schema that the override must follow (modes, media queries, contexts,
- * token-mode association).
+ * Creates a self-contained stylesheet scoped to the supplied selector. Token and
+ * context values missing from the override are pulled from the base theme, but the
+ * returned stylesheet still redeclares them.
  */
 export function createScopedThemeDeclarations(
   base: Theme,
