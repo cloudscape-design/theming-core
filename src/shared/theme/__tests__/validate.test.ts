@@ -3,7 +3,7 @@
 import { afterAll, beforeEach, describe, test, expect, vi, MockInstance } from 'vitest';
 import { override, presetWithSecondaryTheme, rootTheme } from '../../../__fixtures__/common';
 import { Override } from '../interfaces';
-import { validateOverride, validateCompleteThemeOverride, getThemeFromPreset } from '../validate';
+import { validateOverride, validateScopedThemeOverride, getThemeFromPreset } from '../validate';
 
 let spy: MockInstance;
 beforeEach(() => {
@@ -65,10 +65,10 @@ describe('validateOverride', () => {
   });
 });
 
-describe('validateCompleteThemeOverride', () => {
+describe('validateScopedThemeOverride', () => {
   test('throws on partial mode value', () => {
     // shadow uses the color mode with light + dark states
-    expect(() => validateCompleteThemeOverride(rootTheme, { tokens: { shadow: { dark: '#123' } } })).toThrow(
+    expect(() => validateScopedThemeOverride(rootTheme, { tokens: { shadow: { dark: '#123' } } })).toThrow(
       'Scoped theme token "shadow" must define all states of its mode. ' +
         'Provided states: [dark]. Expected states: [light, dark]. Missing: [light].',
     );
@@ -76,7 +76,7 @@ describe('validateCompleteThemeOverride', () => {
 
   test('throws on unknown state key', () => {
     expect(() =>
-      validateCompleteThemeOverride(rootTheme, { tokens: { shadow: { light: '#fff', drak: '#000' } } }),
+      validateScopedThemeOverride(rootTheme, { tokens: { shadow: { light: '#fff', drak: '#000' } } }),
     ).toThrow(
       'Scoped theme token "shadow" must define all states of its mode. ' +
         'Provided states: [light, drak]. Expected states: [light, dark]. Missing: [dark]. Unknown: [drak].',
@@ -85,14 +85,14 @@ describe('validateCompleteThemeOverride', () => {
 
   test('throws on object value for a mode-less token', () => {
     // black is not part of tokenModeMap
-    expect(() => validateCompleteThemeOverride(rootTheme, { tokens: { black: { light: '#000' } } })).toThrow(
+    expect(() => validateScopedThemeOverride(rootTheme, { tokens: { black: { light: '#000' } } })).toThrow(
       'Scoped theme token "black" does not support mode-specific values.',
     );
   });
 
   test('throws on partial mode value inside a context', () => {
     expect(() =>
-      validateCompleteThemeOverride(rootTheme, {
+      validateScopedThemeOverride(rootTheme, {
         tokens: {},
         contexts: { navigation: { tokens: { shadow: { light: '#fff' } } } },
       }),
@@ -101,16 +101,16 @@ describe('validateCompleteThemeOverride', () => {
 
   test('accepts a complete mode value', () => {
     expect(() =>
-      validateCompleteThemeOverride(rootTheme, { tokens: { shadow: { light: '#fff', dark: '#000' } } }),
+      validateScopedThemeOverride(rootTheme, { tokens: { shadow: { light: '#fff', dark: '#000' } } }),
     ).not.toThrow();
   });
 
   test('accepts a plain string value on a mode token', () => {
-    expect(() => validateCompleteThemeOverride(rootTheme, { tokens: { shadow: 'red' } })).not.toThrow();
+    expect(() => validateScopedThemeOverride(rootTheme, { tokens: { shadow: 'red' } })).not.toThrow();
   });
 
   test('accepts a plain string value on a mode-less token', () => {
-    expect(() => validateCompleteThemeOverride(rootTheme, { tokens: { black: '#000' } })).not.toThrow();
+    expect(() => validateScopedThemeOverride(rootTheme, { tokens: { black: '#000' } })).not.toThrow();
   });
 
   describe('with reference tokens', () => {
@@ -124,7 +124,7 @@ describe('validateCompleteThemeOverride', () => {
         [],
       );
 
-      expect(() => validateCompleteThemeOverride(rootTheme, validated)).not.toThrow();
+      expect(() => validateScopedThemeOverride(rootTheme, validated)).not.toThrow();
     });
 
     test('accepts mode-object tokens generated from a mode-object seed when they are mode-mapped', () => {
@@ -149,7 +149,7 @@ describe('validateCompleteThemeOverride', () => {
         },
       };
 
-      expect(() => validateCompleteThemeOverride(themeWithModeMappedGeneratedTokens, validated)).not.toThrow();
+      expect(() => validateScopedThemeOverride(themeWithModeMappedGeneratedTokens, validated)).not.toThrow();
     });
 
     test('throws for mode-object tokens generated from a mode-object seed when they are mode-less', () => {
@@ -160,7 +160,7 @@ describe('validateCompleteThemeOverride', () => {
       );
 
       // rootTheme's tokenModeMap does not contain the generated colorPrimary* tokens.
-      expect(() => validateCompleteThemeOverride(rootTheme, validated)).toThrow(
+      expect(() => validateScopedThemeOverride(rootTheme, validated)).toThrow(
         /Scoped theme token "colorPrimary\d+" does not support mode-specific values/,
       );
     });

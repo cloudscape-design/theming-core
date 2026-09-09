@@ -81,7 +81,7 @@ export function validateOverride(override: Override, themeable: Token[], availab
  * mode, context, and token definitions (schema theme) can't be used as a fallback
  * for the token values, the override must define a value for all states of the mode.
  */
-export function validateCompleteThemeOverride(schemaTheme: Theme, override: Override): void {
+export function validateScopedThemeOverride(schemaTheme: Theme, override: Override): void {
   function validateTokens(tokens: Override['tokens'], contextId?: string) {
     Object.entries(tokens).forEach(([token, value]) => {
       // This check only applies to tokens values defined as objects.

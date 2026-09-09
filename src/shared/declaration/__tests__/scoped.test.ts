@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
 import { rootTheme, preset } from '../../../__fixtures__/common';
-import { Override } from '../../theme';
-import { createCompleteThemeDeclarations } from '..';
+import { Override, Theme } from '../../theme';
+import { createScopedThemeDeclarations } from '..';
 
 // Scoped ("theming v2") overrides must be complete: mode values define all states.
 const scopedOverride: Override = {
@@ -23,15 +23,15 @@ const scopedOverride: Override = {
   },
 };
 
-describe('createCompleteThemeDeclarations', () => {
+describe('createScopedThemeDeclarations', () => {
   test('renders scoped declarations', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
     expect(output).toMatchSnapshot();
   });
 
   test('root rule uses the plain custom selector without specificity bumps', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
     expect(output).toContain('.my-scope{');
     expect(output).not.toContain(':not(#\\9)');
@@ -39,48 +39,103 @@ describe('createCompleteThemeDeclarations', () => {
   });
 
   test('mode rule compounds the custom selector with the mode state selector', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
     expect(output).toContain('@media not print {.dark.my-scope{');
   });
 
   test('emits both context rule forms when a context is overridden', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
     expect(output).toContain('.my-scope .navigation');
     expect(output).toContain('.my-scope.navigation');
   });
 
   test('emits a token whose override value equals the base theme value', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
     expect(output).toContain('--black-css:black;');
   });
 
-  test('does not emit base theme tokens that are not part of the override', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+  test('fills blanks from the base theme: non-overridden tokens are emitted with base values', () => {
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
-    expect(output).not.toContain('--grey-css');
-    expect(output).not.toContain('--fontFamilyBase-css');
-    expect(output).not.toContain('--scaledSize-css');
+    expect(output).toContain('--grey-css:grey');
+    expect(output).toContain('--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif');
+    // Density token: default (comfortable) resolution of the base scaledSize chain.
+    expect(output).toContain('--scaledSize-css:');
   });
 
-  test('wraps selector lists in :is()', () => {
-    const output = createCompleteThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.a, .b');
+  test('override values win over base values', () => {
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
 
-    expect(output).toContain(':is(.a, .b){');
-    expect(output).toContain(':is(.a, .b).dark{');
-    expect(output).toMatchSnapshot();
+    const rootRule = output.slice(0, output.indexOf('}'));
+    expect(rootRule).toContain('--shadow-css:yellow');
+    expect(rootRule).not.toContain('--shadow-css:grey');
+    expect(rootRule).toContain('--buttonShadow-css:red');
   });
 
-  test('produces no rules for contexts without overrides', () => {
-    const output = createCompleteThemeDeclarations(
+  test('re-anchors base reference chains on the scope: dependents track overridden inputs', () => {
+    // boxShadow (base: { light: '{shadow}', dark: '{brown}' }) is not overridden, but its
+    // light state references the overridden shadow token. Full emission re-declares it on
+    // the scope element, where the reference resolves against the override.
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.my-scope');
+
+    const rootRule = output.slice(0, output.indexOf('}'));
+    expect(rootRule).toContain('--boxShadow-css:var(--shadow-css)');
+    expect(rootRule).toContain('--lineShadow-css:var(--buttonShadow-css)');
+  });
+
+  test('emits base context values for contexts the override does not touch', () => {
+    const output = createScopedThemeDeclarations(
       rootTheme,
       { tokens: { shadow: { light: 'yellow', dark: 'orange' } } },
       preset.propertiesMap,
       '.my-scope',
     );
 
-    expect(output).not.toContain('.navigation');
+    // The base navigation context redefines boxShadow as a literal; it must be preserved.
+    const navigationRules = output
+      .split('}')
+      .filter((block) => block.includes('.navigation'))
+      .join('}');
+    expect(navigationRules).toContain('--boxShadow-css:purple');
+  });
+
+  test('partial mode values fill missing states from the base theme', () => {
+    // validateScopedOverride rejects these on the public path; createScopedThemeDeclarations
+    // itself completes them from the base via merge, which keeps internal callers safe.
+    const output = createScopedThemeDeclarations(
+      rootTheme,
+      { tokens: { shadow: { dark: 'orange' } } } as Override,
+      preset.propertiesMap,
+      '.my-scope',
+    );
+
+    const rootRule = output.slice(0, output.indexOf('}'));
+    expect(rootRule).toContain('--shadow-css:var(--grey-css)'); // light: base value (reference to grey)
+    expect(output).toContain('--shadow-css:orange'); // dark: override value
+  });
+
+  test('does not throw for a default-mode context combined with base reference tokens', () => {
+    const themeWithDefaultModeContext: Theme = {
+      ...rootTheme,
+      referenceTokens: { color: { primary: '#0073bb' } },
+      contexts: {
+        ...rootTheme.contexts,
+        header: { id: 'header', selector: '.header', defaultMode: 'dark', tokens: {} },
+      },
+    };
+
+    expect(() =>
+      createScopedThemeDeclarations(themeWithDefaultModeContext, scopedOverride, preset.propertiesMap, '.my-scope'),
+    ).not.toThrow();
+  });
+
+  test('wraps selector lists in :is()', () => {
+    const output = createScopedThemeDeclarations(rootTheme, scopedOverride, preset.propertiesMap, '.a, .b');
+
+    expect(output).toContain(':is(.a, .b){');
+    expect(output).toContain(':is(.a, .b).dark{');
   });
 });

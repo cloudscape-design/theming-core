@@ -45,6 +45,13 @@ export function mergeInPlace(theme: Theme, override: Override): Theme {
     }
   });
 
+  // Merge reference tokens into the theme
+  if (theme.referenceTokens || override.referenceTokens) {
+    theme.referenceTokens = {
+      color: { ...theme.referenceTokens?.color, ...override.referenceTokens?.color },
+    };
+  }
+
   // Merge context-specific tokens into each context
   if (override.contexts) {
     entries(override.contexts).forEach(([contextId, context]) => {

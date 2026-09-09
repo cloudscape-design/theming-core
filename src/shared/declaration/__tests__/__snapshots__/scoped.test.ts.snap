@@ -1,35 +1,39 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createCompleteThemeDeclarations > renders scoped declarations 1`] = `
+exports[`createScopedThemeDeclarations > renders scoped declarations 1`] = `
 ".my-scope{
+	--fontFamilyBase-css:"Helvetica Neue", Arial, sans-serif;
+	--fontFamilyBody-css:var(--fontFamilyBase-css);
+	--black-css:black;
+	--grey-css:grey;
+	--brown-css:brown;
 	--shadow-css:yellow;
 	--buttonShadow-css:red;
-	--black-css:black;
+	--boxShadow-css:var(--shadow-css);
+	--lineShadow-css:var(--buttonShadow-css);
+	--small-css:1px;
+	--medium-css:3px;
+	--scaledSize-css:var(--medium-css);
+	--appear-css:20ms;
+	--containerShadowBase-css:2px 3px orange, -1px 0 8px olive;
+	--modalShadowContainer-css:var(--containerShadowBase-css);
+}
+.compact.my-scope{
+	--scaledSize-css:var(--small-css);
 }
 @media not print {.dark.my-scope{
 	--shadow-css:orange;
+	--boxShadow-css:var(--brown-css);
+	--lineShadow-css:var(--boxShadow-css);
 }}
+.disabled-motion.my-scope{
+	--appear-css:0;
+}
 .my-scope .navigation,.my-scope.navigation{
 	--shadow-css:pink;
+	--boxShadow-css:purple;
 }
 @media not print {.dark.my-scope .navigation,.dark.my-scope.navigation{
-	--buttonShadow-css:green;
-}}"
-`;
-
-exports[`createCompleteThemeDeclarations > wraps selector lists in :is() 1`] = `
-":is(.a, .b){
-	--shadow-css:yellow;
-	--buttonShadow-css:red;
-	--black-css:black;
-}
-@media not print {:is(.a, .b).dark{
-	--shadow-css:orange;
-}}
-:is(.a, .b) .navigation,:is(.a, .b).navigation{
-	--shadow-css:pink;
-}
-@media not print {:is(.a, .b).dark .navigation,:is(.a, .b).dark.navigation{
 	--buttonShadow-css:green;
 }}"
 `;

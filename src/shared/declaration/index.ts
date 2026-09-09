@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme } from '../theme';
+import { merge, mergeInPlace, Override, Theme } from '../theme';
 import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils';
 import type { PropertiesMap } from './interfaces';
 import type { SelectorCustomizer } from './customizer';
@@ -109,47 +109,32 @@ export function createOverrideDeclarations(
  * the schema that the override must follow (modes, media queries, contexts,
  * token-mode association).
  */
-export function createCompleteThemeDeclarations(
-  schemaTheme: Theme,
+export function createScopedThemeDeclarations(
+  base: Theme,
   override: Override,
   propertiesMap: PropertiesMap,
   selector: string,
 ): string {
-  // We iterate over the keys and definitions in the schema theme, but use the values
-  // from the override.
-  const contexts: Theme['contexts'] = {};
-  Object.values(schemaTheme.contexts).forEach((schemaContext) => {
-    contexts[schemaContext.id] = {
-      id: schemaContext.id,
-      selector: schemaContext.selector,
-      defaultMode: schemaContext.defaultMode,
-      // Empty contexts are fine, the theme creators remove them from the generated styles.
-      tokens: { ...override.contexts?.[schemaContext.id]?.tokens } as Theme['tokens'],
-    };
-  });
-
-  // Create a new theme with the non-themeable parts (mode, tokenModeMap) from the schema
-  // themeable parts (tokens, contexts) from the override.
+  const mergedTheme = merge(base, override);
   const scopedTheme: Theme = {
-    ...schemaTheme,
+    ...mergedTheme,
     selector: wrapComplexSelector(selector),
-    referenceTokens: override.referenceTokens,
-    tokens: { ...override.tokens } as Theme['tokens'],
-    contexts,
   };
 
-  // Since this method generates an isolated base theme rather than a combined components
-  // package, there's no clear association between the component styles and the base theme.
-  // Instead, let's consider tokens that aren't explicitly included in the styles as pruneable.
-  // This puts more control in the builder's hands.
+  // Since this method generates a full theme rather than a combined components package, there's
+  // no clear association between the component styles and the base theme. So we have treat all
+  // included tokens as used tokens for safety.
   const usedTokens = Object.keys(scopedTheme.tokens);
-  Object.values(contexts).forEach((context) => usedTokens.push(...Object.keys(context.tokens)));
+  Object.values(scopedTheme.contexts).forEach((context) => {
+    usedTokens.push(...Object.keys(context.tokens));
+  });
 
   // No customizer needed in new Selector() to increase selector specificity, we assume that
   // the base theme styles are in a cascade layer (awsui-base-theme), which has lower priority
-  // than unlayered styles.
+  // than unlayered styles. Builders can wrap the returned stylesheet in a @layer to customize
+  // ordering even further.
   const ruleCreator = new RuleCreator(new Selector(), propertiesMap, usedTokens);
-  // No baseTheme, since the scopedTheme is meant to be complete and self-contained.
+  // No baseTheme, since the scopedTheme stylesheet should be generated fully complete.
   const stylesheet = new SingleThemeCreator(scopedTheme, ruleCreator, undefined, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
 }
