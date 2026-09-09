@@ -69,8 +69,7 @@ describe('validateScopedThemeOverride', () => {
   test('throws on partial mode value', () => {
     // shadow uses the color mode with light + dark states
     expect(() => validateScopedThemeOverride(rootTheme, { tokens: { shadow: { dark: '#123' } } })).toThrow(
-      'Scoped theme token "shadow" must define all states of its mode. ' +
-        'Provided states: [dark]. Expected states: [light, dark]. Missing: [light].',
+      'Scoped theme token "shadow" must define all states of its mode. Provided [dark], expected [light, dark].',
     );
   });
 
@@ -78,8 +77,7 @@ describe('validateScopedThemeOverride', () => {
     expect(() =>
       validateScopedThemeOverride(rootTheme, { tokens: { shadow: { light: '#fff', drak: '#000' } } }),
     ).toThrow(
-      'Scoped theme token "shadow" must define all states of its mode. ' +
-        'Provided states: [light, drak]. Expected states: [light, dark]. Missing: [dark]. Unknown: [drak].',
+      'Scoped theme token "shadow" must define all states of its mode. Provided [light, drak], expected [light, dark].',
     );
   });
 

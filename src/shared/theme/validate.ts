@@ -107,9 +107,7 @@ export function validateScopedThemeOverride(schemaTheme: Theme, override: Overri
       if (missing.length || unknown.length) {
         throw new Error(
           `Scoped theme token "${token}"${where} must define all states of its mode. ` +
-            `Provided states: [${provided.join(', ')}]. Expected states: [${expected.join(', ')}].` +
-            (missing.length ? ` Missing: [${missing.join(', ')}].` : '') +
-            (unknown.length ? ` Unknown: [${unknown.join(', ')}].` : ''),
+            `Provided [${provided.join(', ')}], expected [${expected.join(', ')}].`,
         );
       }
     });
