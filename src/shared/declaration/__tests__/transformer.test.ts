@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { MinimalTransformer } from '../transformer';
-import Stylesheet, { Rule, Declaration } from '../stylesheet';
+import { MinimalTransformer } from '../transformer.js';
+import Stylesheet, { Rule, Declaration } from '../stylesheet.js';
 
 describe('MinimalTransformer', () => {
   test('removes empty global selector rules', () => {

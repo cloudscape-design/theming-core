@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { generatePaletteFromSeed, clearPaletteCache } from '../palette-generator';
-import { hexToHct } from '../hct-utils';
-import { PaletteStep, ReferencePaletteDefinition } from '../../interfaces';
+import { generatePaletteFromSeed, clearPaletteCache } from '../palette-generator.js';
+import { hexToHct } from '../hct-utils.js';
+import { PaletteStep, ReferencePaletteDefinition } from '../../interfaces.js';
 
 // Helper to get color as string from palette
 function getColor(palette: ReferencePaletteDefinition, step: PaletteStep): string {

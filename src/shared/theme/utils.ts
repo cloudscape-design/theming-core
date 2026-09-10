@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Assignment, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces';
-import { Value, Reference, ModeValue, Mode } from './interfaces';
+import { Assignment, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces.js';
+import { Value, Reference, ModeValue, Mode } from './interfaces.js';
 
 export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, token: string): boolean {
   const categoryTokens = theme.referenceTokens?.[category];

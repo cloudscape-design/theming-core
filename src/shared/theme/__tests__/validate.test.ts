@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterAll, beforeEach, describe, test, expect, vi, MockInstance } from 'vitest';
-import { override, presetWithSecondaryTheme, rootTheme } from '../../../__fixtures__/common';
-import { Override } from '../interfaces';
-import { validateOverride, validateScopedThemeOverride, getThemeFromPreset } from '../validate';
+import { override, presetWithSecondaryTheme, rootTheme } from '../../../__fixtures__/common.js';
+import { Override } from '../interfaces.js';
+import { validateOverride, validateScopedThemeOverride, getThemeFromPreset } from '../validate.js';
 
 let spy: MockInstance;
 beforeEach(() => {

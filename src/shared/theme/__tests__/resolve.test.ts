@@ -9,9 +9,9 @@ import {
   themeWithNonExistingToken,
   themeWithTokenWithoutModeResolution,
   colorMode,
-} from '../../../__fixtures__/common';
-import { resolveTheme, resolveThemeWithPaths, resolveContext } from '../resolve';
-import { Theme, Context } from '../interfaces';
+} from '../../../__fixtures__/common.js';
+import { resolveTheme, resolveThemeWithPaths, resolveContext } from '../resolve.js';
+import { Theme, Context } from '../interfaces.js';
 
 describe('resolve', () => {
   test('resolves theme to full resolution', () => {

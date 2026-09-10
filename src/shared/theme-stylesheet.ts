@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ThemePreset, Override, validateOverride } from './theme';
-import { createOverrideDeclarations, createScopedThemeDeclarations } from './declaration';
-import { createMultiThemeCustomizer } from './declaration/customizer';
-import { getContexts, getThemeFromPreset, validateScopedThemeOverride } from './theme/validate';
+import { ThemePreset, Override, validateOverride } from './theme/index.js';
+import { createOverrideDeclarations, createScopedThemeDeclarations } from './declaration/index.js';
+import { createMultiThemeCustomizer } from './declaration/customizer.js';
+import { getContexts, getThemeFromPreset, validateScopedThemeOverride } from './theme/validate.js';
 
 export interface GenerateThemeStylesheetParams {
   override: Override;

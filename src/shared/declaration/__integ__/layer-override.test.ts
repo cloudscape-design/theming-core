@@ -3,10 +3,10 @@
 import { test, expect } from 'vitest';
 import useBrowser from '@cloudscape-design/browser-test-tools/use-browser';
 import { BasePageObject } from '@cloudscape-design/browser-test-tools/page-objects';
-import { getInlineStylesheets } from '../../../build/inline-stylesheets';
-import { generateThemeStylesheet } from '../../../browser';
-import { ThemePreset, resolveTheme, reduce, defaultsReducer } from '../../theme';
-import { calculatePropertiesMap } from '../../../build/properties';
+import { getInlineStylesheets } from '../../../build/inline-stylesheets.js';
+import { generateThemeStylesheet } from '../../../browser/index.js';
+import { ThemePreset, resolveTheme, reduce, defaultsReducer } from '../../theme/index.js';
+import { calculatePropertiesMap } from '../../../build/properties.js';
 import { preset as inputPreset } from '../../../build/__tests__/__fixtures__/template/internal/generated/theming/index.js';
 
 /**

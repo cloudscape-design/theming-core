@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { isModeValue, isValue, isReference, generateCamelCaseName, flattenObject, getReference } from '../utils';
+import { isModeValue, isValue, isReference, generateCamelCaseName, flattenObject, getReference } from '../utils.js';
 
 describe('theme utils', () => {
   describe('isModeValue', () => {

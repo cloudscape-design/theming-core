@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { rootTheme, preset } from '../../../__fixtures__/common';
-import { Override, Theme } from '../../theme';
-import { createScopedThemeDeclarations } from '..';
+import { rootTheme, preset } from '../../../__fixtures__/common.js';
+import { Override, Theme } from '../../theme/index.js';
+import { createScopedThemeDeclarations } from '../index.js';
 
 // Scoped overrides must be complete: mode values define all states.
 const scopedOverride: Override = {

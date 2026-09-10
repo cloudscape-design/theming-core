@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect, vi } from 'vitest';
-import { processReferenceTokens, processColorPaletteInput } from '../process';
-import { ReferenceTokens } from '../interfaces';
+import { processReferenceTokens, processColorPaletteInput } from '../process.js';
+import { ReferenceTokens } from '../interfaces.js';
 
 // Mock the color generation utilities
 vi.mock('../color-generation/hct-utils', () => ({

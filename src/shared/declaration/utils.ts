@@ -1,10 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Context, Mode, Theme } from '../theme';
-import { isOptionalState } from '../theme/utils';
-import { entries } from '../utils';
-import type Stylesheet from './stylesheet';
-import type { Rule } from './stylesheet';
+import type { Context, Mode, Theme } from '../theme/index.js';
+import { isOptionalState } from '../theme/utils.js';
+import { entries } from '../utils.js';
+import type Stylesheet from './stylesheet.js';
+import type { Rule } from './stylesheet.js';
 
 export function compact<T>(arr: (T | undefined)[]): T[] {
   const result: T[] = [];

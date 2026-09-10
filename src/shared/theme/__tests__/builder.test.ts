@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { beforeEach, test, expect } from 'vitest';
-import { ThemeBuilder } from '../builder';
+import { ThemeBuilder } from '../builder.js';
 
 let builder: ThemeBuilder;
 const mode = { id: 'mode', states: { mode: { default: true }, optional: { selector: '.optional' } } };

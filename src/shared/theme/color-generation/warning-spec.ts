@@ -1,8 +1,8 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { PaletteStep } from '../interfaces';
-import { PaletteSpecification } from './palette-spec';
+import { PaletteStep } from '../interfaces.js';
+import { PaletteSpecification } from './palette-spec.js';
 
 const MIN_TONE = 5;
 const MAX_TONE = 98;
