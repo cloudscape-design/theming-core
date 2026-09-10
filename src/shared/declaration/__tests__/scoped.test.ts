@@ -5,7 +5,7 @@ import { rootTheme, preset } from '../../../__fixtures__/common';
 import { Override, Theme } from '../../theme';
 import { createScopedThemeDeclarations } from '..';
 
-// Scoped ("theming v2") overrides must be complete: mode values define all states.
+// Scoped overrides must be complete: mode values define all states.
 const scopedOverride: Override = {
   tokens: {
     shadow: { light: 'yellow', dark: 'orange' },
