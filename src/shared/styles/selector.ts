@@ -23,6 +23,16 @@ export function getFirstSelector(selector: string): string {
 }
 
 /**
+ * Wraps selectors containing combinators or selector lists (commas) in `:is()`
+ * so that they can be safely compounded with mode and context selectors.
+ * Simple compound selectors are returned unchanged.
+ */
+export function wrapComplexSelector(selector: string): string {
+  const trimmed = selector.trim();
+  return /[\s>+~,]/.test(trimmed) ? `:is(${trimmed})` : trimmed;
+}
+
+/**
  * Detects and repeats class names to increase specificity, otherwise
  * fall back to increase by id
  * @param selectors

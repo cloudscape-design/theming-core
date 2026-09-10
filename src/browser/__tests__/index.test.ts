@@ -14,6 +14,7 @@ import {
 } from '../../__fixtures__/common';
 import { applyTheme, generateThemeStylesheet } from '../index';
 import { Theme, ThemePreset, Override } from '../../shared/theme';
+import { processReferenceTokens } from '../../shared/theme/process';
 
 const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');
 
@@ -77,6 +78,54 @@ const overrideWithReferenceTokens: Override = {
   tokens: {
     colorPrimary700: '#ff00bf', // This should be overridden by reference token
     // Don't override the dependent tokens - let them cascade via CSS variables
+  },
+};
+
+// Scoped ("theming v2") overrides must be complete: mode values define all states.
+const scopedOverride: Override = {
+  tokens: {
+    shadow: { light: 'yellow', dark: 'orange' },
+    buttonShadow: 'red',
+  },
+  contexts: {
+    navigation: {
+      tokens: {
+        shadow: { light: 'pink', dark: 'pink' },
+      },
+    },
+  },
+};
+
+// Reference token seeds for the scoped path: a plain string seed generates
+// mode-less string values, a mode-object seed generates mode-object values.
+const modeObjectSeed = { light: '#ff6600', dark: '#692dc9' };
+
+const scopedOverrideWithStringSeed: Override = {
+  ...scopedOverride,
+  referenceTokens: { color: { primary: '#0073bb' } },
+};
+
+const scopedOverrideWithModeObjectSeed: Override = {
+  ...scopedOverride,
+  referenceTokens: { color: { primary: { seed: modeObjectSeed } } },
+};
+
+// Preset whose base theme maps all seed-generated tokens (colorPrimary50, ...)
+// to the color mode, matching the {light, dark} shape of the generated values.
+const presetWithModeMappedGeneratedTokens: ThemePreset = {
+  ...preset,
+  theme: {
+    ...rootTheme,
+    tokenModeMap: {
+      ...rootTheme.tokenModeMap,
+      ...Object.keys(processReferenceTokens({ primary: { seed: modeObjectSeed } })).reduce(
+        (acc, token) => {
+          acc[token] = 'color';
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+    },
   },
 };
 
@@ -168,6 +217,25 @@ describe('applyTheme', () => {
       expect(allStyleNodes(targetDocument)).toHaveLength(0);
     });
   });
+  describe('with selector (scoped theming)', () => {
+    test('attaches one style node containing the scoped stylesheet', () => {
+      applyTheme({ override: scopedOverride, preset, selector: '#my-widget' });
+
+      const styleNodes = allStyleNodes();
+
+      expect(styleNodes).toHaveLength(1);
+      expect(styleNodes[0].innerHTML).toContain('#my-widget{');
+      expect(styleNodes[0].innerHTML).not.toContain(':not(#\\9)');
+    });
+
+    test('removes style node on reset', () => {
+      const { reset } = applyTheme({ override: scopedOverride, preset, selector: '#my-widget' });
+
+      reset();
+
+      expect(allStyleNodes()).toHaveLength(0);
+    });
+  });
 });
 
 describe('generateThemeStylesheet', () => {
@@ -209,6 +277,66 @@ describe('generateThemeStylesheet', () => {
       });
 
       expect(styles).toMatchSnapshot();
+    });
+  });
+
+  describe('with selector (scoped theming)', () => {
+    test('creates scoped override styles', () => {
+      const styles = generateThemeStylesheet({ override: scopedOverride, preset, selector: '.my-scope' });
+
+      expect(styles).toContain('.my-scope{');
+      expect(styles).not.toContain(':not(#\\9)');
+      expect(styles).toMatchSnapshot();
+    });
+
+    test('without selector produces the legacy output', () => {
+      const styles = generateThemeStylesheet({ override, preset });
+
+      expect(styles).toContain('body:not(#\\9){');
+      expect(styles).toEqual(generateThemeStylesheet({ override, preset, selector: undefined }));
+    });
+
+    test('whitespace-only selector uses the legacy path', () => {
+      const styles = generateThemeStylesheet({ override, preset, selector: '   ' });
+
+      expect(styles).toEqual(generateThemeStylesheet({ override, preset }));
+    });
+
+    test('throws on partial mode values (strict scoped validation)', () => {
+      // The legacy `override` fixture provides boxShadow only for light mode.
+      expect(() => generateThemeStylesheet({ override, preset, selector: '.my-scope' })).toThrow(
+        'Scoped theme token "boxShadow" must define all states of its mode.',
+      );
+    });
+  });
+
+  describe('with selector and reference tokens', () => {
+    test('renders with a string seed', () => {
+      const styles = generateThemeStylesheet({
+        override: scopedOverrideWithStringSeed,
+        preset,
+        selector: '.my-scope',
+      });
+
+      expect(styles).toContain('.my-scope{');
+    });
+
+    test('renders with a mode-object seed when generated tokens are mode-mapped', () => {
+      const styles = generateThemeStylesheet({
+        override: scopedOverrideWithModeObjectSeed,
+        preset: presetWithModeMappedGeneratedTokens,
+        selector: '.my-scope',
+      });
+
+      expect(styles).toContain('.my-scope{');
+    });
+
+    test('throws a clear validation error with a mode-object seed when generated tokens are mode-less', () => {
+      // rootTheme's tokenModeMap does not contain the generated colorPrimary* tokens,
+      // so their mode-object values cannot be resolved in a scoped stylesheet.
+      expect(() =>
+        generateThemeStylesheet({ override: scopedOverrideWithModeObjectSeed, preset, selector: '.my-scope' }),
+      ).toThrow(/Scoped theme token "colorPrimary\d+" does not support mode-specific values/);
     });
   });
 
