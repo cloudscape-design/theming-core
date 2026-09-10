@@ -1,7 +1,28 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { isModeValue, isValue, isReference, generateCamelCaseName, flattenObject, getReference } from '../utils';
+import {
+  isModeValue,
+  isValue,
+  isReference,
+  generateCamelCaseName,
+  flattenObject,
+  getReference,
+  isReferenceToken,
+} from '../utils';
+import { Theme } from '../interfaces';
+
+function createTheme(referenceTokens?: Theme['referenceTokens']): Theme {
+  return {
+    id: 'test',
+    selector: ':root',
+    tokens: {},
+    modes: {},
+    tokenModeMap: {},
+    contexts: {},
+    referenceTokens,
+  };
+}
 
 describe('theme utils', () => {
   describe('isModeValue', () => {
@@ -214,6 +235,45 @@ describe('theme utils', () => {
       expect(result).toEqual({
         aBC: { d: 'value' },
       });
+    });
+  });
+
+  describe('isReferenceToken', () => {
+    test('returns true for names derived from reference tokens', () => {
+      const theme = createTheme({
+        color: {
+          primary: { 500: '#0073bb', 900: '#000000' },
+          neutral: { 100: '#ffffff' },
+        },
+      });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary500')).toBe(true);
+      expect(isReferenceToken('color', theme, 'colorPrimary900')).toBe(true);
+      expect(isReferenceToken('color', theme, 'colorNeutral100')).toBe(true);
+    });
+
+    test('returns false for names not derived from reference tokens', () => {
+      const theme = createTheme({
+        color: {
+          primary: { 500: '#0073bb' },
+        },
+      });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary400')).toBe(false);
+      expect(isReferenceToken('color', theme, 'colorNeutral500')).toBe(false);
+      expect(isReferenceToken('color', theme, 'notAToken')).toBe(false);
+    });
+
+    test('returns false when the theme has no reference tokens', () => {
+      expect(isReferenceToken('color', createTheme(), 'colorPrimary500')).toBe(false);
+      expect(isReferenceToken('color', createTheme({}), 'colorPrimary500')).toBe(false);
+    });
+
+    test('ignores empty palettes', () => {
+      const theme = createTheme({ color: { primary: undefined, neutral: {} } });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary500')).toBe(false);
+      expect(isReferenceToken('color', theme, 'colorNeutral500')).toBe(false);
     });
   });
 });
