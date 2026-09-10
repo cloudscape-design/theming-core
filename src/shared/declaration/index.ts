@@ -1,17 +1,17 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { merge, mergeInPlace, Override, Theme } from '../theme';
-import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils';
-import type { PropertiesMap } from './interfaces';
-import type { SelectorCustomizer } from './customizer';
-import { RuleCreator } from './rule';
-import { SingleThemeCreator } from './theme-creator/single';
-import { MultiThemeCreator } from './theme-creator/multi';
-import { Selector } from './selector';
-import { MinimalTransformer } from './transformer';
-import { wrapComplexSelector } from '../styles/selector';
-import type Stylesheet from './stylesheet';
-import { cloneDeep } from '../utils';
+import { merge, mergeInPlace, Override, Theme } from '../theme/index.js';
+import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils.js';
+import type { PropertiesMap } from './interfaces.js';
+import type { SelectorCustomizer } from './customizer.js';
+import { RuleCreator } from './rule.js';
+import { SingleThemeCreator } from './theme-creator/single.js';
+import { MultiThemeCreator } from './theme-creator/multi.js';
+import { Selector } from './selector.js';
+import { MinimalTransformer } from './transformer.js';
+import { wrapComplexSelector } from '../styles/selector.js';
+import type Stylesheet from './stylesheet.js';
+import { cloneDeep } from '../utils.js';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);

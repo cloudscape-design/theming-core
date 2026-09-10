@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { generatePaletteFromSeed } from '../palette-generator';
+import { generatePaletteFromSeed } from '../palette-generator.js';
 
 describe('performance benchmarks', () => {
   test('palette generation completes within reasonable time', () => {

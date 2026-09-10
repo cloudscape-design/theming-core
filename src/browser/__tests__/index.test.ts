@@ -11,10 +11,10 @@ import {
   presetWithSeedColor,
   presetWithExplicitPalette,
   overrideWithSeedColor,
-} from '../../__fixtures__/common';
-import { applyTheme, generateThemeStylesheet } from '../index';
-import { Theme, ThemePreset, Override } from '../../shared/theme';
-import { processReferenceTokens } from '../../shared/theme/process';
+} from '../../__fixtures__/common.js';
+import { applyTheme, generateThemeStylesheet } from '../index.js';
+import { Theme, ThemePreset, Override } from '../../shared/theme/index.js';
+import { processReferenceTokens } from '../../shared/theme/process.js';
 
 const allStyleNodes = (targetDocument: Document = document) => targetDocument.head.querySelectorAll('style');
 

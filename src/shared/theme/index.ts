@@ -14,8 +14,8 @@ export {
   ReferenceTokens,
   ColorReferenceTokens,
   ReferencePaletteDefinition,
-} from './interfaces';
-export { ThemeBuilder, TokenCategory } from './builder';
+} from './interfaces.js';
+export { ThemeBuilder, TokenCategory } from './builder.js';
 export {
   resolveTheme,
   resolveThemeWithPaths,
@@ -27,7 +27,7 @@ export {
   FullResolution,
   SpecificResolution,
   FullResolutionPaths,
-} from './resolve';
-export { validateOverride } from './validate';
-export { merge, mergeInPlace } from './merge';
-export { processColorPaletteInput } from './process';
+} from './resolve.js';
+export { validateOverride } from './validate.js';
+export { merge, mergeInPlace } from './merge.js';
+export { processColorPaletteInput } from './process.js';

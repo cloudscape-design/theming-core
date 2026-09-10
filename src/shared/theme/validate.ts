@@ -1,9 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { entries, fromEntries, includes } from '../utils';
-import { Override, Theme, ThemePreset, Token } from './interfaces';
-import { processReferenceTokens } from './process';
-import { getMode } from './utils';
+import { entries, fromEntries, includes } from '../utils.js';
+import { Override, Theme, ThemePreset, Token } from './interfaces.js';
+import { processReferenceTokens } from './process.js';
+import { getMode } from './utils.js';
 
 /**
  * This function compares the theme override against the list of tokens that are allowed

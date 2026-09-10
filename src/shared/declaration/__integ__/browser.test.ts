@@ -3,10 +3,10 @@
 import { test, expect } from 'vitest';
 import useBrowser from '@cloudscape-design/browser-test-tools/use-browser';
 import { BasePageObject } from '@cloudscape-design/browser-test-tools/page-objects';
-import { rootTheme, preset, colorMode, navigationContext, defaultsResolution } from '../../../__fixtures__/common';
-import { createMultiThemeCustomizer, singleThemeCustomizer } from '../../declaration/customizer';
-import { createBuildDeclarations, createOverrideDeclarations } from '..';
-import { OptionalState, Override } from '../../theme';
+import { rootTheme, preset, colorMode, navigationContext, defaultsResolution } from '../../../__fixtures__/common.js';
+import { createMultiThemeCustomizer, singleThemeCustomizer } from '../../declaration/customizer.js';
+import { createBuildDeclarations, createOverrideDeclarations } from '../index.js';
+import { OptionalState, Override } from '../../theme/index.js';
 
 test(
   'resolves properties for root',

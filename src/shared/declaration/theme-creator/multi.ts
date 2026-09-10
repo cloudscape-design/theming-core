@@ -1,18 +1,26 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { isGlobalSelector } from '../../styles/selector';
-import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../../theme';
-import type { PropertiesMap } from '../interfaces';
-import { RuleCreator, SelectorConfig } from '../rule';
-import { SingleThemeCreator } from './single';
-import Stylesheet, { Rule } from '../stylesheet';
+import { isGlobalSelector } from '../../styles/selector.js';
+import {
+  defaultsReducer,
+  modeReducer,
+  OptionalState,
+  reduce,
+  resolveContext,
+  resolveTheme,
+  Theme,
+} from '../../theme/index.js';
+import type { PropertiesMap } from '../interfaces.js';
+import { RuleCreator, SelectorConfig } from '../rule.js';
+import { SingleThemeCreator } from './single.js';
+import Stylesheet, { Rule } from '../stylesheet.js';
 import {
   appendRuleToStylesheet,
   compact,
   forEachContext,
   forEachContextWithinOptionalModeState,
   forEachOptionalModeState,
-} from '../utils';
+} from '../utils.js';
 
 /**
  * Extends the single theme stylesheet creator by a secondary theme, which takes the existing theme as

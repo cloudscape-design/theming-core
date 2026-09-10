@@ -1,10 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Override, ThemePreset } from '../shared/theme';
-import { generateThemeStylesheet } from '../shared/theme-stylesheet';
-import { getNonce, createStyleNode, appendStyleNode } from './dom';
+import { Override, ThemePreset } from '../shared/theme/index.js';
+import { generateThemeStylesheet } from '../shared/theme-stylesheet.js';
+import { getNonce, createStyleNode, appendStyleNode } from './dom.js';
 
-export { generateThemeStylesheet, GenerateThemeStylesheetParams } from '../shared/theme-stylesheet';
+export { generateThemeStylesheet, GenerateThemeStylesheetParams } from '../shared/theme-stylesheet.js';
 
 export interface ApplyThemeParams {
   override: Override;
@@ -45,4 +45,4 @@ export {
   ColorReferenceTokens,
   ReferencePaletteDefinition,
   processColorPaletteInput,
-} from '../shared/theme';
+} from '../shared/theme/index.js';

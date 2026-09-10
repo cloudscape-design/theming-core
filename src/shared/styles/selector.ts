@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { includes } from '../utils';
+import { includes } from '../utils.js';
 
 // The idea to use a special :not(#\9) selector to increase CSS specificity came from:
 // https://github.com/MadLittleMods/postcss-increase-specificity

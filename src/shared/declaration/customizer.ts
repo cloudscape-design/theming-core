@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { increaseSpecificity, increaseSpecificityGradually, isIncreased } from '../styles/selector';
-import { includes } from '../utils';
+import { increaseSpecificity, increaseSpecificityGradually, isIncreased } from '../styles/selector.js';
+import { includes } from '../utils.js';
 
 export type SelectorCustomizer = (selector: string) => string;
 

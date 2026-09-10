@@ -1,11 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, test, expect } from 'vitest';
-import { PrimaryPaletteSpecification } from '../primary-spec';
-import { NeutralPaletteSpecification } from '../neutral-spec';
-import { WarningPaletteSpecification } from '../warning-spec';
-import { hexToHct } from '../hct-utils';
-import { PaletteStep, ReferencePaletteDefinition } from '../../interfaces';
+import { PrimaryPaletteSpecification } from '../primary-spec.js';
+import { NeutralPaletteSpecification } from '../neutral-spec.js';
+import { WarningPaletteSpecification } from '../warning-spec.js';
+import { hexToHct } from '../hct-utils.js';
+import { PaletteStep, ReferencePaletteDefinition } from '../../interfaces.js';
 
 // While WCAG specifies contrast ratios (e.g., 4.5:1), the HCT (hue, chroma, tone) system converts these into a simple tone difference.
 // A difference of 40 in HCT tone guarantees a contrast ratio >= 3:1, and a difference of 50 guarantees a contrast ratio >= 4.5:1.

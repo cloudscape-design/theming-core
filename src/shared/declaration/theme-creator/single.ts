@@ -9,17 +9,17 @@ import {
   resolveContext,
   resolveTheme,
   Theme,
-} from '../../theme';
-import type { PropertiesMap } from '../interfaces';
-import Stylesheet from '../stylesheet';
-import type { RuleCreator } from '../rule';
+} from '../../theme/index.js';
+import type { PropertiesMap } from '../interfaces.js';
+import Stylesheet from '../stylesheet.js';
+import type { RuleCreator } from '../rule.js';
 import {
   appendRuleToStylesheet,
   compact,
   forEachContext,
   forEachContextWithinOptionalModeState,
   forEachOptionalModeState,
-} from '../utils';
+} from '../utils.js';
 
 export class SingleThemeCreator {
   theme: Theme;
