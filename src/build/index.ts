@@ -3,6 +3,7 @@
 export { buildThemedComponents, BuildThemedComponentsParams } from './public';
 export { toStableKeyframeName } from './token';
 export { generateThemeStylesheet, GenerateThemeStylesheetParams } from '../shared/theme-stylesheet';
+export { getStylesheetPackageImports, StylesheetImport } from './stylesheet-import';
 export {
   Theme,
   ThemePreset,
