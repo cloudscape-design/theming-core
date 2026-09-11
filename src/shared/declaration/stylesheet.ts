@@ -134,6 +134,6 @@ export class Declaration {
 function asValuesArray<T>(map: Map<string, [T, number]>): T[] {
   const tmp: [T, number][] = [];
   map.forEach(([item, position]) => tmp.push([item, position]));
-  tmp.sort(([itemA, posA], [itemB, posB]) => posA - posB);
+  tmp.sort(([, posA], [, posB]) => posA - posB);
   return tmp.map(([item]) => item);
 }

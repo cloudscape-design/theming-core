@@ -1,22 +1,23 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mergeInPlace, Override, Theme } from '../theme';
+import { merge, mergeInPlace, Override, Theme } from '../theme';
 import { flattenReferenceTokens, collectReferencedTokens } from '../theme/utils';
-import type { PropertiesMap, SelectorCustomizer } from './interfaces';
+import type { PropertiesMap } from './interfaces';
+import type { SelectorCustomizer } from './customizer';
 import { RuleCreator } from './rule';
-import { SingleThemeCreator } from './single';
-import { MultiThemeCreator } from './multi';
+import { SingleThemeCreator } from './theme-creator/single';
+import { MultiThemeCreator } from './theme-creator/multi';
 import { Selector } from './selector';
-import { UsedPropertyRegistry } from './registry';
 import { MinimalTransformer } from './transformer';
+import { wrapComplexSelector } from '../styles/selector';
 import type Stylesheet from './stylesheet';
-import { cloneDeep, values } from '../utils';
+import { cloneDeep } from '../utils';
 
 function createMinimalTheme(base: Theme, override: Override): Theme {
   const minimalTheme = cloneDeep(base);
   const contextTokens: Set<string> = new Set();
 
-  values(minimalTheme.contexts).forEach((context) => {
+  Object.values(minimalTheme.contexts).forEach((context) => {
     Object.keys(context.tokens).forEach((key) => {
       const isInOverrideContext = key in (override?.contexts?.[context.id]?.tokens ?? {});
       if (!(key in override.tokens) && !isInOverrideContext) {
@@ -78,10 +79,7 @@ function buildStylesheet(
   selectorCustomizer: SelectorCustomizer,
   usedTokens: string[],
 ): Stylesheet {
-  const ruleCreator = new RuleCreator(
-    new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, usedTokens),
-  );
+  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), propertiesMap, usedTokens);
   return new MultiThemeCreator(themes, ruleCreator, propertiesMap).create();
 }
 
@@ -100,11 +98,35 @@ export function createOverrideDeclarations(
   addMissingTokensToTheme(minimalTheme, referencedTokens, base);
 
   const usedTokens = [...initialTokens, ...referencedTokens];
-  const ruleCreator = new RuleCreator(
-    new Selector(selectorCustomizer),
-    new UsedPropertyRegistry(propertiesMap, usedTokens),
-  );
+  const ruleCreator = new RuleCreator(new Selector(selectorCustomizer), propertiesMap, usedTokens);
   const stylesheet = new SingleThemeCreator(minimalTheme, ruleCreator, base, propertiesMap).create();
+  return new MinimalTransformer().transform(stylesheet).toString();
+}
+
+/**
+ * Creates a self-contained stylesheet scoped to the supplied selector. Token and
+ * context values missing from the override are pulled from the base theme, but the
+ * returned stylesheet still redeclares them.
+ */
+export function createScopedThemeDeclarations(
+  base: Theme,
+  override: Override,
+  propertiesMap: PropertiesMap,
+  selector: string,
+): string {
+  const mergedTheme = merge(base, override);
+  const scopedTheme: Theme = {
+    ...mergedTheme,
+    selector: wrapComplexSelector(selector),
+  };
+
+  // No customizer needed in new Selector() to increase selector specificity, we assume that
+  // the base theme styles are in a cascade layer (awsui-base-theme), which has lower priority
+  // than unlayered styles. Builders can wrap the returned stylesheet in a @layer to customize
+  // ordering even further.
+  const ruleCreator = new RuleCreator(new Selector(), propertiesMap);
+  // No baseTheme, since the scopedTheme stylesheet should be generated fully complete.
+  const stylesheet = new SingleThemeCreator(scopedTheme, ruleCreator, undefined, propertiesMap).create();
   return new MinimalTransformer().transform(stylesheet).toString();
 }
 

@@ -1,26 +1,29 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { isGlobalSelector } from '../styles/selector';
-import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../theme';
-import type { PropertiesMap } from './interfaces';
-import { AbstractCreator } from './abstract';
-import type { StylesheetCreator } from './interfaces';
-import { RuleCreator, SelectorConfig } from './rule';
+import { isGlobalSelector } from '../../styles/selector';
+import { defaultsReducer, modeReducer, OptionalState, reduce, resolveContext, resolveTheme, Theme } from '../../theme';
+import type { PropertiesMap } from '../interfaces';
+import { RuleCreator, SelectorConfig } from '../rule';
 import { SingleThemeCreator } from './single';
-import Stylesheet, { Rule } from './stylesheet';
-import { compact } from './utils';
+import Stylesheet, { Rule } from '../stylesheet';
+import {
+  appendRuleToStylesheet,
+  compact,
+  forEachContext,
+  forEachContextWithinOptionalModeState,
+  forEachOptionalModeState,
+} from '../utils';
 
 /**
  * Extends the single theme stylesheet creator by a secondary theme, which takes the existing theme as
  * base.
  */
-export class MultiThemeCreator extends AbstractCreator implements StylesheetCreator {
+export class MultiThemeCreator {
   themes: Theme[];
   ruleCreator: RuleCreator;
   propertiesMap?: PropertiesMap;
 
   constructor(themes: Theme[], ruleCreator: RuleCreator, propertiesMap?: PropertiesMap) {
-    super();
     this.themes = themes;
     this.ruleCreator = ruleCreator;
     this.propertiesMap = propertiesMap;
@@ -68,9 +71,9 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
 
     const rootRule = this.ruleCreator.create({ global: [secondary.selector] }, defaults);
     const parentRule = this.findRule(stylesheet, { global: [primary.selector] });
-    MultiThemeCreator.appendRuleToStylesheet(stylesheet, rootRule, compact([parentRule]));
+    appendRuleToStylesheet(stylesheet, rootRule, compact([parentRule]));
 
-    MultiThemeCreator.forEachOptionalModeState(secondary, (mode, state) => {
+    forEachOptionalModeState(secondary, (mode, state) => {
       const optionalState = mode.states[state] as OptionalState;
       const modeResolution = reduce(secondaryResolution, secondary, modeReducer(mode, state));
       const modeRule = this.ruleCreator.create(
@@ -82,10 +85,10 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           global: [primary.selector, optionalState.selector],
         }),
       );
-      MultiThemeCreator.appendRuleToStylesheet(stylesheet, modeRule, compact([rootRule, parentModeRule, parentRule]));
+      appendRuleToStylesheet(stylesheet, modeRule, compact([rootRule, parentModeRule, parentRule]));
     });
 
-    MultiThemeCreator.forEachContext(secondary, (context) => {
+    forEachContext(secondary, (context) => {
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
         secondary,
@@ -101,24 +104,16 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
           local: [context.selector],
         }),
       );
-      MultiThemeCreator.appendRuleToStylesheet(
-        stylesheet,
-        contextRule,
-        compact([parentContextRule, rootRule, parentRule]),
-      );
+      appendRuleToStylesheet(stylesheet, contextRule, compact([parentContextRule, rootRule, parentRule]));
 
       const contextRuleGlobal = this.ruleCreator.create(
         { global: [secondary.selector, context.selector] },
         contextResolution,
       );
-      MultiThemeCreator.appendRuleToStylesheet(
-        stylesheet,
-        contextRuleGlobal,
-        compact([rootRule, parentContextRule, parentRule]),
-      );
+      appendRuleToStylesheet(stylesheet, contextRuleGlobal, compact([rootRule, parentContextRule, parentRule]));
     });
 
-    MultiThemeCreator.forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
+    forEachContextWithinOptionalModeState(secondary, (context, mode, state) => {
       const optionalState = mode.states[state] as OptionalState;
       const contextResolution = reduce(
         resolveContext(secondary, context, undefined, undefined, this.propertiesMap),
@@ -154,7 +149,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         }),
       );
 
-      MultiThemeCreator.appendRuleToStylesheet(
+      appendRuleToStylesheet(
         stylesheet,
         contextAndModeRule,
         compact([
@@ -176,7 +171,7 @@ export class MultiThemeCreator extends AbstractCreator implements StylesheetCrea
         contextResolution,
       );
 
-      MultiThemeCreator.appendRuleToStylesheet(
+      appendRuleToStylesheet(
         stylesheet,
         contextAndModeRuleGlobal,
         compact([
