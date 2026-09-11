@@ -15,9 +15,9 @@ export interface SelectorConfig {
 export class RuleCreator {
   selector: Selector;
   propertiesMap: PropertiesMap;
-  usedTokens: string[];
+  usedTokens?: string[];
 
-  constructor(selector: Selector, propertiesMap: PropertiesMap, usedTokens: string[]) {
+  constructor(selector: Selector, propertiesMap: PropertiesMap, usedTokens?: string[]) {
     this.selector = selector;
     this.propertiesMap = propertiesMap;
     this.usedTokens = usedTokens;
@@ -39,7 +39,7 @@ export class RuleCreator {
   }
 
   private getProperty(token: string): string | undefined {
-    if (this.usedTokens.indexOf(token) > -1) {
+    if (!this.usedTokens || this.usedTokens.indexOf(token) > -1) {
       return this.propertiesMap[token];
     }
     return undefined;

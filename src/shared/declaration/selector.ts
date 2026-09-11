@@ -9,16 +9,16 @@ interface SelectorParams {
 }
 
 export class Selector {
-  customizer: SelectorCustomizer;
+  customizer?: SelectorCustomizer;
 
-  constructor(customizer: SelectorCustomizer) {
+  constructor(customizer?: SelectorCustomizer) {
     this.customizer = customizer;
   }
 
   for({ global, local }: SelectorParams): string {
     if (global.length === 1 && !local?.length && isGlobalSelector(global[0])) {
       // Global selectors (:root, body, html) are only applied alone
-      return this.customizer(global[0]);
+      return this.customizer ? this.customizer(global[0]) : global[0];
     }
     const nonGlobalSelectors = global.filter((f) => !isGlobalSelector(f));
 
@@ -26,8 +26,9 @@ export class Selector {
     if (local?.length) {
       selector += ` ${this.toSelector(local)}`;
     }
+    selector = selector.trim();
 
-    return this.customizer(selector.trim());
+    return this.customizer ? this.customizer(selector) : selector;
   }
 
   private toSelector(individuals: string[]): string {
