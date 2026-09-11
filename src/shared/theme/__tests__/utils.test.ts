@@ -1,7 +1,28 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { describe, test, expect } from 'vitest';
-import { isModeValue, isValue, isReference, generateCamelCaseName, flattenObject, getReference } from '../utils';
+import { describe, test, expect, vi } from 'vitest';
+import {
+  isModeValue,
+  isValue,
+  isReference,
+  generateCamelCaseName,
+  flattenObject,
+  getReference,
+  isReferenceToken,
+} from '../utils';
+import { Theme } from '../interfaces';
+
+function createTheme(referenceTokens?: Theme['referenceTokens']): Theme {
+  return {
+    id: 'test',
+    selector: ':root',
+    tokens: {},
+    modes: {},
+    tokenModeMap: {},
+    contexts: {},
+    referenceTokens,
+  };
+}
 
 describe('theme utils', () => {
   describe('isModeValue', () => {
@@ -214,6 +235,79 @@ describe('theme utils', () => {
       expect(result).toEqual({
         aBC: { d: 'value' },
       });
+    });
+  });
+
+  describe('isReferenceToken', () => {
+    test('returns true for names derived from reference tokens', () => {
+      const theme = createTheme({
+        color: {
+          primary: { 500: '#0073bb', 900: '#000000' },
+          neutral: { 100: '#ffffff' },
+        },
+      });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary500')).toBe(true);
+      expect(isReferenceToken('color', theme, 'colorPrimary900')).toBe(true);
+      expect(isReferenceToken('color', theme, 'colorNeutral100')).toBe(true);
+    });
+
+    test('returns false for names not derived from reference tokens', () => {
+      const theme = createTheme({
+        color: {
+          primary: { 500: '#0073bb' },
+        },
+      });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary400')).toBe(false);
+      expect(isReferenceToken('color', theme, 'colorNeutral500')).toBe(false);
+      expect(isReferenceToken('color', theme, 'notAToken')).toBe(false);
+    });
+
+    test('returns false when the theme has no reference tokens', () => {
+      expect(isReferenceToken('color', createTheme(), 'colorPrimary500')).toBe(false);
+      expect(isReferenceToken('color', createTheme({}), 'colorPrimary500')).toBe(false);
+    });
+
+    test('ignores empty palettes', () => {
+      const theme = createTheme({ color: { primary: undefined, neutral: {} } });
+
+      expect(isReferenceToken('color', theme, 'colorPrimary500')).toBe(false);
+      expect(isReferenceToken('color', theme, 'colorNeutral500')).toBe(false);
+    });
+
+    test('reuses the cached name set for repeat lookups on the same referenceTokens', () => {
+      const theme = createTheme({ color: { primary: { 500: '#0073bb', 900: '#000000' } } });
+      const entriesSpy = vi.spyOn(Object, 'entries');
+
+      // First lookup builds the name set for this referenceTokens object.
+      expect(isReferenceToken('color', theme, 'colorPrimary500')).toBe(true);
+      const callsAfterBuild = entriesSpy.mock.calls.length;
+
+      // Subsequent lookups on the same object hit the cache and do no rebuild work.
+      expect(isReferenceToken('color', theme, 'colorPrimary900')).toBe(true);
+      expect(isReferenceToken('color', theme, 'notAToken')).toBe(false);
+
+      expect(entriesSpy.mock.calls.length).toBe(callsAfterBuild);
+      entriesSpy.mockRestore();
+    });
+
+    test('rebuilds the name set for a different referenceTokens object', () => {
+      const primed = createTheme({ color: { primary: { 500: '#0073bb' } } });
+
+      // Prime the cache for the first referenceTokens object.
+      expect(isReferenceToken('color', primed, 'colorPrimary500')).toBe(true);
+
+      const entriesSpy = vi.spyOn(Object, 'entries');
+
+      // A different referenceTokens object is a distinct cache key, so the name set
+      // is built fresh (rebuild work happens) and reflects its own palette.
+      const fresh = createTheme({ color: { primary: { 900: '#000000' } } });
+
+      expect(isReferenceToken('color', fresh, 'colorPrimary900')).toBe(true);
+      expect(entriesSpy.mock.calls.length).toBeGreaterThan(0);
+      expect(isReferenceToken('color', fresh, 'colorPrimary500')).toBe(false);
+      entriesSpy.mockRestore();
     });
   });
 });
