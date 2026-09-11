@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 export { buildThemedComponents, BuildThemedComponentsParams } from './public';
 export { toStableKeyframeName } from './token';
+export { generateThemeStylesheet, GenerateThemeStylesheetParams } from '../shared/theme-stylesheet';
 export {
   Theme,
   ThemePreset,
