@@ -3,14 +3,40 @@
 import { Assignment, DefaultState, OptionalState, ReferenceTokens, Theme } from './interfaces';
 import { Value, Reference, ModeValue, Mode } from './interfaces';
 
-export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, token: string): boolean {
-  const categoryTokens = theme.referenceTokens?.[category];
-  if (!categoryTokens) return false;
+// Memoize the derived reference-token name Set per `referenceTokens` object and category.
+const referenceTokenNamesByRefTokens = new WeakMap<
+  ReferenceTokens,
+  Partial<Record<keyof ReferenceTokens, Set<string>>>
+>();
 
-  return Object.entries(categoryTokens).some(([type, set]) => {
-    if (!set) return false;
-    return Object.keys(set).some((step) => generateReferenceTokenName(category, type, step) === token);
-  });
+function getReferenceTokenNames(referenceTokens: ReferenceTokens, category: keyof ReferenceTokens): Set<string> {
+  let perCategory = referenceTokenNamesByRefTokens.get(referenceTokens);
+  if (!perCategory) {
+    perCategory = {};
+    referenceTokenNamesByRefTokens.set(referenceTokens, perCategory);
+  }
+
+  let names = perCategory[category];
+  if (!names) {
+    names = new Set<string>();
+    const categoryTokens = referenceTokens[category];
+    if (categoryTokens) {
+      Object.entries(categoryTokens).forEach(([type, set]) => {
+        if (!set) return;
+        Object.keys(set).forEach((step) => names!.add(generateReferenceTokenName(category, type, step)));
+      });
+    }
+    perCategory[category] = names;
+  }
+
+  return names;
+}
+
+export function isReferenceToken(category: keyof ReferenceTokens, theme: Theme, token: string): boolean {
+  const referenceTokens = theme.referenceTokens;
+  if (!referenceTokens) return false;
+
+  return getReferenceTokenNames(referenceTokens, category).has(token);
 }
 
 export function flattenObject(obj: any, prefix: string[] = []): Record<string, Assignment> {
