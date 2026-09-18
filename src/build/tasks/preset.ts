@@ -14,7 +14,7 @@ export async function createPresetFiles(preset: ThemePreset, outputDir: string) 
     writeFile(join(generatedDir, '/index.js'), renderPreset(preset)),
     writeFile(join(generatedDir, '/index.cjs'), renderCJSPreset(preset)),
     writeFile(join(generatedDir, '/index.d.ts'), renderPresetDeclaration(preset)),
-    writeFile(join(generatedDir, '/index.cjs.d.ts'), renderCJSPresetDeclaration(preset)),
+    writeFile(join(generatedDir, '/index.d.cts'), renderCJSPresetDeclaration(preset)),
   ]);
 }
 
