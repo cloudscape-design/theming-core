@@ -351,7 +351,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.font-size-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
+          'Tokens validation error: instance.tokens.font-size-body.$value is not any of [subschema 0],[subschema 1]',
         );
       });
     });
@@ -379,7 +379,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.line-height-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
+          'Tokens validation error: instance.tokens.line-height-body.$value is not any of [subschema 0],[subschema 1]',
         );
       });
     });
@@ -419,7 +419,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$"',
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value is not any of [subschema 0],[subschema 1]',
         );
       });
     });
@@ -512,6 +512,70 @@ describe('validateJson', () => {
           }),
         ).toThrowError('Tokens validation error');
       });
+    });
+  });
+
+  describe('density-scoped typography', () => {
+    const anyOfError = (tokenName: string) =>
+      `Tokens validation error: instance.tokens.${tokenName}.$value is not any of [subschema 0],[subschema 1]`;
+
+    test('accepts comfortable/compact objects for each typography category', () => {
+      expect(
+        validateTokens({
+          'font-family-base': { $value: { comfortable: 'Font A, sans-serif', compact: 'Font B, sans-serif' } },
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13px' } },
+          'line-height-body-m': { $value: { comfortable: '20px', compact: '18px' } },
+          'font-weight-heading': { $value: { comfortable: '700', compact: 'bold' } },
+          'letter-spacing-heading': { $value: { comfortable: '0.5px', compact: 'normal' } },
+        }),
+      ).toBe(true);
+    });
+
+    test('still accepts a single string value (backward compatible)', () => {
+      expect(
+        validateTokens({
+          'font-family-base': { $value: 'Font A, sans-serif' },
+          'font-size-body-m': { $value: '14px' },
+          'line-height-body-m': { $value: '20px' },
+          'font-weight-heading': { $value: '700' },
+          'letter-spacing-heading': { $value: 'normal' },
+        }),
+      ).toBe(true);
+    });
+
+    test('accepts descriptions alongside a density object', () => {
+      expect(
+        validateTokens({
+          'font-size-body-m': {
+            $value: { comfortable: '14px', compact: '13px' },
+            $description: 'The default font size for regular body text.',
+          },
+        }),
+      ).toBe(true);
+    });
+
+    test('rejects a density object with an invalid per-mode value', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13 px' } },
+        }),
+      ).toThrowError(anyOfError('font-size-body-m'));
+    });
+
+    test('rejects a density object missing a mode', () => {
+      expect(() =>
+        validateTokens({
+          'line-height-body-m': { $value: { comfortable: '20px' } },
+        }),
+      ).toThrowError(anyOfError('line-height-body-m'));
+    });
+
+    test('rejects a density object with an unexpected mode', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13px', cozy: '15px' } },
+        }),
+      ).toThrowError(anyOfError('font-size-body-m'));
     });
   });
 });
