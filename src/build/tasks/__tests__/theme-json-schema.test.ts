@@ -350,9 +350,7 @@ describe('validateJson', () => {
               $value: invalidValue,
             },
           }),
-        ).toThrowError(
-          'Tokens validation error: instance.tokens.font-size-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
-        );
+        ).toThrowError('Tokens validation error: instance.tokens.font-size-body.$value is not any of (subschema 0:');
       });
     });
   });
@@ -378,9 +376,7 @@ describe('validateJson', () => {
               $value: invalidValue,
             },
           }),
-        ).toThrowError(
-          'Tokens validation error: instance.tokens.line-height-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
-        );
+        ).toThrowError('Tokens validation error: instance.tokens.line-height-body.$value is not any of (subschema 0:');
       });
     });
   });
@@ -419,7 +415,7 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$"',
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value is not any of (subschema 0:',
         );
       });
     });
@@ -512,6 +508,153 @@ describe('validateJson', () => {
           }),
         ).toThrowError('Tokens validation error');
       });
+    });
+  });
+
+  describe('density-scoped typography', () => {
+    test('accepts comfortable/compact objects for each typography category', () => {
+      expect(
+        validateTokens({
+          'font-family-base': { $value: { comfortable: 'Font A, sans-serif', compact: 'Font B, sans-serif' } },
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13px' } },
+          'line-height-body-m': { $value: { comfortable: '20px', compact: '18px' } },
+          'font-weight-heading': { $value: { comfortable: '700', compact: 'bold' } },
+          'letter-spacing-heading': { $value: { comfortable: '0.5px', compact: 'normal' } },
+        }),
+      ).toBe(true);
+    });
+
+    test('still accepts a single string value (backward compatible)', () => {
+      expect(
+        validateTokens({
+          'font-family-base': { $value: 'Font A, sans-serif' },
+          'font-size-body-m': { $value: '14px' },
+          'line-height-body-m': { $value: '20px' },
+          'font-weight-heading': { $value: '700' },
+          'letter-spacing-heading': { $value: 'normal' },
+        }),
+      ).toBe(true);
+    });
+
+    test('accepts descriptions alongside a density object', () => {
+      expect(
+        validateTokens({
+          'font-size-body-m': {
+            $value: { comfortable: '14px', compact: '13px' },
+            $description: 'The default font size for regular body text.',
+          },
+        }),
+      ).toBe(true);
+    });
+
+    // Returns the full thrown message so assertions can check the complete
+    // expanded string, not just a prefix.
+    const getError = (tokens: Record<string, TokenJson>): string => {
+      try {
+        validateTokens(tokens);
+      } catch (error) {
+        return (error as Error).message;
+      }
+      throw new Error('expected validateTokens to throw, but it did not');
+    };
+
+    test('rejects a density object with an invalid per-mode value, naming the mode and both branches', () => {
+      const message = getError({
+        'font-size-body-m': { $value: { comfortable: '14px', compact: '13 px' } },
+      });
+      // Branch 0 (plain string) is reported as a type mismatch; branch 1 (the
+      // density object) pinpoints the offending mode and the pattern it failed.
+      expect(message).toContain('instance.tokens.font-size-body-m.$value is not any of (');
+      expect(message).toContain('subschema 0: instance is not of a type(s) string');
+      expect(message).toContain('subschema 1: instance.compact does not match pattern');
+      expect(message).toContain('(px|rem|em)$');
+      // the two branches are joined and parenthesised as one message
+      expect(message).toMatch(/is not any of \(subschema 0: .+ \| subschema 1: .+\)$/);
+      // the opaque collapsed form never leaks through
+      expect(message).not.toContain('[subschema 0],[subschema 1]');
+    });
+
+    test('rejects a density object missing a mode, naming the required property', () => {
+      const message = getError({
+        'line-height-body-m': { $value: { comfortable: '20px' } },
+      });
+      expect(message).toBe(
+        'Tokens validation error: instance.tokens.line-height-body-m.$value is not any of ' +
+          '(subschema 0: instance is not of a type(s) string | ' +
+          'subschema 1: instance requires property "compact")',
+      );
+    });
+
+    test('rejects a density object with an unexpected mode, naming the disallowed property', () => {
+      const message = getError({
+        'font-size-body-m': { $value: { comfortable: '14px', compact: '13px', cozy: '15px' } },
+      });
+      expect(message).toBe(
+        'Tokens validation error: instance.tokens.font-size-body-m.$value is not any of ' +
+          '(subschema 0: instance is not of a type(s) string | ' +
+          'subschema 1: instance is not allowed to have the additional property "cozy")',
+      );
+    });
+
+    test('rejects an invalid string value, naming the pattern on the string branch', () => {
+      const message = getError({
+        'font-size-body-m': { $value: '13 px' },
+      });
+      // Branch 0 (plain string) reports the failed pattern; branch 1 (object)
+      // reports the type mismatch.
+      expect(message).toContain('instance.tokens.font-size-body-m.$value is not any of (');
+      expect(message).toContain('subschema 0: instance does not match pattern');
+      expect(message).toContain('(px|rem|em)$');
+      expect(message).toContain('subschema 1: instance is not of a type(s) object');
+    });
+
+    test('names every failed per-mode value when both modes are invalid', () => {
+      const message = getError({
+        'font-size-body-m': { $value: { comfortable: 'big', compact: 'small' } },
+      });
+      // both offending modes are reported, separated by '; '
+      expect(message).toContain('subschema 1: instance.comfortable does not match pattern');
+      expect(message).toContain('; instance.compact does not match pattern');
+    });
+
+    test('expands the object branch for every anyOf typography category', () => {
+      // A per-category VALID comfortable value and an INVALID compact value (one
+      // the category's own pattern rejects), plus the pattern fragment the
+      // expanded message must surface. Keeping comfortable valid means only the
+      // compact mode is reported, which is what the assertion checks.
+      const cases: Array<[string, string, string, string]> = [
+        ['font-size-body-m', '14px', '13 px', '(px|rem|em)$'],
+        ['line-height-body-m', '20px', '13 px', '(px|rem|em)$'],
+        ['font-weight-heading', '700', 'xx', '|light|heavy)$'],
+        ['letter-spacing-heading', 'normal', 'xx', '|unset|'],
+      ];
+      for (const [tokenName, goodComfortable, badCompact, patternFragment] of cases) {
+        const message = getError({
+          [tokenName]: { $value: { comfortable: goodComfortable, compact: badCompact } },
+        });
+        expect(message).toContain(`instance.tokens.${tokenName}.$value is not any of (subschema 0:`);
+        // the object branch (subschema 1) is expanded to name the mode and its pattern
+        expect(message).toContain('subschema 1: instance.compact does not match pattern');
+        expect(message).toContain(patternFragment);
+        // the opaque collapsed form never leaks through
+        expect(message).not.toContain('[subschema 0],[subschema 1]');
+      }
+    });
+
+    test('font-family accepts any string per mode, so a string value is not a pattern failure', () => {
+      // font-family has no pattern, so its only density constraint is shape; a
+      // bad shape still expands, but a plain string per mode is valid.
+      expect(
+        validateTokens({
+          'font-family-base': { $value: { comfortable: 'Arial', compact: 'Helvetica' } },
+        }),
+      ).toBe(true);
+      const message = getError({ 'font-family-base': { $value: { comfortable: 'Arial' } } });
+      expect(message).toBe(
+        'Tokens validation error: instance.tokens.font-family-base.$value is not any of ' +
+          '(subschema 0: instance is not of a type(s) string | ' +
+          'subschema 1: instance requires property "compact")',
+      );
     });
   });
 });

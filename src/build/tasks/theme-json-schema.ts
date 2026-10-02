@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { validate } from 'jsonschema';
+import { validate, ValidationError } from 'jsonschema';
 import { Theme } from '../../shared/theme';
 import { ThemeJson } from './theme-json';
 
@@ -9,12 +9,13 @@ interface ThemeJsonSchema extends GenericSchema {
 }
 
 interface GenericSchema {
-  type: string;
+  type?: string;
   pattern?: string;
   patternProperties?: Record<string, GenericSchema>;
   properties?: Record<string, GenericSchema>;
   additionalProperties?: boolean;
   required?: Array<string>;
+  anyOf?: Array<GenericSchema>;
 }
 
 const stringValueSchema: GenericSchema = { type: 'string' };
@@ -84,7 +85,9 @@ const tokensSchema: GenericSchema = {
   type: 'object',
   patternProperties: {
     '^color-': getTokenSchema(getComplexValueSchema(colorValueSchema, visualModes)),
-    '^font-family-': getTokenSchema(stringValueSchema),
+    '^font-family-': getTokenSchema({
+      anyOf: [stringValueSchema, getComplexValueSchema(stringValueSchema, densityModes)],
+    }),
     '^border-radius-': getTokenSchema(spaceValueSchema),
     '^border-width-': getTokenSchema(borderWidthValueSchema),
     '^space-': getTokenSchema(getComplexValueSchema(spaceValueSchema, densityModes)),
@@ -92,12 +95,20 @@ const tokensSchema: GenericSchema = {
     '^motion-easing-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^motion-keyframes-': getTokenSchema(getComplexValueSchema(stringValueSchema, motionModes)),
     '^shadow-': getTokenSchema(getComplexValueSchema(stringValueSchema, visualModes)),
-    '^font-size-': getTokenSchema(textSizeValueSchema),
+    '^font-size-': getTokenSchema({
+      anyOf: [textSizeValueSchema, getComplexValueSchema(textSizeValueSchema, densityModes)],
+    }),
     '^font-decoration-thickness-': getTokenSchema(textDecorationThicknessValueSchema),
     '^font-decoration-style-': getTokenSchema(textDecorationStyleValueSchema),
-    '^line-height-': getTokenSchema(textSizeValueSchema),
-    '^font-weight-': getTokenSchema(textWeightValueSchema),
-    '^letter-spacing-': getTokenSchema(letterSpacingValueSchema),
+    '^line-height-': getTokenSchema({
+      anyOf: [textSizeValueSchema, getComplexValueSchema(textSizeValueSchema, densityModes)],
+    }),
+    '^font-weight-': getTokenSchema({
+      anyOf: [textWeightValueSchema, getComplexValueSchema(textWeightValueSchema, densityModes)],
+    }),
+    '^letter-spacing-': getTokenSchema({
+      anyOf: [letterSpacingValueSchema, getComplexValueSchema(letterSpacingValueSchema, densityModes)],
+    }),
     '^size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
   },
   additionalProperties: false,
@@ -130,11 +141,24 @@ export function getThemeJSONSchema(theme: Theme): ThemeJsonSchema {
   };
 }
 
+function describeError(error: ValidationError): string {
+  const schema = error.schema;
+  if (error.name !== 'anyOf' || typeof schema === 'string' || !schema.anyOf) {
+    return error.stack;
+  }
+  const branchMessages = schema.anyOf.map((subSchema, index) => {
+    const subErrors = validate(error.instance, subSchema).errors;
+    const detail = subErrors.map((subError) => describeError(subError)).join('; ');
+    return `subschema ${index}: ${detail}`;
+  });
+  return `${error.property} is not any of (${branchMessages.join(' | ')})`;
+}
+
 export function validateJson(themeJson: ThemeJson, themeJsonSchema: ThemeJsonSchema): boolean {
   const validationResult = validate(themeJson, themeJsonSchema);
   if (validationResult.valid) {
     return true;
   } else {
-    throw new Error(`Tokens validation error: ${validationResult.errors[0].stack}`);
+    throw new Error(`Tokens validation error: ${describeError(validationResult.errors[0])}`);
   }
 }
