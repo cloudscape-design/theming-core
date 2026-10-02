@@ -1,6 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { validate } from 'jsonschema';
+import { validate, ValidationError } from 'jsonschema';
 import { Theme } from '../../shared/theme';
 import { ThemeJson } from './theme-json';
 
@@ -141,11 +141,23 @@ export function getThemeJSONSchema(theme: Theme): ThemeJsonSchema {
   };
 }
 
+function describeError(error: ValidationError): string {
+  if (error.name !== 'anyOf' || !error.schema || typeof error.schema === 'boolean' || !error.schema.anyOf) {
+    return error.stack;
+  }
+  const branchMessages = error.schema.anyOf.map((subSchema, index) => {
+    const subErrors = validate(error.instance, subSchema).errors;
+    const detail = subErrors.map((subError) => describeError(subError)).join('; ');
+    return `subschema ${index}: ${detail}`;
+  });
+  return `${error.property} is not any of (${branchMessages.join(' | ')})`;
+}
+
 export function validateJson(themeJson: ThemeJson, themeJsonSchema: ThemeJsonSchema): boolean {
   const validationResult = validate(themeJson, themeJsonSchema);
   if (validationResult.valid) {
     return true;
   } else {
-    throw new Error(`Tokens validation error: ${validationResult.errors[0].stack}`);
+    throw new Error(`Tokens validation error: ${describeError(validationResult.errors[0])}`);
   }
 }
