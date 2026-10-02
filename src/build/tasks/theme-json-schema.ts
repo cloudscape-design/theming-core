@@ -142,10 +142,11 @@ export function getThemeJSONSchema(theme: Theme): ThemeJsonSchema {
 }
 
 function describeError(error: ValidationError): string {
-  if (error.name !== 'anyOf' || !error.schema || typeof error.schema === 'boolean' || !error.schema.anyOf) {
+  const schema = error.schema;
+  if (error.name !== 'anyOf' || typeof schema === 'string' || !schema.anyOf) {
     return error.stack;
   }
-  const branchMessages = error.schema.anyOf.map((subSchema, index) => {
+  const branchMessages = schema.anyOf.map((subSchema, index) => {
     const subErrors = validate(error.instance, subSchema).errors;
     const detail = subErrors.map((subError) => describeError(subError)).join('; ');
     return `subschema ${index}: ${detail}`;
