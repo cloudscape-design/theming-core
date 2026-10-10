@@ -3,6 +3,8 @@
 import fs from 'fs';
 import path, { dirname } from 'path';
 
+import { getStylesheetSpecifier, StylesheetImport } from '../../stylesheet-import';
+
 function writeFile(path: string, content: any) {
   const dir = dirname(path);
   fs.mkdirSync(dir, { recursive: true });
@@ -14,13 +16,15 @@ export function writeCssModule(
   targetFolder: string,
   scopedFileExt: string,
   json: Record<string, unknown>,
+  stylesheetImport: StylesheetImport = 'relative',
 ): void {
   const modulePath = path.join(targetFolder, relativeCssPath);
   const stylesFilename = path.basename(relativeCssPath, '.css');
+  const stylesheetPath = path.join(path.dirname(relativeCssPath), stylesFilename + scopedFileExt);
 
   // language=JavaScript
   const content = `
-    import './${stylesFilename}${scopedFileExt}';
+    import '${getStylesheetSpecifier(stylesheetPath, stylesheetImport)}';
     export default ${JSON.stringify(json, null, 2)};
   `;
   writeFile(modulePath + '.js', content);

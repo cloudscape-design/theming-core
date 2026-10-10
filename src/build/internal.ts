@@ -9,8 +9,10 @@ import { createStandaloneContextFiles } from './tasks/standalone-contexts';
 import { getInlineStylesheets } from './inline-stylesheets';
 import { calculatePropertiesMap } from './properties';
 import findNeededTokens from './needed-tokens';
+import { getStylesheetPackageImports, StylesheetImport } from './stylesheet-import';
 
 export { buildStyles, InlineStylesheet, BuildStylesOptions };
+export { getStylesheetPackageImports, StylesheetImport };
 
 export type Tasks = 'preset' | 'design-tokens';
 
@@ -53,6 +55,11 @@ export interface BuildThemedComponentsInternalParams {
    * inline stylesheet as `$system`. Lets components gate build-variant specific output. Default: 'core'.
    */
   system?: string;
+  /**
+   * How the emitted class-name modules reference their stylesheet. Defaults to `'relative'`, which
+   * only a bundler can resolve. See {@link StylesheetImport}.
+   */
+  stylesheetImport?: StylesheetImport;
 }
 /**
  * Builds themed components and optionally design tokens, if not skipped.
@@ -87,6 +94,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     failOnDeprecations,
     tokenVersions,
     system = 'core',
+    stylesheetImport,
   } = params;
 
   if (!skip.includes('design-tokens') && !designTokensOutputDir) {
@@ -108,7 +116,7 @@ export async function buildThemedComponentsInternal(params: BuildThemedComponent
     scssDir,
     componentsOutputDir,
     getInlineStylesheets(basePrimary, baseSecondary, defaults, variablesMap, propertiesMap, neededTokens, system),
-    { failOnDeprecations },
+    { failOnDeprecations, stylesheetImport },
   );
   const internalTokensTask = createInternalTokenFiles(defaults, propertiesMap, componentsOutputDir);
 

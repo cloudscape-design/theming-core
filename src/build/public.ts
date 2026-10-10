@@ -10,7 +10,7 @@ import { getContexts, getThemeFromPreset } from '../shared/theme/validate';
 
 export interface BuildThemedComponentsParams extends Pick<
   BuildThemedComponentsInternalParams,
-  'scssDir' | 'componentsOutputDir'
+  'scssDir' | 'componentsOutputDir' | 'stylesheetImport'
 > {
   /**
    * The `preset` contains the base/fallback theme upon which the custom theme will be applied.
@@ -38,6 +38,7 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
     scssDir,
     override,
     baseThemeId,
+    stylesheetImport,
   } = params;
 
   const preset = createThemedPreset(originalPreset, override, baseThemeId);
@@ -58,6 +59,7 @@ export async function buildThemedComponents(params: BuildThemedComponentsParams)
     scssDir,
     designTokensFileName: preset.theme.id,
     tokenVersions: preset.tokenVersions,
+    stylesheetImport,
   });
 }
 
