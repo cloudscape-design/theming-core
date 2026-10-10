@@ -99,6 +99,7 @@ const tokensSchema: GenericSchema = {
     '^font-weight-': getTokenSchema(textWeightValueSchema),
     '^letter-spacing-': getTokenSchema(letterSpacingValueSchema),
     '^size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
+    '^min-size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
   },
   additionalProperties: false,
 };
