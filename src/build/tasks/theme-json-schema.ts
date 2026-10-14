@@ -85,9 +85,7 @@ const tokensSchema: GenericSchema = {
   type: 'object',
   patternProperties: {
     '^color-': getTokenSchema(getComplexValueSchema(colorValueSchema, visualModes)),
-    '^font-family-': getTokenSchema({
-      anyOf: [stringValueSchema, getComplexValueSchema(stringValueSchema, densityModes)],
-    }),
+    '^font-family-': getTokenSchema(stringValueSchema),
     '^border-radius-': getTokenSchema(spaceValueSchema),
     '^border-width-': getTokenSchema(borderWidthValueSchema),
     '^space-': getTokenSchema(getComplexValueSchema(spaceValueSchema, densityModes)),
