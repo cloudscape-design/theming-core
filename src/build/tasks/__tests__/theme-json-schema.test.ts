@@ -20,6 +20,23 @@ const validateTokens = (tokens: Record<string, TokenJson>): boolean => {
   return validateJson(getJson(tokens), schema);
 };
 
+// Pattern strings as the schema emits them in error messages (double-escaped:
+// once for the JS string, once for the regex). Shared so a schema pattern change
+// updates the assertions in one place.
+const TEXT_SIZE_PATTERN = '^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$';
+const FONT_WEIGHT_PATTERN = '^([1-9][0-9]{0,2}|1000|normal|bold|lighter|bolder|light|heavy)$';
+const LETTER_SPACING_PATTERN = '^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$';
+
+const anyOfError = (path: string, branch0: string, branch1: string): string =>
+  `Tokens validation error: instance.tokens.${path}.$value is not any of ` +
+  `(subschema 0: ${branch0} | subschema 1: ${branch1})`;
+
+const notObject = 'instance is not of a type(s) object';
+const notString = 'instance is not of a type(s) string';
+const patternFail = (pattern: string): string => `instance does not match pattern "${pattern}"`;
+const modePatternFail = (mode: string, pattern: string): string =>
+  `instance.${mode} does not match pattern "${pattern}"`;
+
 describe('validateJson', () => {
   test('accepts only predefined token names', () => {
     expect(() => {
@@ -350,9 +367,7 @@ describe('validateJson', () => {
               $value: invalidValue,
             },
           }),
-        ).toThrowError(
-          'Tokens validation error: instance.tokens.font-size-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
-        );
+        ).toThrowError(anyOfError('font-size-body', patternFail(TEXT_SIZE_PATTERN), notObject));
       });
     });
   });
@@ -378,9 +393,7 @@ describe('validateJson', () => {
               $value: invalidValue,
             },
           }),
-        ).toThrowError(
-          'Tokens validation error: instance.tokens.line-height-body.$value does not match pattern "^\\\\d+(\\\\.\\\\d+)?(px|rem|em)$"',
-        );
+        ).toThrowError(anyOfError('line-height-body', patternFail(TEXT_SIZE_PATTERN), notObject));
       });
     });
   });
@@ -419,7 +432,10 @@ describe('validateJson', () => {
             },
           }),
         ).toThrowError(
-          'Tokens validation error: instance.tokens.letter-spacing-button.$value does not match pattern "^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$"',
+          'Tokens validation error: instance.tokens.letter-spacing-button.$value is not any of ' +
+            '(subschema 0: instance does not match pattern ' +
+            '"^(normal|inherit|initial|revert|revert-layer|unset|-?\\\\d*\\\\.?\\\\d+(px|rem|em))$" | ' +
+            'subschema 1: instance is not of a type(s) object)',
         );
       });
     });
@@ -512,6 +528,105 @@ describe('validateJson', () => {
           }),
         ).toThrowError('Tokens validation error');
       });
+    });
+  });
+
+  describe('density-scoped typography', () => {
+    test('accepts comfortable/compact objects for each typography category', () => {
+      expect(
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13px' } },
+          'line-height-body-m': { $value: { comfortable: '20px', compact: '18px' } },
+          'font-weight-heading': { $value: { comfortable: '700', compact: 'bold' } },
+          'letter-spacing-heading': { $value: { comfortable: '0.5px', compact: 'normal' } },
+        }),
+      ).toBe(true);
+    });
+
+    test('still accepts a single string value (backward compatible)', () => {
+      expect(
+        validateTokens({
+          'font-size-body-m': { $value: '14px' },
+          'line-height-body-m': { $value: '20px' },
+          'font-weight-heading': { $value: '700' },
+          'letter-spacing-heading': { $value: 'normal' },
+        }),
+      ).toBe(true);
+    });
+
+    test('accepts descriptions alongside a density object', () => {
+      expect(
+        validateTokens({
+          'font-size-body-m': {
+            $value: { comfortable: '14px', compact: '13px' },
+            $description: 'The default font size for regular body text.',
+          },
+        }),
+      ).toBe(true);
+    });
+
+    test('rejects a density object with an invalid per-mode value, naming the mode and both branches', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13 px' } },
+        }),
+      ).toThrowError(anyOfError('font-size-body-m', notString, modePatternFail('compact', TEXT_SIZE_PATTERN)));
+    });
+
+    test('rejects a density object missing a mode, naming the required property', () => {
+      expect(() =>
+        validateTokens({
+          'line-height-body-m': { $value: { comfortable: '20px' } },
+        }),
+      ).toThrowError(anyOfError('line-height-body-m', notString, 'instance requires property "compact"'));
+    });
+
+    test('rejects a density object with an unexpected mode, naming the disallowed property', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: '14px', compact: '13px', cozy: '15px' } },
+        }),
+      ).toThrowError(
+        anyOfError('font-size-body-m', notString, 'instance is not allowed to have the additional property "cozy"'),
+      );
+    });
+
+    test('rejects an invalid string value, naming the pattern on the string branch', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: '13 px' },
+        }),
+      ).toThrowError(anyOfError('font-size-body-m', patternFail(TEXT_SIZE_PATTERN), notObject));
+    });
+
+    test('names every failed per-mode value when both modes are invalid', () => {
+      expect(() =>
+        validateTokens({
+          'font-size-body-m': { $value: { comfortable: 'big', compact: 'small' } },
+        }),
+      ).toThrowError(
+        anyOfError(
+          'font-size-body-m',
+          notString,
+          `${modePatternFail('comfortable', TEXT_SIZE_PATTERN)}; ${modePatternFail('compact', TEXT_SIZE_PATTERN)}`,
+        ),
+      );
+    });
+
+    test('expands the object branch for every anyOf typography category', () => {
+      const cases: Array<[string, string, string, string]> = [
+        ['font-size-body-m', '14px', '13 px', modePatternFail('compact', TEXT_SIZE_PATTERN)],
+        ['line-height-body-m', '20px', '13 px', modePatternFail('compact', TEXT_SIZE_PATTERN)],
+        ['font-weight-heading', '700', 'xx', modePatternFail('compact', FONT_WEIGHT_PATTERN)],
+        ['letter-spacing-heading', 'normal', 'xx', modePatternFail('compact', LETTER_SPACING_PATTERN)],
+      ];
+      for (const [tokenName, goodComfortable, badCompact, expectedBranch] of cases) {
+        expect(() =>
+          validateTokens({
+            [tokenName]: { $value: { comfortable: goodComfortable, compact: badCompact } },
+          }),
+        ).toThrowError(anyOfError(tokenName, notString, expectedBranch));
+      }
     });
   });
 });
