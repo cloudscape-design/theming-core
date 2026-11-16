@@ -108,6 +108,7 @@ const tokensSchema: GenericSchema = {
       anyOf: [letterSpacingValueSchema, getComplexValueSchema(letterSpacingValueSchema, densityModes)],
     }),
     '^size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
+    '^min-size-': getTokenSchema(getComplexValueSchema(sizeValueSchema, densityModes)),
   },
   additionalProperties: false,
 };
