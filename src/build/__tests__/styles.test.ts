@@ -19,7 +19,8 @@ async function buildWithFixtures(
 
 test('simple styles build', async () => {
   const outDir = await buildWithFixtures('simple');
-  expect(readdirSync(outDir)).toEqual(['styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
+  // `internal` holds the empty stylesheet module, which the build emits in both stylesheet-import modes.
+  expect(readdirSync(outDir)).toEqual(['internal', 'styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
   const { default: styles } = await import(join(outDir, 'styles.css.js'));
   expect(styles).toMatchInlineSnapshot(`
     {
@@ -31,7 +32,7 @@ test('simple styles build', async () => {
 
 test('bundles all imports for styles.scss entry point', async () => {
   const outDir = await buildWithFixtures('dependencies');
-  expect(readdirSync(outDir)).toEqual(['styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
+  expect(readdirSync(outDir)).toEqual(['internal', 'styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
   const { default: styles } = await import(join(outDir, 'styles.css.js'));
   // includes class names from both files in the fixture
   expect(styles).toMatchInlineSnapshot(`
@@ -46,7 +47,7 @@ test('supports virtual stylesheets', async () => {
   const outDir = await buildWithFixtures('inlines', {
     inlines: [{ url: 'awsui:tokens', contents: '$color-background: #abcabc' }],
   });
-  expect(readdirSync(outDir)).toEqual(['styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
+  expect(readdirSync(outDir)).toEqual(['internal', 'styles.css.js', 'styles.scoped.css', 'styles.selectors.js']);
   const cssContent = readFileSync(join(outDir, 'styles.scoped.css'), 'utf8');
   expect(cssContent).toContain('#abcabc');
 });
@@ -68,7 +69,13 @@ test('throws an error if errors on deprecation warnings are enabled', async () =
 
 test('mirrors directory structure of the sources', async () => {
   const outDir = await buildWithFixtures('dir-structure');
-  expect(readdirSync(outDir)).toEqual(['styles.css.js', 'styles.scoped.css', 'styles.selectors.js', 'sub-component']);
+  expect(readdirSync(outDir)).toEqual([
+    'internal',
+    'styles.css.js',
+    'styles.scoped.css',
+    'styles.selectors.js',
+    'sub-component',
+  ]);
   expect(readdirSync(join(outDir, 'sub-component'))).toEqual([
     'styles.css.js',
     'styles.scoped.css',
